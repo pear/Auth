@@ -218,6 +218,12 @@ class Auth {
      * @var array
      */
     var $authdata;
+    
+    /**
+      * How many times has checkAuth been called
+      * var int
+      */
+    var $authChecks = 0;
 
     /**
      * Constructor
@@ -287,20 +293,21 @@ class Auth {
                 $this->_sessionName = $options['sessionName'];
                 unset($options['sessionName']);
             }
-
             if (!empty($options['allowLogin'])) {
                 $this->_sessionName = $options['sessionName'];
                 unset($options['sessionName']);
             }
-
             if (!empty($options['postUsername'])) {
                 $this->_postUsername = $options['postUsername'];
                 unset($options['postUsername']);
             }
-
             if (!empty($options['postPassword'])) {
                 $this->_postPassword = $options['postPassword'];
                 unset($options['postPassword']);
+            }
+            if (!empty($options['advancedsecurity'])) {
+                $this->advancedsecurity = $options['advancedsecurity'];
+                unset($options['advancedsecurity']);
             }
         }
         return($options);
@@ -316,6 +323,7 @@ class Auth {
     function _loadStorage() {
         if(!is_object($this->storage)) {
             $this->storage =& $this->_factory($this->storage_driver, $this->storage_options);
+            $this->storage->_auth_obj =& $this;
             return(true);
         }
         return(false);
@@ -380,12 +388,15 @@ class Auth {
     function login() {
         $login_ok = false;
         $this->_loadStorage();
+        // Check if using challenge responce
+        (isset($this->post['authsecret']) && $this->post['authsecret'] == 1) ? $usingChap = true : $usingChap = false;
+
         /**
          * When the user has already entered a username,
          * we have to validate it.
          */
         if (!empty($this->username)) {
-            if (true === $this->storage->fetchData($this->username, $this->password)) {
+            if (true === $this->storage->fetchData($this->username, $this->password, $usingChap)) {
                 $this->session['challengekey'] = md5($this->username.$this->password);
                 $login_ok = true;
             }
@@ -578,8 +589,14 @@ class Auth {
         $this->session['sessionip'] = isset($this->server['REMOTE_ADDR']) ? $this->server['REMOTE_ADDR'] : '';
         $this->session['sessionuseragent'] = isset($this->server['HTTP_USER_AGENT']) ? $this->server['HTTP_USER_AGENT'] : '';
 
+        // This should be set by the container to something more safe
+        // Like md5(passwd.microtime)
+        if(empty($this->session['challengekey'])) {
+            $this->session['challengekey'] = md5($username.microtime());
+        }
+
         $this->session['challengecookie'] = md5($this->session['challengekey'].microtime());
-        setcookie('authchallenge', $this->session['nextchallengecookie']);
+        setcookie('authchallenge', $this->session['challengecookie']);
 
         $this->session['registered'] = true;
         $this->session['username']   = $username;
@@ -610,25 +627,7 @@ class Auth {
      * @return boolean  Whether or not the user is authenticated.
      */
     function checkAuth() {
-        if ($this->advancedsecurity) {
-            // Check for ip change
-            if ( isset($this->server['REMOTE_ADDR']) && $this->session['sessionip'] != $this->server['REMOTE_ADDR']) {
-                // Check if the IP of the user has changed, if so we assume a man in the middle attack and log him out
-                $this->expired = true;
-                $this->status = AUTH_SECURITY_BREACH;
-                $this->logout();
-                return false;
-            }
-            // Check for useragent change
-            if ( isset($this->server['HTTP_USER_AGENT']) && $this->session['sessionuseragent'] != $this->server['HTTP_USER_AGENT']) {
-                // Check if the User-Agent of the user has changed, if so we assume a man in the middle attack and log him out
-                $this->expired = true;
-                $this->status = AUTH_SECURITY_BREACH;
-                $this->logout();
-                return false;
-            }
-        }
-
+        $this->authChecks++;
         if (isset($this->session)) {
             // Check if authentication session is expired
             if ($this->expire > 0 &&
@@ -655,15 +654,41 @@ class Auth {
                 $this->session['registered'] == true &&
                 $this->session['username'] != '') {
                 Auth::updateIdle();
-                // Check challenge cookie here
-                if ($this->advancedsecurity && $this->session['challengecookie'] != $this->cookie['authchallenge']) {
-                    $this->expired = true;
-                    $this->status = AUTH_SECURITY_BREACH;
-                    $this->logout();
+                // Only Generate the challenge once
+                if($this->authChecks == 1) {
+                    $this->session['challengecookieold'] = $this->session['challengecookie'];
+                    $this->session['challengecookie'] = md5($this->session['challengekey'].microtime());
+                    setcookie('authchallenge', $this->session['challengecookie']);
                 }
-                
-                $this->session['challengecookie'] = md5($this->session['challengekey'].microtime());
-                setcookie('authchallenge', $this->session['nextchallengecookie']);
+
+                if ($this->advancedsecurity) {
+                    // Check for ip change
+                    if ( isset($this->server['REMOTE_ADDR']) && $this->session['sessionip'] != $this->server['REMOTE_ADDR']) {
+                        // Check if the IP of the user has changed, if so we assume a man in the middle attack and log him out
+                        $this->expired = true;
+                        $this->status = AUTH_SECURITY_BREACH;
+                        $this->logout();
+                        return false;
+                    }
+                    // Check for useragent change
+                    if ( isset($this->server['HTTP_USER_AGENT']) && $this->session['sessionuseragent'] != $this->server['HTTP_USER_AGENT']) {
+                        // Check if the User-Agent of the user has changed, if so we assume a man in the middle attack and log him out
+                        $this->expired = true;
+                        $this->status = AUTH_SECURITY_BREACH;
+                        $this->logout();
+                        return false;
+                    }
+    
+                    // Check challenge cookie here, if challengecookieold is not set this is the first time and check is skipped
+                    if ( isset($this->session['challengecookieold']) && $this->session['challengecookieold'] != $this->cookie['authchallenge']) {
+                        $this->expired = true;
+                        $this->status = AUTH_SECURITY_BREACH;
+                        $this->logout();
+                        $this->login();
+                        return false;
+                    }
+                }
+
                 return true;
             }
         }
@@ -733,8 +758,8 @@ class Auth {
     /**
      * Get the username
      *
-     * @access public
      * @return string
+     * @access public
      */
     function getUsername()
     {
@@ -747,12 +772,32 @@ class Auth {
     /**
      * Get the current status
      *
-     * @access public
      * @return string
+     * @access public
      */
     function getStatus()
     {
         return $this->status;
+    }
+    
+    /**
+     * Gets the post varible used for the username
+     * 
+     * @return string
+     * @access public
+     */
+    function getPostUsernameField() {
+        return($this->_postUsername);
+    }
+
+    /**
+     * Gets the post varible used for the username
+     * 
+     * @return string
+     * @access public
+     */
+    function getPostPasswordField() {
+        return($this->_postPassword);
     }
 
     /**

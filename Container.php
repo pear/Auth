@@ -52,7 +52,7 @@ class Auth_Container
      *
      * @access public
      */
-    function fetchData() {
+    function fetchData($username, $password, $isChallengeResponce=false) {
     }
 
     // }}}
@@ -75,15 +75,13 @@ class Auth_Container
             case "crypt" :
                 return ( crypt($password1, $password2) == $password2 );
                 break;
-    
             case "none" :
+            case "" :
                 return ($password1 == $password2);
                 break;
-    
             case "md5" :
                 return (md5($password1) == $password2);
                 break;
-    
             default :
                 if (function_exists($cryptType)) {
                     return ($cryptType($password1) == $password2);
@@ -94,6 +92,23 @@ class Auth_Container
                 }
                 break;
         }
+    }
+    
+    /**
+      * Returns true if the container supports Challenge Responce 
+      * password authenthication
+      */
+    function supportsChallengeResponce() {
+        return(false);
+    }
+    
+    /**
+      * Returns the crypt current crypt type of the container
+      *
+      * @return string
+      */
+    function getCryptType() {
+        return('');
     }
 
     /**
@@ -121,7 +136,6 @@ class Auth_Container
             }
         }
         return false;
-        
     }
 
     /**

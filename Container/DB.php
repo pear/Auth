@@ -206,9 +206,6 @@ class Auth_Container_DB extends Auth_Container
         }
     }
 
-    // }}}
-    // {{{ fetchData()
-
     /**
      * Get user information from database
      *
@@ -220,10 +217,13 @@ class Auth_Container_DB extends Auth_Container
      *
      * @param   string Username
      * @param   string Password
+     * @param   boolean If true password is secured using an md5 hash
+     *                  the frontend and auth are responsible for making sure the container supports
+     *                  challenge responce password authenthication
      * @return  mixed  Error object or boolean
      */
-    function fetchData($username, $password)
-    {
+    function fetchData($username, $password, $isChallengeResponce=false) {
+        //print "Container_DB::fetchData($username, $password, $isChallengeResponce) <br/>\n";
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
@@ -257,6 +257,8 @@ class Auth_Container_DB extends Auth_Container
                 " WHERE ".$this->options['usernamecol']." = '".$this->db->quoteString($username)."'";
         
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
+        #print "SQL: $query <br/>\n";
+        #print_r($res);
 
         if (DB::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->getCode());
@@ -265,8 +267,23 @@ class Auth_Container_DB extends Auth_Container
             $this->activeUser = '';
             return false;
         }
-        if ($this->verifyPassword(trim($password, "\r\n"),
-                                  trim($res[$this->options['passwordcol']], "\r\n"),
+        
+        // Perform trimming here before the hashihg
+        $password = trim($password, "\r\n");
+        $res[$this->options['passwordcol']] = trim($res[$this->options['passwordcol']], "\r\n");
+        // If using Challeneg Responce md5 the pass with the secret
+        if($isChallengeResponce) {
+            //print " Orig Password [{$res[$this->options['passwordcol']]}]<br/>\n";
+            //print " Challenge [{$this->_auth_obj->session['loginchallenege']}]<br/>\n";
+            $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']].$this->_auth_obj->session['loginchallenege']);
+            // UGLY cannot avoid without modifying verifyPassword
+            if($this->options['cryptType'] == 'md5') {
+                $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']]);
+            }
+            //print " Hashed Password [{$res[$this->options['passwordcol']]}]<br/>\n";
+        }
+        if ($this->verifyPassword($password,
+                                  $res[$this->options['passwordcol']],
                                   $this->options['cryptType'])) {
             // Store additional field values in the session
             foreach ($res as $key => $value) {
@@ -447,6 +464,17 @@ class Auth_Container_DB extends Auth_Container
         }
     }
 
+    function supportsChallengeResponce() {
+        if( $this->options['cryptType'] == 'md5' || $this->options['cryptType'] == 'none' || $this->options['cryptType'] == '' ) {
+            return(true);
+        }
+        return(false);
+    }
+    
+    function getCryptType() {
+        return($this->options['cryptType']);
+    }
+    
     // }}}
 }
 ?>
