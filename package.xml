@@ -35,7 +35,7 @@
   </Release>
 
   <FileList>
-    <Dir Name="/">
+    <Dir Name="/" BaseInstallDir="Auth">
         <File Role="php">Auth.php</File>
         <File Role="php">Container.php</File>    
         <Dir Name="Container">
