@@ -41,6 +41,8 @@ require_once "PEAR.php";
  * url:         ldap://localhost:389/
  *              useful for ldaps://, works only with openldap2 ?
  *              it will be preferred over host and port
+ * version:     LDAP version to use, ususally 2 (default) or 3,
+ *              must be an integer!
  * binddn:      If set, searching for user will be done after binding
  *              as this user, if not set the bind will be anonymous.
  *              This is reported to make the container work with MS
@@ -82,6 +84,7 @@ require_once "PEAR.php";
  * $a = new Auth("LDAP", array(
  *       'host' => 'localhost',
  *       'port' => '389',
+ *       'version' => 3,
  *       'basedn' => 'o=netsols,c=de',
  *       'userattr' => 'uid'
  *       'binddn' => 'cn=admin,o=netsols,c=de',
@@ -104,8 +107,9 @@ require_once "PEAR.php";
  * $a3 = new Auth('LDAP', array(
  *       'host' => 'ldap.netsols.de',
  *       'port' => 389,
+ *       'version' => 3,
  *       'basedn' => 'dc=netsols,dc=de',
- *       'binddn' => 'cn=Jan Wagner,ou=Users,dc=netsols,dc=de',
+ *       'binddn' => 'cn=Jan Wagner,cn=Users,dc=netsols,dc=de',
  *       'bindpw' => 'password',
  *       'userattr' => 'samAccountName',
  *       'userfilter' => '(objectClass=user)',
@@ -115,7 +119,7 @@ require_once "PEAR.php";
  *       'groupfilter' => '(objectClass=group)',
  *       'memberattr' => 'member',
  *       'memberisdn' => true,
- *       'groupdn' => 'ou=Users',
+ *       'groupdn' => 'cn=Users',
  *       'groupscope' => 'one',
  *       'debug' => true);
  *
@@ -171,6 +175,10 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function Auth_Container_LDAP($params)
     {
+        if (false === extension_loaded('ldap')) {
+            return PEAR::raiseError('Auth_Container_LDAP: LDAP Extension not loaded', 41, PEAR_ERROR_DIE);
+        }
+        
         $this->_setDefaults();
 
         if (is_array($params)) {
@@ -203,11 +211,12 @@ class Auth_Container_LDAP extends Auth_Container
         }
         $this->_debug('Successfully connected to server', __LINE__);
 
-        // try switchig to LDAPv3        
-        if (@ldap_get_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $ver) && $ver >= 2) {
-            $this->_debug('Switching to LDAPv3', __LINE__);
-            @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, 3);
+        // switch LDAP version
+        if (is_int($this->options['version']) && $this->options['version'] > 2) {           
+            $this->_debug("Switching to LDAP version {$this->options['version']}", __LINE__);
+            @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $this->options['version']);
         }
+
         // bind with credentials or anonymously
         if ($this->options['binddn'] && $this->options['bindpw']) {
             $this->_debug('Binding with credentials', __LINE__);
@@ -295,10 +304,11 @@ class Auth_Container_LDAP extends Auth_Container
      * @access private
      */
     function _setDefaults()
-    {
+    {        
         $this->options['url']         = '';
         $this->options['host']        = 'localhost';
         $this->options['port']        = '389';
+        $this->options['version']     = 2;
         $this->options['binddn']      = '';
         $this->options['bindpw']      = '';        
         $this->options['basedn']      = '';
