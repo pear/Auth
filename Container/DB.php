@@ -210,7 +210,7 @@ class Auth_Container_DB extends Auth_Container
      * @param   string Password
      * @param   boolean If true password is secured using a md5 hash
      *                  the frontend and auth are responsible for making sure the container supports
-     *                  challenge responce password authenthication
+     *                  challenge response password authenthication
      * @return  mixed  Error object or boolean
      */
     function fetchData($username, $password, $isChallengeResponce=false) {
