@@ -61,7 +61,7 @@ class Auth_Container_DB extends Auth_Container
      *
      * Initate connection to the database via PEAR::DB
      *
-     * @param  $dsn   string connection data or DB object
+     * @param  string Connection data or DB object
      * @return object Returns an error object if something went wrong
      */
     function Auth_Container_DB($dsn)
@@ -181,7 +181,7 @@ class Auth_Container_DB extends Auth_Container
      * This function uses the given username to fetch
      * the corresponding login data from the database
      * table. If an account that matches the passed username
-     * and password is found, the function return true. 
+     * and password is found, the function returns true. 
      * Otherwise it returns false.
      *
      * @param   string Username
