@@ -99,16 +99,33 @@ class Auth_Container_RADIUS extends Auth_Container
      * @param  string Password
      * @return bool   true on success, false on reject
      */
-    function fetchData($username, $password, $challenge = null)
+    function fetchData($username, $password)
     {
+        
+        if (is_object($this->auth)) {
+            $challenge = $this->auth->getChallenge();
+        }
+        echo 'Type' . $this->authtype . "<br>";
+        echo 'XXXUsername:' . $username . "<br>";
+        echo 'XXXChalleng:' . bin2hex($challenge) . "<br>";
+        echo 'XXXPassword:' . $password . "<br>";
+        
+        require_once 'Crypt_CHAP/CHAP.php';
+        $classname = 'Crypt_' . $this->authtype;
+        $crpt = new $classname;
+        $crpt->password = 'sepp';
+        $crpt->challenge = $challenge;
+        $exp = $crpt->challengeResponse();
+        echo 'XXXExpected:' . bin2hex($exp) . "<br>";
+        
         switch($this->authtype) {
         case 'CHAP_MD5':
         case 'MSCHAPv1':
             if (isset($challenge)) {
-                echo $password;
                 $this->radius->challenge = $challenge;
                 $this->radius->chapid    = 1;
                 $this->radius->response  = pack('H*', $password);
+                //$this->radius->response  = $exp;
             } else {
                 require_once 'Crypt_CHAP/CHAP.php';
                 $classname = 'Crypt_' . $this->authtype;
