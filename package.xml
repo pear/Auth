@@ -85,7 +85,7 @@ the login data:
        <file name="SMBPasswd.php"/>
        <file name="SOAP.php"/>
        <file name="vpopmail.php"/>
-       <file name="pear.php"/>
+       <file name="PEAR.php"/>
       </dir>
       
       <!-- The Test suite -->
