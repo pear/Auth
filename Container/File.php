@@ -91,6 +91,10 @@ class Auth_Container_File extends Auth_Container
     {
         $users = $this->pwfile->listUsers();
 
+        if (!is_array($users)) {
+            return array();
+        }
+
         foreach ($users as $key => $value) {
             $retVal[] = array("username" => $key, "password" => $value);
         }
