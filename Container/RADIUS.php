@@ -19,11 +19,10 @@
 // $Id$
 //
 
-
 require_once "Auth/Container.php";
 require_once "Auth/RADIUS.php";
 
-/*
+/**
  * Storage driver for authenticating users against RADIUS servers.
  *
  * @author  Michael Bretterklieber <michael@bretterklieber.com>
@@ -32,6 +31,7 @@ require_once "Auth/RADIUS.php";
  */
 class Auth_Container_RADIUS extends Auth_Container
 {
+
     /**
      * Contains a RADIUS object
      * @var object
@@ -48,11 +48,13 @@ class Auth_Container_RADIUS extends Auth_Container
      * Constructor of the container class.
      *
      * $options can have these keys:
-     * 'servers'    an array containing an array: servername, port, sharedsecret, timeout, maxtries
-     * 'configfile' The filename of the configurationfile
-     * 'authtype'   The type of authentication, one of: PAP, CHAP_MD5, MSCHAPv1, MSCHAPv2, default is PAP
+     * 'servers'    an array containing an array: servername, port,
+     *              sharedsecret, timeout, maxtries
+     * 'configfile' The filename of the configuration file
+     * 'authtype'   The type of authentication, one of: PAP, CHAP_MD5,
+     *              MSCHAPv1, MSCHAPv2, default is PAP
      *
-     * @param  $options associative array with 
+     * @param  $options associative array
      * @return object Returns an error object if something went wrong
      */
     function Auth_Container_RADIUS($options)
@@ -117,7 +119,7 @@ class Auth_Container_RADIUS extends Auth_Container
                 $this->radius->response  = $crpt->challengeResponse();
                 break;
             }
-  
+
         case 'MSCHAPv2':
             require_once 'Crypt_CHAP/CHAP.php';
             $crpt = new Crypt_MSCHAPv2;
@@ -128,14 +130,14 @@ class Auth_Container_RADIUS extends Auth_Container
             $this->radius->chapid        = $crpt->chapid;
             $this->radius->response      = $crpt->challengeResponse();
             break;
-    
+
         default:
             $this->radius->password = $password;
             break;
         }
-        
+
         $this->radius->username = $username;
-        
+
         $this->radius->putAuthAttributes();
         $result = $this->radius->send();
         if (PEAR::isError($result)) {
@@ -145,7 +147,7 @@ class Auth_Container_RADIUS extends Auth_Container
         $this->radius->getAttributes();
 //      just for debugging
 //      $this->radius->dumpAttributes();
-        
+
         return $result;
     }
 }

@@ -70,7 +70,9 @@ class Auth_Container_SOAP extends Auth_Container
      * @var array
      * @access private
      */
-    var $_requiredOptions = array('endpoint', 'namespace', 'method', 'encoding', 'usernamefield', 'passwordfield');
+    var $_requiredOptions = array('endpoint', 'namespace', 'method',
+                                  'encoding', 'usernamefield',
+                                  'passwordfield');
 
     /**
      * Options for the class
