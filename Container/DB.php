@@ -155,7 +155,7 @@ class Auth_Container_DB extends Auth_Container
     {
         $err = $this->_prepare();
         if ($err !== true) {
-            return $res;
+            return $err;
         }
         return $this->db->query($query);
     }
