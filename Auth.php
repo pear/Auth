@@ -342,7 +342,7 @@ class Auth
 
     /**
      * Set the maximum expire time
-     *
+     * 
      * @access public
      * @param  integer time in seconds
      * @param  bool    add time to current expire time or not
@@ -376,6 +376,55 @@ class Auth
         @session_name($name);
     }
 
+    // }}}
+    // {{{ setShowLogin()
+
+    /**
+     * Should the login form be displayed if neccessary?
+     *
+     * @access public
+     * @param  bool    show login form or not
+     * @return void
+     */
+    function setShowLogin($showLogin = true)
+    {
+        $this->showLogin = $showLogin;
+    }
+
+    // }}}
+    // {{{ setAuth()
+
+    /**
+     * Register variable in a session telling that the user
+     * has logged in successfully
+     *
+     * @access public
+     * @param  string Username
+     * @param  mixed  Additional information that is stored in
+     *                the session. This parameter can have any
+     *                type (integer, string, array etc).
+     * @return void
+     */
+    function setAuth($username, $data = null)
+    {              
+        $session = &Auth::_importGlobalVariable("session");
+
+        if (!isset($session['auth'])) {
+            session_register("auth");
+        }
+
+        $session['auth'] = array(
+                                'registered'    => true,
+                                'username'      => $username,
+                                'timestamp'     => time(),
+                                'idle'          => time()
+                           );
+
+        if (!empty($data)) {
+            $session['auth']['data'] = $data;
+        }
+    }
+    
     // }}}
     // {{{ checkAuth()
 
@@ -428,40 +477,6 @@ class Auth
     }
 
     // }}}
-    // {{{ setAuth()
-
-    /**
-     * Register variable in a session telling that the user
-     * has logged in successfully
-     *
-     * @access public
-     * @param  string Username
-     * @param  mixed  Additional information that is stored in
-     *                the session. This parameter can have any
-     *                type (integer, string, array etc).
-     * @return void
-     */
-    function setAuth($username, $data = null)
-    {              
-        $session = &Auth::_importGlobalVariable("session");
-
-        if (!isset($session['auth'])) {
-            session_register("auth");
-        }
-
-        $session['auth'] = array(
-                                'registered'    => true,
-                                'username'      => $username,
-                                'timestamp'     => time(),
-                                'idle'          => time()
-                           );
-
-        if (!empty($data)) {
-            $session['auth']['data'] = $data;
-        }
-    }
-    
-    // }}}
     // {{{ getAuth()
 
     /**
@@ -475,21 +490,6 @@ class Auth
         $session = &$this->_importGlobalVariable("session");
         
         return (true == !empty($session) && $session['auth']['registered']) ? true : false;
-    }
-
-    // }}}
-    // {{{ setShowLogin()
-
-    /**
-     * Should the login form be displayed if neccessary?
-     *
-     * @access public
-     * @param  bool    show login form or not
-     * @return void
-     */
-    function setShowLogin($showLogin = true)
-    {
-        $this->showLogin = $showLogin;
     }
 
     // }}}
