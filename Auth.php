@@ -181,6 +181,12 @@ class Auth {
      * @var string
      */
     var $_postPassword = 'password';
+    
+    /**
+     * A hash to hold various superglobals as reference
+     * @var array
+     */
+    var $authdata;
 
     // {{{ Constructor
 
@@ -231,6 +237,13 @@ class Auth {
         // Pass a reference to auth to the container, ugly but works
         // this is used by the DB container to use method setAuthData not staticaly.
         $this->storage->_auth_obj =& $this;
+        
+        $this->authdata['get'] =& $_GET;
+        $this->authdata['get'] =& $_GET;
+        $this->authdata['get'] =& $_GET;
+        $this->authdata['get'] =& $_GET;
+        $this->authdata['get'] =& $_GET;
+        
     }
 
     // }}}
@@ -331,7 +344,8 @@ class Auth {
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (is_callable($this->loginCallback)) {
-                call_user_func($this->loginCallback,$this->username, &$this);
+                call_user_func($this->loginCallback,$this->username, @$this);
+                #call_user_func_array($this->loginFailedCallback, array($this->username, &$this));
             }
         }
 
@@ -342,7 +356,8 @@ class Auth {
         if (!empty($this->username) && !$login_ok) {
             $this->status = AUTH_WRONG_LOGIN;
             if (is_callable($this->loginFailedCallback)) {
-                call_user_func($this->loginFailedCallback,$this->username, &$this);
+                call_user_func($this->loginFailedCallback,$this->username, @$this);
+                #call_user_func_array($this->loginFailedCallback, array($this->username, &$this));
             }
         }
 
@@ -679,7 +694,8 @@ class Auth {
     function drawLogin($username = '')
     {
         if (is_callable($this->loginFunction)) {
-            call_user_func($this->loginFunction, $username, $this->status, &$this);
+            call_user_func($this->loginFunction, $username, $this->status, @$this);
+            #call_user_func_array($this->loginFailedCallback, array($this->username, &$this));
         } else {
             $server = &$this->_importGlobalVariable('server');
 
@@ -736,7 +752,8 @@ class Auth {
         $session = &$this->_importGlobalVariable('session');
 
         if (is_callable($this->logoutCallback)) {
-            call_user_func($this->logoutCallback, $session[$this->_sessionName]['username'], &$this);
+            call_user_func($this->logoutCallback, $session[$this->_sessionName]['username'], @$this);
+            #call_user_func_array($this->loginFailedCallback, array($this->username, &$this));
         }
 
         $this->username = '';
@@ -896,45 +913,24 @@ class Auth {
         $var = null;
 
         switch (strtolower($variable)) {
-
-            case 'server' :
-                if (isset($_SERVER)) {
-                    $var = &$_SERVER;
-                } else {
-                    $var = &$GLOBALS['HTTP_SERVER_VARS'];
-                }
+            case 'session' :
+                isset($_SESSION) ? $var = &$_SESSION : $var = &$GLOBALS['HTTP_SESSION_VARS'] ;
                 break;
 
-            case 'session' :
-                if (isset($_SESSION)) {
-                    $var = &$_SESSION;
-                } else {
-                    $var = &$GLOBALS['HTTP_SESSION_VARS'];
-                }
+            case 'server' :
+                isset($_SERVER) ? $var = &$_SERVER : $var = &$GLOBALS['HTTP_SERVER_VARS'];
                 break;
 
             case 'post' :
-                if (isset($_POST)) {
-                    $var = &$_POST;
-                } else {
-                    $var = &$GLOBALS['HTTP_POST_VARS'];
-                }
+                isset($_POST) ? $var = &$_POST : $var = &$GLOBALS['HTTP_POST_VARS'];
                 break;
 
             case 'cookie' :
-                if (isset($_COOKIE)) {
-                    $var = &$_COOKIE;
-                } else {
-                    $var = &$GLOBALS['HTTP_COOKIE_VARS'];
-                }
+                isset($_COOKIE) ? $var = &$_COOKIE : $var = &$GLOBALS['HTTP_COOKIE_VARS'];
                 break;
 
             case 'get' :
-                if (isset($_GET)) {
-                    $var = &$_GET;
-                } else {
-                    $var = &$GLOBALS['HTTP_GET_VARS'];
-                }
+                isset($_GET) ? $var = &$_GET : $var = &$GLOBALS['HTTP_GET_VARS'];
                 break;
 
             default:
