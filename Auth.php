@@ -43,6 +43,8 @@
  *        // for users which have been authenticated successfully.
  *    }
  *
+ * Note: PEAR::Auth currently requires register_globals=on in
+ *       your PHP configuration.
  *
  * @author  Martin Jansen <mj@php.net>
  * @package Auth
