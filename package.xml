@@ -54,6 +54,41 @@
     </notes>
   </release>
 
+  <release>
+    <version>1.0</version>
+    <date>2001-12-23</date>
+    <state>stable</state>
+    <notes>
+     This is the first stable version of PEAR::Auth.
+     
+     Currently it features:
+     
+     * Customized login functions.
+
+     * 3 different storage containers: database, text file, LDAP.
+       Customized containers can be easily written.
+
+     * Via the function setShowLogin() it is possible to create sites
+       that have an optional login function, that makes it possible
+       to create parts of the site without authentication and the
+       rest only when the user has been authenicated.
+
+     * idle- and expire time.    
+    </notes>
+  </release>
+
+  <release>
+    <version>1.0.1</version>
+    <date>2002-02-07</date>
+    <state>stable</state>
+    <notes>
+     This release includes a new function setSessionname, that allows
+     the user of the package to change the name of the session to
+     a value different than default ("PHPSESSID"). This is useful, if
+     one uses two different auth systems on one domain.
+    </notes>
+  </release>
+
   <filelist>
     <dir name="/" baseinstalldir="Auth">
         <file role="php">Auth.php</file>
@@ -61,6 +96,8 @@
         <file role="text">README.Auth</file>
         <dir name="Container">
             <file role="php">DB.php</file>
+            <file role="php">File.php</file>
+            <file role="php">LDAP.php</file>
         </dir>
     </dir>
   </filelist>
