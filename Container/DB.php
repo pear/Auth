@@ -160,9 +160,9 @@ class Auth_Container_DB extends Auth_Container
      *
      * This function uses the given username to fetch
      * the corresponding login data from the database
-     * table. This function returns a associative hash
-     * that contains the values for all fields in the
-     * table.
+     * table. If an account that matches the passed username
+     * and password is found, the function return true. 
+     * Otherwise it returns false.
      *
      * @param   string Username
      * @param   string Password
