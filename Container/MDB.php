@@ -95,7 +95,7 @@ class Auth_Container_MDB extends Auth_Container
         } elseif (get_parent_class($dsn) == "mdb_common") {
             $this->db = $dsn;
         } elseif (is_object($dsn) && MDB::isError($dsn)) {
-            return PEAR::raiseError($dsn->getMessage(), $dsn->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($dsn->getMessage(), $dsn->code);
         } else {
             return PEAR::raiseError('The given dsn was not valid in file ' . __FILE__ . ' at line ' . __LINE__,
                                     41,
@@ -107,7 +107,7 @@ class Auth_Container_MDB extends Auth_Container
         }
 
         if (MDB::isError($this->db)) {
-            return PEAR::raiseError("", $this->db->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError("", $this->db->code);
         } else {
             return true;
         }
@@ -212,7 +212,7 @@ class Auth_Container_MDB extends Auth_Container
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode(), PEAR_ERROR_DIE);
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
         // Include additional fields if they exist
@@ -233,7 +233,7 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->db->getRow($query, null, null, null, MDB_FETCHMODE_ASSOC);
 
         if (MDB::isError($res) || PEAR::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode(), PEAR_ERROR_DIE);
+            return PEAR::raiseError($res->getMessage(), $res->getCode());
         } else {
             if (is_array($res)) {
                 if ($this->verifyPassword(trim($password),
@@ -259,7 +259,7 @@ class Auth_Container_MDB extends Auth_Container
     {
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode(), PEAR_ERROR_DIE);
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
         $retVal = array();
@@ -272,7 +272,7 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->db->getAll($query, null, null, null, MDB_FETCHMODE_ASSOC);
 
         if (MDB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode(), PEAR_ERROR_DIE);
+            return PEAR::raiseError($res->getMessage(), $res->getCode());
         } else {
             foreach ($res as $user) {
                 $retVal[] = $user;
@@ -325,7 +325,7 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->query($query);
 
         if (MDB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($res->getMessage(), $res->code);
         } else {
             return true;
         }
@@ -353,7 +353,7 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->query($query);
 
         if (MDB::isError($res)) {
-           return PEAR::raiseError($res->getMessage(), $res->code, PEAR_ERROR_DIE);
+           return PEAR::raiseError($res->getMessage(), $res->code);
         } else {
           return true;
         }
