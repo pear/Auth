@@ -128,10 +128,6 @@
  *        $myauth->start();
  *    }
  *
- *
- * Note: PEAR::Auth currently requires register_globals=on in
- *       your PHP configuration.
- *
  * @author  Martin Jansen <mj@php.net>
  * @package Auth
  * @version $Revision$
@@ -416,42 +412,24 @@ class Auth
      * @param  string Username
      * @param  array  Additional information that is stored in
      *                the session.
-     * @global  $HTTP_SESSION_VARS
      */
     function setAuth($username, $data = array())
-    {
-        
-        if (isset($_SESSION)) {
+    {              
+        $session = &Auth::_importGlobalVariable("session");
 
-            if (!isset($_SESSION['auth'])) {
-                session_register("auth");
-            }
+        if (!isset($session['auth'])) {
+            session_register("auth");
+        }
 
-            $_SESSION['auth'] = array(
-                                    'registered'    => true,
-                                    'username'      => $username,
-                                    'timestamp'     => time(),
-                                    'idle'          => time()
-                                );
-            
-            if (!empty($data))
-                $_SESSION['auth']['data'] = $data;
-            
-        } else {
+        $session['auth'] = array(
+                                'registered'    => true,
+                                'username'      => $username,
+                                'timestamp'     => time(),
+                                'idle'          => time()
+                           );
 
-            if (!isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
-                session_register("auth");
-            }
-
-            $GLOBALS['auth']               = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
-            $GLOBALS['auth']['registered'] = true;
-            $GLOBALS['auth']['username']   = $username;
-            $GLOBALS['auth']['timestamp']  = time();
-            $GLOBALS['auth']['idle']       = time();
-
-            if (!empty($data)) {
-                $GLOBALS['auth']['data']   = $data;
-            }
+        if (!empty($data)) {
+            $session['auth']['data'] = $data;
         }
     }
     
