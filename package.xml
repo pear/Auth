@@ -20,13 +20,13 @@
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="Auth">
-        <file role="php">Auth.php</file>
-        <file role="php">Container.php</file>
-        <file role="doc">README.Auth</file>
+        <file role="php" name="Auth.php" />
+        <file role="php" name="Container.php" />
+        <file role="doc" name="README.Auth" />
         <dir name="Container">
-          <file role="php">DB.php</file>
-          <file role="php">File.php</file>
-          <file role="php">LDAP.php</file>
+          <file role="php" name="DB.php" />
+          <file role="php" name="File.php" />
+          <file role="php" name="LDAP.php" />
         </dir>
       </dir>
     </filelist>
@@ -49,13 +49,13 @@
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="Auth">
-        <file role="php">Auth.php</file>
-        <file role="php">Container.php</file>
-        <file role="doc">README.Auth</file>
+        <file role="php" name="Auth.php" />
+        <file role="php" name="Container.php" />
+        <file role="doc" name="README.Auth" />
         <dir name="Container">
-          <file role="php">DB.php</file>
-          <file role="php">File.php</file>
-          <file role="php">LDAP.php</file>
+          <file role="php" name="DB.php" />
+          <file role="php" name="File.php" />
+          <file role="php" name="LDAP.php" />
         </dir>
       </dir>
     </filelist>
@@ -81,13 +81,13 @@
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="Auth">
-        <file role="php">Auth.php</file>
-        <file role="php">Container.php</file>
-        <file role="doc">README.Auth</file>
+        <file role="php" name="Auth.php" />
+        <file role="php" name="Container.php" />
+        <file role="doc" name="README.Auth" />
         <dir name="Container">
-          <file role="php">DB.php</file>
-          <file role="php">File.php</file>
-          <file role="php">LDAP.php</file>
+          <file role="php" name="DB.php" />
+          <file role="php" name="File.php" />
+          <file role="php" name="LDAP.php" />
         </dir>
       </dir>
     </filelist>
@@ -116,13 +116,13 @@
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="Auth">
-        <file role="php">Auth.php</file>
-        <file role="php">Container.php</file>
-        <file role="doc">README.Auth</file>
+        <file role="php" name="Auth.php" />
+        <file role="php" name="Container.php" />
+        <file role="doc" name="README.Auth" />
         <dir name="Container">
-          <file role="php">DB.php</file>
-          <file role="php">File.php</file>
-          <file role="php">LDAP.php</file>
+          <file role="php" name="DB.php" />
+          <file role="php" name="File.php" />
+          <file role="php" name="LDAP.php" />
         </dir>
       </dir>
     </filelist>
@@ -140,13 +140,13 @@
     </notes>
     <filelist>
       <dir name="/" baseinstalldir="Auth">
-        <file role="php">Auth.php</file>
-        <file role="php">Container.php</file>
-        <file role="doc">README.Auth</file>
+        <file role="php" name="Auth.php" />
+        <file role="php" name="Container.php" />
+        <file role="doc" name="README.Auth" />
         <dir name="Container">
-          <file role="php">DB.php</file>
-          <file role="php">File.php</file>
-          <file role="php">LDAP.php</file>
+          <file role="php" name="DB.php" />
+          <file role="php" name="File.php" />
+          <file role="php" name="LDAP.php" />
         </dir>
       </dir>
     </filelist>
