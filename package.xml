@@ -14,7 +14,8 @@ the login data:
 * POP3 servers
 * IMAP servers
 * vpopmail accounts
-* RADIUS</description>
+* RADIUS
+* SOAP</description>
   <maintainers>
     <maintainer>
       <user>MJ</user>
@@ -44,6 +45,8 @@ the login data:
   <jeroen@terena.nl>.
 * Added new POP3 storage container written by Yavor Shahpasov
   <yavo@siava.org>.
+* Added new SOAP storage container written by Bruno Pedro
+  <bpedro@co.sapo.pt>.
 * Fixed some smaller bugs.
 ]]>
     </notes>
@@ -57,7 +60,8 @@ the login data:
        <file name="IMAP.php"/>
        <file name="POP3.php"/>
        <file name="LDAP.php"/>
-       <file name="RADIUS.php"/>       
+       <file name="RADIUS.php"/>
+       <file name="SOAP.php"/>
        <file name="vpopmail.php"/>
       </dir>
     </filelist>
