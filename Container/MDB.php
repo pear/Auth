@@ -253,7 +253,7 @@ class Auth_Container_MDB extends Auth_Container
             return false;
         }
 
-        // Perform trimming here before the hashihg
+        // Perform trimming here before the hashing
         $password = trim($password, "\r\n");
         $res[$this->options['passwordcol']] = trim($res[$this->options['passwordcol']], "\r\n");
         // If using Challenge Response md5 the pass with the secret
@@ -275,7 +275,7 @@ class Auth_Container_MDB extends Auth_Container
                     continue;
                 }
                 // Use reference to the auth object if exists
-                // This is because the auth session variable can change so a static call to setAuthData does not make sence
+                // This is because the auth session variable can change so a static call to setAuthData does not make sense
                 if (is_object($this->_auth_obj)) {
                     $this->_auth_obj->setAuthData($key, $value);
                 } else {
@@ -304,7 +304,7 @@ class Auth_Container_MDB extends Auth_Container
 
         $retVal = array();
 
-        //Check if db_fileds contains a *, if so assume all columns are selected
+        //Check if db_fields contains a *, if so assume all columns are selected
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = '*';
         } else {
