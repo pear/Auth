@@ -22,14 +22,17 @@
 require_once "Auth/Container.php";
 require_once "PEAR.php";
 
-/*
+/**
  * Storage driver for fetching login data from an IMAP server
  *
  * This class is based on LDAP containers, but it very simple.
  * By default it connects to localhost:143 
  * The constructor will first check if the host:port combination is 
- * actually reachable.
+ * actually reachable. This behaviour can be disabled.
  * It then tries to create an IMAP stream (without opening a mailbox)
+ * If you wish to pass extended options to the connections, you may
+ * do so by specifying protocol options.
+ * 
  * To use this storage containers, you have to use the
  * following syntax:
  *
@@ -42,9 +45,25 @@ require_once "PEAR.php";
  * $myAuth = new Auth('IMAP', $params);
  * ....
  * 
-/**
+ * By default we connect without any protocol options set. However, some 
+ * servers require you to connect with the notls or norsh options set.
+ * To do this you need to add the following value to the params array:
+ * 'baseDSN'   => '/imap/notls/norsh'
  *
- * @author   Jeroen Houben <jeroen@terena.nl>
+ * To connect to an SSL IMAP server:
+ * 'baseDSN'   => '/imap/ssl'
+ *
+ * To connect to an SSL IMAP server with a self-signed certificate:
+ * 'baseDSN'   => '/imap/ssl/novalidate-cert'
+ *
+ * Further options may be available and can be found on the php site at
+ * http://www.php.net/manual/function.imap-open.php
+ *
+ */
+
+/*
+ *
+ * @author   Jeroen Houben <jeroen@terena.nl>, Cipriano Groenendal <cipri@campai.nl>
  * @package  Auth
  * @version  $Revision$
  */
@@ -60,6 +79,7 @@ class Auth_Container_IMAP extends Auth_Container
      * Constructor of the container class
      *
      * @param  $params, associative hash with host,port,basedn and userattr key
+     * @param  $params, associative array with host, port, baseDSN, checkServer key.
      * @return object Returns an error object if something went wrong
      */
     function Auth_Container_IMAP($params)
@@ -74,8 +94,9 @@ class Auth_Container_IMAP extends Auth_Container
         if (is_array($params)) {
             $this->_parseOptions($params);
         }
-        
-        $this->_checkServer();
+        if ($this->options['checkServer']) {
+            $this->_checkServer($this->options['timeout']);
+        }
         return true;
     }
 
@@ -88,6 +109,9 @@ class Auth_Container_IMAP extends Auth_Container
     {
         $this->options['host'] = 'localhost';
         $this->options['port'] = 143;
+        $this->options['baseDSN'] = '';
+        $this->options['checkServer'] = true;
+        $this->options['timeout'] = 20;
     }
 
 
@@ -96,10 +120,10 @@ class Auth_Container_IMAP extends Auth_Container
      *
      * @access private
      */
-    function _checkServer($timeout=20) {
+    function _checkServer() {
         $fp = @fsockopen ($this->options['host'], $this->options['port'],
                           $errno, $errstr, $timeout);
-        if ($fp) {
+        if (is_resource($fp)) {
             @fclose($fp);
         } else {
             $message = "Error connecting to IMAP server "
@@ -131,8 +155,9 @@ class Auth_Container_IMAP extends Auth_Container
      */
     function fetchData($username, $password)
     {
-        $conn = @imap_open ('{'.$this->options['host'].':'.$this->options['port'].'}', $username, $password, OP_HALFOPEN);
-        if ($conn) {
+        $dsn = '{'.$this->options['host'].':'.$this->options['port'].$this->options['baseDSN'].'}';
+        $conn = @imap_open ($dsn, $username, $password, OP_HALFOPEN);
+        if (is_resource($conn)){
             $this->activeUser = $username;
             @imap_close($conn);
             return true;
