@@ -32,6 +32,12 @@ the login data:
       <email>jflemer@acm.jhu.edu</email>
       <role>developer</role>
     </maintainer>
+    <maintainer>
+      <user>yavo</user>
+      <name>Yavor Shahpasov</name>
+      <email>yavo@nicosia.com.cy</email>
+      <role>lead</role>
+    </maintainer>
   </maintainers>
   <release>
     <version>1.2.1</version>
