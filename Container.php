@@ -19,8 +19,6 @@
 // $Id$
 //
 
-define("AUTH_METHOD_NOT_SUPPORTED", -4);
-
 /**
  * Storage class for fetching login data
  *
@@ -37,8 +35,6 @@ class Auth_Container
      */
     var $activeUser = "";
 
-    // {{{ Constructor
-
     /**
      * Constructor
      *
@@ -46,12 +42,8 @@ class Auth_Container
      *
      * @access public
      */
-    function Auth_Container()
-    {
+    function Auth_Container() {
     }
-
-    // }}}
-    // {{{ fetchData()
 
     /**
      * Fetch data from storage container
@@ -60,8 +52,7 @@ class Auth_Container
      *
      * @access public
      */
-    function fetchData() 
-    {
+    function fetchData() {
     }
 
     // }}}
@@ -105,14 +96,10 @@ class Auth_Container
         }
     }
 
-    // }}}
-    // {{{ listUsers()
-
     /**
      * List all users that are available from the storage container
      */
-    function listUsers()
-    {
+    function listUsers() {
         return AUTH_METHOD_NOT_SUPPORTED;
     }
 
@@ -123,8 +110,7 @@ class Auth_Container
      *
      * @param string The username
      */
-    function getUser($username)
-    {
+    function getUser($username) {
         $users = $this->listUsers();
         if ($users === AUTH_METHOD_NOT_SUPPORTED) {
             return AUTH_METHOD_NOT_SUPPORTED;
@@ -138,9 +124,6 @@ class Auth_Container
         
     }
 
-    // }}}
-    // {{{ addUser()
-
     /**
      * Add a new user to the storage container
      *
@@ -150,28 +133,18 @@ class Auth_Container
      *
      * @return boolean
      */
-    function addUser($username, $password, $additional=null)
-    {
+    function addUser($username, $password, $additional=null) {
         return AUTH_METHOD_NOT_SUPPORTED;
     }
-
-    // }}}
-    // {{{ removeUser()
 
     /**
      * Remove user from the storage container
      *
      * @param string Username
      */
-    function removeUser($username)
-    {
+    function removeUser($username) {
         return AUTH_METHOD_NOT_SUPPORTED;
     }
-
-    // }}}
-
-
-    // {{{ changePassword()
 
     /**
      * Change password for user in the storage container
@@ -179,12 +152,9 @@ class Auth_Container
      * @param string Username
      * @param string The new password
      */
-    function changePassword($username, $password)
-    {
+    function changePassword($username, $password) {
         return AUTH_METHOD_NOT_SUPPORTED;
     }
-
-    // }}}
 
 }
 ?>
