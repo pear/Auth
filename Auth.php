@@ -21,128 +21,22 @@
 
 require_once "PEAR.php";
 
+define("AUTH_IDLED",       -1);
+define("AUTH_EXPIRED",     -2);
+define("AUTH_WRONG_LOGIN", -3);
+define("AUTH_USER_NOBODY", "nobody");
+
 /**
  * PEAR::Auth
  *
  * The PEAR::Auth class provides methods for creating an
  * authentication system using PHP.
  *
- * The constructor accepts these parameters:
- *
- *   Auth( string $storageDriver, mixed $options, 
- *         string $loginFunction, bool $showLogin )
- *
- *      $storageDriver  : Storage driver for user data 
- *                        (currently only DB is supported)
- *
- *      $options        : Either a valid dsn or an array of this form: 
- *                        array ( 
- *                            'table'         => $table_with_userdata,
- *                            'usernamecol'   => $column_with_username,
- *                            'passwordcol'   => $column_with_md5_pw
- *                        )
- *
- *      $loginFunction  : The name of a user defined function which draws
- *                        the login form (see drawLogin() for an example)
- *                        (optional, ignored if empty)
- *
- *      $showLogin      : Define if the login form should be displayed
- *                        if the user hasn't logged in already.
- *                        (optional, default: true)
- *                                  
- * Usage example:
- *
- *    require_once "Auth/Auth.php";
- *
- *    // We use a MySQL as storage container in this example
- *    $a = new Auth("DB","mysql://martin:test@example.com/test");
- *
- *    // Detect, if the user is already logged in. If not, draw the
- *    // login form.
- *    $a->start();
- *
- *    if ($a->getAuth()) {
- *        echo "Welcome user ".$a->getUsername()."!<br />\n";
- *        // output the content of your site, that is only visible
- *        // for users which have been authenticated successfully.
- *    }
- *
- *
- * Advanced example:
- *
- *  Set up the Auth class in an auto_prepend file like this:
- *
- *    require_once "Auth/Auth.php";
- *
- *    // define dsn
- *    $dsn = "mysql://martin:test@example.com/test";
- *  
- *    // set options
- *    $options = array(
- *      'table'         => 'myuser',
- *      'usernamecol'   => 'userlogin',
- *      'passwordcol'   => 'cryptpassword',
- *      'dsn'           => $dsn
- *    );
- *
- *    // define login form function
- *    function myloginform( $username )
- *    {
- *      // see drawLogin for an example
- *    }
- *
- *    // create auth object
- *    $myauth = new Auth('DB', $options, 'myloginform', true);
- *
- *  You can now use the $myauth object on all your pages like 
- *  in the example above:
- *
- *    // start auth session
- *    $myauth->start();
- *
- *    if ($myauth->getAuth()) {
- *        // user has logged in 
- *    }
- *
- *  If you only want to check, if a user has logged in without
- *  displaying the login form,  use setShowLogin() before you 
- *  call $myauth->start() on your page:
- *
- *    // disable display of login form
- *    $myauth->setShowLogin( false );
- * 
- *    // start auth session
- *    $myauth->start();
- *
- *    if ($myauth->getAuth()) {
- *        // user has logged in 
- *    } else {
- *        // user has not logged in and NO login 
- *        // is displayed.
- *    }
- *
- *  To logout a user and redisplay the login form use a construct
- *  like this:
- *
- *    $myauth->start();
- *
- *    if ( $action == 'logout' ) {
- *        $myauth->logout();
- *        $myauth->start();
- *    }
- *
  * @author  Martin Jansen <mj@php.net>
  * @package Auth
  * @version $Revision$
  */
-
-define("AUTH_IDLED",       -1);
-define("AUTH_EXPIRED",     -2);
-define("AUTH_WRONG_LOGIN", -3);
-define("AUTH_USER_NOBODY", "nobody");
-
-class Auth
-{
+class Auth {
 
     /**
      * Auth lifetime in seconds
