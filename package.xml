@@ -47,6 +47,8 @@ the login data:
     <state>beta</state>
     <notes>
 <![CDATA[
+* Moved login screen generation code to Auth/Frontend/Html.php 
+  In the future the frontend will be configurable.
 * Implemented support for Challenge / Responce password authenthication, currently will work only with DB container and 
   cryptType = none|md5
 * Implemented setAllowLogin to control which pages are allowed to perform login, 
