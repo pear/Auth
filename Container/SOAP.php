@@ -100,6 +100,13 @@ class Auth_Container_SOAP extends Auth_Container
      var $soapResponse = array();
 
     /**
+     * The SOAP client
+     * @var mixed
+     * @access public
+     */
+     var $soapClient = null;
+
+    /**
      * Constructor of the container class
      *
      * @param  $options, associative array with endpoint, namespace, method,
@@ -134,8 +141,16 @@ class Auth_Container_SOAP extends Auth_Container
             return false;
         } else {
             // create a SOAP client and set encoding
-            $soapClient = new SOAP_Client($this->_options['endpoint']);
-            $soapClient->setEncoding($this->_options['encoding']);
+            $this->soapClient = new SOAP_Client($this->_options['endpoint']);
+            $this->soapClient->setEncoding($this->_options['encoding']);
+        }
+        // set the trace option if requested
+        if (isset($this->_options['trace'])) {
+            $this->soapClient->__options['trace'] = true;
+        }
+        // set the timeout option if requested
+        if (isset($this->_options['timeout'])) {
+            $this->soapClient->__options['timeout'] = $this->_options['timeout'];
         }
         // assign username and password fields
         $usernameField = new SOAP_Value($this->_options['usernamefield'],'string', $username);
@@ -146,7 +161,7 @@ class Auth_Container_SOAP extends Auth_Container
             $SOAPParams[] = new SOAP_Value($fieldName, 'string', $fieldValue);
         }
         // make SOAP call
-        $this->soapResponse = $soapClient->call(
+        $this->soapResponse = $this->soapClient->call(
                                   $this->_options['method'],
                                   $SOAPParams,
                                   array('namespace' => $this->_options['namespace'])

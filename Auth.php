@@ -244,7 +244,14 @@ class Auth {
         $this->applyAuthOptions($options);
 
         // Start the session suppress error if already started
-        @session_start();
+        if(!session_id()){
+            @session_start();
+            if(!session_id()) {
+                // Throw error
+                include_once 'PEAR.php';
+                PEAR::throwError('Session could not be started by Auth, possibly headers are already sent, try putting ob_start in the begninig of your script');
+            }
+        }
 
         // Make Sure Auth session variable is there
         if( !isset($_SESSION[$this->_sessionName]) && !isset($GLOBALS['HTTP_SESSION_VARS'][$this->_sessionName]) ) {
@@ -405,7 +412,9 @@ class Auth {
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (is_callable($this->loginCallback)) {
-                call_user_func_array($this->loginCallback, array($this->username, &$this) );
+                call_user_func($this->loginCallback, $this->username, $this);
+                #$method = $this->loginCallback;
+                #$this->$method($this->username, $this);
             }
         }
 
@@ -416,17 +425,21 @@ class Auth {
         if (!empty($this->username) && !$login_ok) {
             $this->status = AUTH_WRONG_LOGIN;
             if (is_callable($this->loginFailedCallback)) {
-                call_user_func_array($this->loginFailedCallback, array($this->username, &$this) );
+                call_user_func_array($this->loginFailedCallback, $this->username, $this);
+                #$method = $this->loginFailedCallback;
+                #$this->$method($this->username, $this->status, $this);
             }
         }
 
         if ((empty($this->username) || !$login_ok) && $this->showLogin) {
             if (is_callable($this->loginFunction)) {
-                call_user_func_array($this->loginFunction, array($this->username, $this->status, &$this) );
+                call_user_func($this->loginFunction, $this->username, $this->status, $this);
+                #$method = $this->loginFunction;
+                #$this->$method($this->username, $this->status, $this);
             } else {
                 // BC fix Auth used to use drawLogin for this
                 // call is sub classes implement this
-                if(is_callable(array(&$this, 'drawLogin'))) {
+                if(is_callable(array($this, 'drawLogin'))) {
                     return $this->drawLogin($this->username, $this);
                 }
 
@@ -572,11 +585,14 @@ class Auth {
     function getAuthData($name = null) {
         if (!isset($this->session['data'])) {
             return null;
+        }    
+        if(!isset($name)) {
+            return $this->session['data'];
         }
-        if (!is_null($name)) {
+        if (isset($name) && isset($this->session['data'][$name])) {
             return $this->session['data'][$name];
         }
-        return $this->session['data'];
+        return null;        
     }
 
     /**
@@ -588,6 +604,10 @@ class Auth {
      * @access public
      */
     function setAuth($username) {
+    
+        // #2021 - Change the session id to avoid session fixation attacks php 4.3.3 > 
+        session_regenerate_id();
+
         if (!isset($this->session) || !is_array($this->session)) {
             $this->session = array();
         }
@@ -744,7 +764,9 @@ class Auth {
      */
     function logout() {
         if (is_callable($this->logoutCallback)) {
-            call_user_func_array($this->logoutCallback, array($this->session['username'], &$this) );
+            call_user_func($this->logoutCallback, $this->session['username'], $this );
+            #$method = $this->logoutCallback;
+            #$this->$method($this->session['username'], $this);
         }
 
         $this->username = '';

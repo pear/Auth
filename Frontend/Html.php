@@ -60,12 +60,11 @@ class Auth_Frontend_Html {
         } else if (!empty ($caller->status) && $caller->status == AUTH_SECURITY_BREACH) {
             $status = '<i>Security problem detected. </i>'."\n";
         }
-        #PEAR::raiseError('You are using the built-in login screen of PEAR::Auth.<br />See the <a href="http://pear.php.net/manual/">manual</a> for details on how to create your own login function.', null);
-
+        
         echo '<form method="post" action="'.$caller->server['PHP_SELF'].'" onSubmit="'.$loginOnClick.'">'."\n";
-        echo '<table border="0" cellpadding="2" cellspacing="0" summary="login form">'."\n";
+        echo '<table border="0" cellpadding="2" cellspacing="0" summary="login form" align="center" >'."\n";
         echo '<tr>'."\n";
-        echo '    <td colspan="2" bgcolor="#eeeeee"><b>Login </b>'.$status.'</td>'."\n";
+        echo '    <td colspan="2" bgcolor="#eeeeee"><strong>Login </strong>'.$status.'</td>'."\n";
         echo '</tr>'."\n";
         echo '<tr>'."\n";
         echo '    <td>Username:</td>'."\n";
@@ -82,9 +81,8 @@ class Auth_Frontend_Html {
         echo '</tr>'."\n";
         echo '</table>'."\n";
         // Might be a good idea to make the variable name variable 
-        echo '<input type="hidden" id="authsecret" name="authsecret" value="">';
+        echo '<input type="hidden" id="authsecret" name="authsecret" value="" />';
         echo '</form>'."\n";
-        echo '</center>'."\n\n";
     }
     
 }
