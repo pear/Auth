@@ -82,7 +82,7 @@ require_once "PEAR.php";
  *      'table'         => 'myuser',
  *      'usernamecol'   => 'userlogin',
  *      'passwordcol'   => 'cryptpassword',
- *      'dns'           => $dsn
+ *      'dsn'           => $dsn
  *    );
  *
  *    // define login form function
