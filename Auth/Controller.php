@@ -16,7 +16,7 @@ class Auth_Controller {
       *
       * @todo Add a list of urls which need redirection
       */
-    function Auth_Controller($auth_obj, $login='login.php', $default='index.php', $accessList=array()){
+    function Auth_Controller(&$auth_obj, $login='login.php', $default='index.php', $accessList=array()) {
         #print $auth_obj;
         $this->auth =& $auth_obj;
         $this->_loginPage = $login;
@@ -25,7 +25,7 @@ class Auth_Controller {
         
         
         @session_start();
-        if($_GET['return'] && !strstr($_GET['return'], $this->_loginPage)){
+        if($_GET['return'] && !strstr($_GET['return'], $this->_loginPage)) {
             print "Return: {$_GET['return']} <br/>";
             $this->auth->setAuthData('returnUrl', $_GET['return']);
         }
@@ -36,24 +36,24 @@ class Auth_Controller {
     /**
       * Redirects Back to the calling page
       */
-    function redirectBack(){
+    function redirectBack() {
         // If redirectback go there
         // else go to the default page
         
         $returnUrl = $this->auth->getAuthData('returnUrl');
-        if(!$returnUrl){
+        if(!$returnUrl) {
             $returnUrl = $this->_defaultPage;
         }
         
         // Add some entropy to the return to make it unique
         // avoind problems with cached pages and proxies
-        if(strpos($returnUrl, '?') === false){
+        if(strpos($returnUrl, '?') === false) {
             $returnUrl .= '?';
         }
         $returnUrl .= uniqid('');
         
         header('Location:'.$returnUrl);
-        die("You could not be redirected to <a href=\"$returnUrl\">$returnUrl</a>");
+        print("You could not be redirected to <a href=\"$returnUrl\">$returnUrl</a>");
     }
     
     /**
@@ -62,14 +62,14 @@ class Auth_Controller {
       * 
       * put return page on the query or in auth
       */
-    function redirectLogin(){
+    function redirectLogin() {
         // Go to the login Page
         
         // For Auth, put some check to avoid infinite redirects, this should at least exclude
         // the login page
         
         $url = $this->_loginPage;
-        if(strpos($url, '?') === false){
+        if(strpos($url, '?') === false) {
             $url .= '?';
         }
 
@@ -77,18 +77,18 @@ class Auth_Controller {
             $url .= 'return='.urlencode($_SERVER['PHP_SELF']);
         }
         header('Location:'.$url);
-        die("You could not be redirected to <a href=\"$url\">$url</a>");
+        print("You could not be redirected to <a href=\"$url\">$url</a>");
     }
     
     
-    function start(){
+    function start() {
         // Check the accessList here
-        if(!$this->auth->checkAuth()){
+        if(!$this->auth->checkAuth()) {
             $this->redirectLogin();
         }
     }
     
-    function isAuthorised(){
+    function isAuthorised() {
         return($this->auth->checkAuth());
     }
 }
