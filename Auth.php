@@ -55,7 +55,7 @@ require_once "PEAR.php";
  *    require_once "Auth/Auth.php";
  *
  *    // We use a MySQL as storage container in this example
- *    $a = new Auth("DB","mysql://martin:test@localhost/test");
+ *    $a = new Auth("DB","mysql://martin:test@example.com/test");
  *
  *    // Detect, if the user is already logged in. If not, draw the
  *    // login form.
@@ -75,7 +75,7 @@ require_once "PEAR.php";
  *    require_once "Auth/Auth.php";
  *
  *    // define dsn
- *    $dsn = "mysql://martin:test@localhost/test";
+ *    $dsn = "mysql://martin:test@example.com/test";
  *  
  *    // set options
  *    $options = array(
