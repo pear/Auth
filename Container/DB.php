@@ -240,31 +240,28 @@ class Auth_Container_DB extends Auth_Container
 
         if (DB::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->getCode(), PEAR_ERROR_DIE);
-        } else {
-            if (is_array($res)) {
-                if ($this->verifyPassword(trim($password), 
-                                          trim($res[$this->options['passwordcol']]),
-                                          $this->options['cryptType']))
-                {
-                    // Store additional field values in the session
-                    foreach ($res as $key => $value) {
-                        if ($key == $this->options['passwordcol'] ||
-                            $key == $this->options['usernamecol']) {
-                            continue;
-                        }
-                        Auth::setAuthData($key, $value);
-                    }
-
-                    return true;
-                } else {
-                    $this->activeUser = $res[$this->options['usernamecol']];
-                    return false;
-                }
-            } else {
-                $this->activeUser = "";
-                return false;
-            }
         }
+        if (!is_array($res)) {
+            $this->activeUser = "";
+            return false;
+        }
+        if ($this->verifyPassword(trim($password), 
+                                  trim($res[$this->options['passwordcol']]),
+                                  $this->options['cryptType'])) {
+            // Store additional field values in the session
+            foreach ($res as $key => $value) {
+                if ($key == $this->options['passwordcol'] ||
+                    $key == $this->options['usernamecol']) {
+                    continue;
+                }
+                Auth::setAuthData($key, $value);
+            }
+
+            return true;
+        }
+
+        $this->activeUser = $res[$this->options['usernamecol']];
+        return false;
     }
 
     // }}}
