@@ -34,7 +34,7 @@ require_once "DB.php";
  */
 class Auth_Container_DB extends Auth_Container
 {
-        
+
     /**
      * Additional options for the storage container
      * @var array
@@ -55,7 +55,7 @@ class Auth_Container_DB extends Auth_Container
      * Initate connection to the database via PEAR::DB
      *
      * @param  $dsn   string connection data or DB object
-     * @return object Returns an error object if something went wrong 
+     * @return object Returns an error object if something went wrong
      */
     function Auth_Container_DB($dsn)
     {
@@ -84,10 +84,10 @@ class Auth_Container_DB extends Auth_Container
         }
 
         else {
-            return new PEAR_Error("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__, 
-                                  41, 
-                                  PEAR_ERROR_RETURN, 
-                                  null, 
+            return new PEAR_Error("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__,
+                                  41,
+                                  PEAR_ERROR_RETURN,
+                                  null,
                                   null
                                   );
         }
@@ -107,7 +107,7 @@ class Auth_Container_DB extends Auth_Container
     {
         $this->db = DB::Connect($dsn);
 
-        if (DB::isError($this->db)) {               
+        if (DB::isError($this->db)) {
             return new DB_Error($this->db->code, PEAR_ERROR_DIE);
         } else {
             return true;
@@ -164,9 +164,9 @@ class Auth_Container_DB extends Auth_Container
      * @param   string Password
      * @return  mixed  Error object or boolean
      */
-    function fetchData($username, $password) 
-    {       
-        $query = sprintf("SELECT %s FROM %s 
+    function fetchData($username, $password)
+    {
+        $query = sprintf("SELECT %s FROM %s
                              WHERE %s = '%s'
                              AND %s = '%s'",
                          $this->options['usernamecol'],
@@ -178,7 +178,7 @@ class Auth_Container_DB extends Auth_Container
                          );
 
         $res = $this->db->query($query);
-        
+
         if (DB::isError($res)) {
             return new DB_Error($res->code, PEAR_ERROR_DIE);
         } else {
@@ -192,7 +192,7 @@ class Auth_Container_DB extends Auth_Container
             } else {
                 return false;
             }
-        }    
+        }
     }
 
     // }}}
