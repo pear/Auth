@@ -143,7 +143,8 @@ class Auth_Container_RADIUS extends Auth_Container
         }
 
         $this->radius->getAttributes();
-        $this->radius->dumpAttributes();
+//      just for debugging
+//      $this->radius->dumpAttributes();
         
         return $result;
     }
