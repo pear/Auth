@@ -76,7 +76,7 @@ class Auth_Container_LDAP extends Auth_Container
      * @param  $params, associative hash with host,port,base and userattr key
      * @return object Returns an error object if something went wrong
      */
-    function Auth_Container_Ldap($params)
+    function Auth_Container_LDAP($params)
     {
         $this->_setDefaults();
 
@@ -151,6 +151,7 @@ class Auth_Container_LDAP extends Auth_Container
         if (($result_id = @ldap_search($this->conn_id,$this->options['basedn'],$this->options['userattr']."=".$username)) == false) {
             return new PEAR_Error("Error searching LDAP.", 41, PEAR_ERROR_DIE);
         }
+
         // did we get just one entry?
         if (ldap_count_entries($this->conn_id, $result_id) == 1) {
 
@@ -165,6 +166,7 @@ class Auth_Container_LDAP extends Auth_Container
                 return true;
             }
         }
+
         // default
         return false;
     }
