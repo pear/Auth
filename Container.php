@@ -37,7 +37,7 @@ class Auth_Container
      *
      * @access public
      */
-    function Auth_Container() 
+    function Auth_Container()
     {
     }
 
