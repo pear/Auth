@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!-- do not use the "Type" attribute here, that one is only for
      generated package.xml files -->
-<Package>
-  <Name>Auth</Name>
-  <Summary>The PEAR::Auth class provides methods for creating an authentication system using PHP.</Summary>
-  <Maintainer>
-    <Initials>MJ</Initials>
-    <Name>Martin Jansen</Name>
-    <Email>mj@php.net</Email>
-  </Maintainer>
-  <Release>
-    <Version>0.1</Version>
-    <Date>2001-07-11</Date>
-    <Notes>
+<package>
+  <name>Auth</name>
+  <summary>The PEAR::Auth class provides methods for creating an authentication system using PHP.</summary>
+  <maintainer>
+    <initials>MJ</initials>
+    <name>Martin Jansen</name>
+    <email>mj@php.net</email>
+  </maintainer>
+  <release>
+    <version>0.1</version>
+    <date>2001-07-11</date>
+    <notes>
       This is the initial independent release of the Auth package.
-    </Notes>
-  </Release>
+    </notes>
+  </release>
 
-  <Release>
-    <Version>0.2</Version>
-    <Date>2001-07-22</Date>
-    <Notes>
+  <release>
+    <version>0.2</version>
+    <date>2001-07-22</date>
+    <notes>
       Improved a bunch of things:
       
       *  Renamed some internal functions to be more compliant
@@ -31,16 +31,16 @@
       *  Added maximum idle time, which is (unlike expire
          time) refreshed on every request.
       *  Improved behaviour of Container/DB.php
-    </Notes>
-  </Release>
+    </notes>
+  </release>
 
-  <FileList>
-    <Dir Name="/" BaseInstallDir="Auth">
-        <File Role="php">Auth.php</File>
-        <File Role="php">Container.php</File>    
-        <Dir Name="Container">
-            <File Role="php">DB.php</File>
-        </Dir>
-    </Dir>
-  </FileList>
-</Package>
+  <filelist>
+    <dir name="/" baseinstalldir="Auth">
+        <file role="php">Auth.php</file>
+        <file role="php">Container.php</file>    
+        <dir name="Container">
+            <file role="php">DB.php</file>
+        </dir>
+    </dir>
+  </filelist>
+</package>
