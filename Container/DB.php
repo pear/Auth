@@ -236,7 +236,12 @@ class Auth_Container_DB extends Auth_Container
         else{
             $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
         }
-
+        /**
+         Old Style, removed to go around the oci8 
+         problem 
+         See bug 206
+         http://pear.php.net/bugs/bug.php?id=206
+         
         $query = "SELECT ! FROM ! WHERE ! = ?";
         $query_params = array(
                          $sql_from,
@@ -244,7 +249,13 @@ class Auth_Container_DB extends Auth_Container
                          $this->options['usernamecol'],
                          $username
                          );
-        $res = $this->db->getRow($query, $query_params, DB_FETCHMODE_ASSOC);
+        */
+        
+        $query = "SELECT ".$sql_from.
+                " FROM ".$this->options['table'].
+                " WHERE ".$this->options['usernamecol']." = '".$this->db->quoteString($username)."'";
+        
+        $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->getCode());
