@@ -93,6 +93,13 @@ class Auth_Container_SOAP extends Auth_Container
     var $_features = array();
 
     /**
+     * The SOAP response
+     * @var array
+     * @access public
+     */
+     var $soapResponse = array();
+
+    /**
      * Constructor of the container class
      *
      * @param  $options, associative array with endpoint, namespace, method,
@@ -139,15 +146,15 @@ class Auth_Container_SOAP extends Auth_Container
             $SOAPParams[] = new SOAP_Value($fieldName, 'string', $fieldValue);
         }
         // make SOAP call
-        $soapResponse = $soapClient->call(
-                                          $this->_options['method'],
-                                          $SOAPParams,
-                                          array('namespace' => $this->_options['namespace'])
-                                         );
-        if (!PEAR::isError($soapResponse)) {
+        $this->soapResponse = $soapClient->call(
+                                  $this->_options['method'],
+                                  $SOAPParams,
+                                  array('namespace' => $this->_options['namespace'])
+                                               );
+        if (!PEAR::isError($this->soapResponse)) {
             if ($this->_options['matchpasswords']) {
                 // check if passwords match
-                if ($password == $soapResponse->{$this->_options['passwordfield']}) {
+                if ($password == $this->soapResponse->{$this->_options['passwordfield']}) {
                     return true;
                 } else {
                     return false;
