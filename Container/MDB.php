@@ -13,7 +13,7 @@
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Author: Lorenzo Alberton <l.alberton@quipo.it>                                  |
+// | Author: Lorenzo Alberton <l.alberton@quipo.it>                       |
 // +----------------------------------------------------------------------+
 //
 // $Id$
@@ -42,7 +42,7 @@ class Auth_Container_MDB extends Auth_Container
     var $options = array();
 
     /**
-     * DB object
+     * MDB object
      * @var object
      */
     var $db = null;
@@ -59,9 +59,9 @@ class Auth_Container_MDB extends Auth_Container
     /**
      * Constructor of the container class
      *
-     * Initate connection to the database via PEAR::DB
+     * Initate connection to the database via PEAR::MDB
      *
-     * @param  string Connection data or DB object
+     * @param  string Connection data or MDB object
      * @return object Returns an error object if something went wrong
      */
     function Auth_Container_MDB($dsn)
@@ -85,7 +85,7 @@ class Auth_Container_MDB extends Auth_Container
      * Connect to database by using the given DSN string
      *
      * @access private
-     * @param  string DSN string
+     * @param  mixed DSN string | array | mdb object
      * @return mixed  Object on error, otherwise bool
      */
     function _connect($dsn)
@@ -108,9 +108,8 @@ class Auth_Container_MDB extends Auth_Container
 
         if (MDB::isError($this->db) || PEAR::isError($this->db)) {
             return PEAR::raiseError($this->db->getMessage(), $this->db->code);
-        } else {
-            return true;
         }
+        return true;
     }
 
     // }}}
@@ -123,7 +122,7 @@ class Auth_Container_MDB extends Auth_Container
      * the database. If that's not the case, a new connection is opened.
      *
      * @access private
-     * @return mixed True or a DB error object.
+     * @return mixed True or a MDB error object.
      */
     function _prepare()
     {
@@ -197,7 +196,6 @@ class Auth_Container_MDB extends Auth_Container
             }
             $this->options['db_fields'] = ', ' . $this->options['db_fields'];
         }
-
     }
 
     // }}}
@@ -275,6 +273,9 @@ class Auth_Container_MDB extends Auth_Container
     // }}}
     // {{{ listUsers()
 
+    /**
+     * @return array
+     */
     function listUsers()
     {
         $err = $this->_prepare();
@@ -324,7 +325,7 @@ class Auth_Container_MDB extends Auth_Container
      */
     function addUser($username, $password, $additional = "")
     {
-    
+
         if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
         } elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
@@ -332,7 +333,7 @@ class Auth_Container_MDB extends Auth_Container
         } else {
             $cryptFunction = 'md5';
         }
-        
+
         $additional_key   = '';
         $additional_value = '';
 
@@ -357,9 +358,8 @@ class Auth_Container_MDB extends Auth_Container
 
         if (MDB::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->code);
-        } else {
-            return true;
         }
+        return true;
     }
 
     // }}}
@@ -384,10 +384,9 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->query($query);
 
         if (MDB::isError($res)) {
-           return PEAR::raiseError($res->getMessage(), $res->code);
-        } else {
-          return true;
+            return PEAR::raiseError($res->getMessage(), $res->code);
         }
+        return true;
     }
 
     // }}}
@@ -396,8 +395,8 @@ class Auth_Container_MDB extends Auth_Container
     /**
      * Change password for user in the storage container
      *
-     * @param string Username
-     * @param string The new password 
+    * @param string Username
+     * @param string The new password
      */
     function changePassword($username, $password)
     {
@@ -408,23 +407,23 @@ class Auth_Container_MDB extends Auth_Container
         } else {
             $cryptFunction = 'md5';
         }
-        
+
         $query = sprintf("UPDATE %s SET %s = %s WHERE %s = %s",
                          $this->options['table'],
                          $this->options['passwordcol'],
-                         $password,
+                         $this->db->getTextValue($password),
                          $this->options['usernamecol'],
-                         $username
+                         $this->db->getTextValue($username)
                          );
 
         $res = $this->query($query);
 
         if (MDB::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->code);
-        } else {
-            return true;
         }
+        return true;
     }
+
     // }}}
 
 }
