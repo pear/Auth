@@ -35,6 +35,7 @@ the login data:
     <state>stable</state>
     <notes>
 <![CDATA[
+* Fixed code in error handling logic.
 * Added new storage container that uses vpopmail to authenticate
   users. This feature has been implemented by Stanislav Grozev
   (<tacho@orbitel.bg>).
