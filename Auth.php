@@ -238,12 +238,6 @@ class Auth {
         // this is used by the DB container to use method setAuthData not staticaly.
         $this->storage->_auth_obj =& $this;
         
-        $this->authdata['get'] =& $_GET;
-        $this->authdata['get'] =& $_GET;
-        $this->authdata['get'] =& $_GET;
-        $this->authdata['get'] =& $_GET;
-        $this->authdata['get'] =& $_GET;
-        
     }
 
     // }}}
