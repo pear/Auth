@@ -4,6 +4,7 @@ include_once('Auth/Auth.php');
 include('TestAuthContainer.php');
 include('FileContainer.php');
 include('DBContainer.php');
+include('MDBContainer.php');
 include('POP3Container.php');
 include('POP3aContainer.php');
 include_once('PHPUnit.php');
@@ -15,7 +16,7 @@ function error($err){
     print "Message:".trim($err->getMessage())."\n";
     #print "UserInfo:".trim($err->getUserInfo())."\n";
     #print "DebugInfo:".trim($err->getDebugInfo())."\n";
-    
+
 }
 
 #error_reporting(0);
@@ -31,6 +32,8 @@ $suite->addTest(new PHPUnit_TestSuite('FileContaner'));
 // DB Container
 $suite->addTest(new PHPUnit_TestSuite('DBContainer'));
 #$suite->addTest(new DBContainer('testListUsers'));
+// MDB Container
+$suite->addTest(new PHPUnit_TestSuite('MDBContainer'));
 // POP3 Container
 $suite->addTest(new PHPUnit_TestSuite('POP3Container'));
 // POP3a Container classing passing the constructor options as a string
