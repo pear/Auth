@@ -41,28 +41,12 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.3.0r3</version>
-    <date>2004-08-07</date>
+    <version>1.3.X</version>
+    <date>2005-01-17</date>
     <license>PHP License</license>
     <state>beta</state>
     <notes>
 <![CDATA[
-* Moved login screen generation code to Auth/Frontend/Html.php 
-  In the future the frontend will be configurable.
-* Implemented support for Challenge / Responce password authenthication
-  have to enable advanced security $auth->setAdvancedSecurity
-  will work only with DB container and cryptType = none|md5
-* Implemented setAllowLogin to control which pages are allowed to perform login, 
-  to preservce BC. Previusly the showLogin flag was used to control this - yavo
-* Implmented lazy loading for the storage constructor, constructor is only created when needed
-  to make Auth more lightweight (this might be adding a bit more overhead to login and usermanagement functions)
-* Removed include of PEAR, was not used anywhare in Auth.php
-* Created a new storage container DBLite same as DB but with the user manipulation functions removed (50% smaller)
-* Added a new method staticCheckAuth which can be called statically with only the auth options
-* Auth::importGlobalVariable method was removed and replaced by references to global variables
-* Removed all calls to $session[$this->_sessionName], made local reference session point to that instead
-* Changed call_user_func to call_user_func_array for the callbacks, to avoid using @ for passing variables by reference
-* Code Cleanup, removed most vi comments
 * Fixed Bug #3101: Wrong variable names in Auth/Container/File.php (mike)
 ]]>
     </notes>
@@ -132,6 +116,32 @@ the login data:
   </release>
 
     <changelog>
+    <release>
+      <version>1.3.0r3</version>
+      <date>2004-08-07</date>
+      <license>PHP License</license>
+      <state>beta</state>
+      <notes>
+<![CDATA[
+* Moved login screen generation code to Auth/Frontend/Html.php 
+  In the future the frontend will be configurable.
+* Implemented support for Challenge / Responce password authenthication
+  have to enable advanced security $auth->setAdvancedSecurity
+  will work only with DB container and cryptType = none|md5
+* Implemented setAllowLogin to control which pages are allowed to perform login, 
+  to preservce BC. Previusly the showLogin flag was used to control this - yavo
+* Implmented lazy loading for the storage constructor, constructor is only created when needed
+  to make Auth more lightweight (this might be adding a bit more overhead to login and usermanagement functions)
+* Removed include of PEAR, was not used anywhare in Auth.php
+* Created a new storage container DBLite same as DB but with the user manipulation functions removed (50% smaller)
+* Added a new method staticCheckAuth which can be called statically with only the auth options
+* Auth::importGlobalVariable method was removed and replaced by references to global variables
+* Removed all calls to $session[$this->_sessionName], made local reference session point to that instead
+* Changed call_user_func to call_user_func_array for the callbacks, to avoid using @ for passing variables by reference
+* Code Cleanup, removed most vi comments
+]]>
+      </notes>
+    </release>
     <release>
         <version>1.3.0r1</version>
         <date>2004-06-04</date>
