@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP version 4.0                                                      |
 // +----------------------------------------------------------------------+
@@ -13,37 +13,41 @@
 // | obtain it through the world-wide-web, please send a note to          |
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
-// | Authors: Martin Jansen <mj@php.net>                                  |
+// | Authors: Stefan Ekman <stekman@sedata.org>                           |
+// |          Martin Jansen <mj@php.net>                                  |
 // +----------------------------------------------------------------------+
 //
 // $Id$
 //
 
+require_once "File/Passwd.php";
 require_once "Auth/Container.php";
 require_once "PEAR.php";
 
 /**
- * Storage driver for fetching login data from a textfile
+ * Storage driver for fetching login data from an encrypted password file.
  *
- * @author   Martin Jansen <mj@php.net>
+ * This storage container can handle Unix style passwd, .htaccess, and
+ * CVS pserver passwd files.
+ *
+ * @author   Stefan Ekman <stekman@sedata.net>
  * @package  Auth
  * @version  $Revision$
  */
 class Auth_Container_File extends Auth_Container
 {
-
     /**
-     * Content of the password file
-     * @var string
+     * File_Passwd object
+     * @var object
      */
-    var $content = "";
+    var $pwfile;
 
     // {{{ Constructor
 
     /**
      * Constructor of the container class
      *
-     * @param  $dsn   string connection data or DB object
+     * @param  $filename   string filename for a passwd type file
      * @return object Returns an error object if something went wrong
      */
     function Auth_Container_File($filename)
@@ -52,16 +56,18 @@ class Auth_Container_File extends Auth_Container
             return new PEAR_Error("Illegal filename.", 41, PEAR_ERROR_DIE);
         }
 
-        if (!$this->content = @file($filename)) {
+        if (!$this->pwfile = new File_Passwd($filename,0)) {
             return new PEAR_Error("Error while reading file contents.", 41, PEAR_ERROR_DIE);
         }
+
+        $this->pwfile->close();
     }
 
     // }}}
     // {{{ fetchData()
 
     /**
-     * Get user information from textfile
+     * Get user information from pwfile
      *
      * @param   string Username
      * @param   string Password
@@ -69,36 +75,13 @@ class Auth_Container_File extends Auth_Container
      */
     function fetchData($username, $password)
     {
-        foreach ($this->content as $value) {
-
-            list($file_username, $file_password) = explode(":", $value);
-
-            if ($file_username == $username) {
-
-                $file_password = trim($file_password);
-
-                switch (strlen($file_password)) {
-                    /**
-                     * MD5 encryption
-                     */
-                    case 32 : {
-                        $compare_password = md5($password);
-                        break;
-                    }
-
-                    default : {
-                        $compare_password = $password;
-                    }
-                }
-
-                if ($file_password == $compare_password) {
-                    Auth::setAuth($username);
-                    return true;
-                }
-            }
+        $result = $this->pwfile->verifyPassword($username, $password);
+        
+        if ($result) {
+            Auth::SetAuth($username);
         }
 
-        return false;
+        return $result;
     }
 
     // }}}
