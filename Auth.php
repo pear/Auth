@@ -521,8 +521,8 @@ class Auth
     {
         $session = &Auth::_importGlobalVariable("session");
 
-        if (isset($session['auth']['data'])) {
-            return $session['auth']['data'];
+        if (isset($session['auth'][$data])) {
+            return $session['auth'][$data];
         } else {
             return null;
         }        
