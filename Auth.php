@@ -390,21 +390,20 @@ class Auth {
      * in the session.
      *
      * @access public
-     * @param  mixed  Additional information. This parameter can
-     *                have any type (integer, string, array etc).
-     * @return mixed  Previous value.
+     * @param  string  Name of the data field
+     * @param  mixed   Value of the data field
+     * @param  boolean Should existing data be overwritten? (default 
+     *                 is true)
+     * @return void
      */
-    function setAuthData($data)
+    function setAuthData($name, $value, $overwrite = true)
     {
         $session = &Auth::_importGlobalVariable("session");
 
-        if (isset($session['auth']['data'])) {
-            $olddata = $session['auth']['data'];
-        } else {
-            $olddata = null;
+        if (!empty($session['auth']['data'][$name]) && $overwrite == false) {
+            return;
         }
-        $session['auth']['data'] = $data;
-        return $olddata;
+        $session['auth']['data'][$name] = $value;
     }
     
     // }}}
@@ -413,15 +412,22 @@ class Auth {
     /**
      * Get additional information that is stored in the session.
      *
+     * If no value for the first parameter is passed, the method will
+     * return all data that is currently stored.
+     *
      * @access public
-     * @return mixed  Additional information.
+     * @param  string Name of the data field
+     * @return mixed  Value of the data field.
      */
-    function getAuthData($data)
+    function getAuthData($name = null)
     {
         $session = &Auth::_importGlobalVariable("session");
 
-        if (isset($session['auth'][$data])) {
-            return $session['auth'][$data];
+        if (is_null($name)) {
+            return $session['auth']['data'];
+        }
+        if (isset($session['auth']['data'][$name])) {
+            return $session['auth'][$name];
         } else {
             return null;
         }        
@@ -436,13 +442,9 @@ class Auth {
      *
      * @access public
      * @param  string Username
-     * @param  mixed  [Deprecated] Additional information that
-     *                is stored in the session. This parameter
-     *                can have any type (integer, string, array
-     *                etc).
      * @return void
      */
-    function setAuth($username, $data = null)
+    function setAuth($username)
     {
         $session = &Auth::_importGlobalVariable("session");
 
@@ -454,14 +456,11 @@ class Auth {
             $session['auth'] = array();
         }
 
+        $session['auth']['data']       = array();
         $session['auth']['registered'] = true;
         $session['auth']['username']   = $username;
         $session['auth']['timestamp']  = time();
         $session['auth']['idle']       = time();
-
-        if (!empty($data)) {
-            Auth::setAuthData($data);
-        }
     }
     
     // }}}
