@@ -129,11 +129,11 @@ class Auth
             $this->loginFunction = $loginFunction;
         }
 
-        $this->storage = $this->_factory($storageDriver,$options);
+        $this->storage = $this->_factory($storageDriver, $options);
     }
 
     // }}}
-    // {{{ _factory
+    // {{{ _factory()
 
     /**
      * Return a storage driver based on $driver and $options
@@ -146,8 +146,8 @@ class Auth
      */
     function _factory($driver, $options = "")
     {
-        $storage_path = "Auth/Container/".$driver.".php";
-        $storage_class = "Auth_Container_".$driver;
+        $storage_path = "Auth/Container/" . $driver . ".php";
+        $storage_class = "Auth_Container_" . $driver;
 
         require_once $storage_path;
 
@@ -216,7 +216,7 @@ class Auth
          * we have to validate it.
          */
         if ($this->username != "") {
-            $login_ok = $this->storage->fetchData($this->username,$this->password);
+            $login_ok = $this->storage->fetchData($this->username, $this->password);
         }
 
         /**
@@ -243,7 +243,7 @@ class Auth
      * @param  integer time in seconds
      * @param  bool    add time to current expire time or not
      */
-    function setExpire($time,$add = false)
+    function setExpire($time, $add = false)
     {
         if ($add) {
             $this->expire += $time;

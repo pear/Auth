@@ -42,7 +42,7 @@ class Auth_Container
     }
 
     // }}}
-    // {{{ fetchData
+    // {{{ fetchData()
 
     /**
      * Fetch data from storage container

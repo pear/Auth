@@ -94,7 +94,7 @@ class Auth_Container_DB extends Auth_Container
     }
 
     // }}}
-    // {{{ _connect
+    // {{{ _connect()
 
     /**
      * Connect to database by using the given DSN string
@@ -115,7 +115,7 @@ class Auth_Container_DB extends Auth_Container
     }
 
     // }}}
-    // {{{ _setDefaults
+    // {{{ _setDefaults()
 
     /**
      * Set some default options
@@ -124,14 +124,14 @@ class Auth_Container_DB extends Auth_Container
      */
     function _setDefaults()
     {
-        $this->options['table'] = "auth";
+        $this->options['table']       = "auth";
         $this->options['usernamecol'] = "username";
         $this->options['passwordcol'] = "password";
-        $this->options['dsn'] = "";
+        $this->options['dsn']         = "";
     }
 
     // }}}
-    // {{{ _parseOptions
+    // {{{ _parseOptions()
 
     /**
      * Parse options passed to the container class
