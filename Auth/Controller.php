@@ -142,6 +142,7 @@ class Auth_Controller {
     function start() {
         // Check the accessList here
         // ACL should be a list of urls with allow/deny
+        // If allow set allowLogin to false
         // Some wild card matching should be implemented ?,*
         if(!strstr($_SERVER['PHP_SELF'], $this->_loginPage) && !$this->auth->checkAuth()) {
             $this->redirectLogin();
@@ -149,8 +150,6 @@ class Auth_Controller {
             $this->auth->start();
             // Logged on and on login page
             if(strstr($_SERVER['PHP_SELF'], $this->_loginPage) && $this->auth->checkAuth()){
-                // Should we call this here
-                // or in the login page manually
                 $this->autoRedirectBack ? 
                     $this->redirectBack() :
                     null ;
