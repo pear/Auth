@@ -175,7 +175,7 @@ class Auth_Container_DB extends Auth_Container
         $this->options['usernamecol'] = "username";
         $this->options['passwordcol'] = "password";
         $this->options['dsn']         = "";
-        $this->options['db_fields']   = "";
+        $this->options['db_fields']   = "*";
         $this->options['cryptType']   = "md5";
     }
 
@@ -286,6 +286,7 @@ class Auth_Container_DB extends Auth_Container
             return PEAR::raiseError($res->getMessage(), $res->getCode());
         } else {
             foreach ($res as $user) {
+                $user['username'] = $user[$this->options['usernamecol']];
                 $retVal[] = $user;
             }
         }
