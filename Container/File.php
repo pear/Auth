@@ -15,6 +15,7 @@
 // +----------------------------------------------------------------------+
 // | Authors: Stefan Ekman <stekman@sedata.org>                           |
 // |          Martin Jansen <mj@php.net>                                  |
+// |          Mika Tuupola <tuupola@appelsiini.net>                       |
 // +----------------------------------------------------------------------+
 //
 // $Id$
@@ -96,12 +97,63 @@ class Auth_Container_File extends Auth_Container
         }
 
         foreach ($users as $key => $value) {
-            $retVal[] = array("username" => $key, "password" => $value);
+            $cvsuser = $this->pwfile->getCvsUser($key);
+            $retVal[] = array("username" => $key, 
+                              "password" => $value,
+                              "cvsuser"  => $cvsuser);
         }
 
         return $retVal;
     }
 
     // }}}
+
+    /**
+     * Add a new user to the storage container
+     *
+     * @param string Username
+     * @param string Password
+     * @param mixed  CVS username
+     *
+     * @return boolean
+     */
+    function addUser($username, $password, $additional='')
+    {
+        if (!($this->pwfile->isLocked())) {
+            $this->pwfile->lock();
+        }
+
+        if (is_array($additional)) {
+            $cvsuser = $additional[cvsuser];
+        } else {
+            $cvsuser = $additional;
+        }
+
+        $retval = $this->pwfile->addUser($username, $password, $cvsuser);
+        $this->pwfile->close();
+
+        return($retval);
+    }
+
+    // }}}
+    // {{{ removeUser()
+
+    /**
+     * Remove user from the storage container
+     *
+     * @param string Username
+     */
+    function removeUser($username)
+    {
+        if (!($this->pwfile->isLocked())) {
+            $this->pwfile->lock();
+        }
+        $retval = $this->pwfile->delUser($username);  
+        $this->pwfile->close();
+        return($retval);
+    }
+
+    // }}}
+
 }
 ?>
