@@ -187,20 +187,20 @@ class Auth_Container_LDAP extends Auth_Container
             $conn_params = array($this->options['host'], $this->options['port']);
         }
 
-        if(($this->conn_id = @call_user_func_array('ldap_connect', $conn_params)) === false) {
+        if (($this->conn_id = @call_user_func_array('ldap_connect', $conn_params)) === false) {
             return PEAR::raiseError('Auth_Container_LDAP: Could not connect to server.', 41, PEAR_ERROR_DIE);
         }
         $this->_debug('Successfully connected to server', __LINE__);
 
         // try switchig to LDAPv3
         $ver = 0;
-        if(@ldap_get_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $ver) && $ver >= 2) {
+        if (@ldap_get_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $ver) && $ver >= 2) {
             $this->_debug('Switching to LDAPv3', __LINE__);
             @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, 3);
         }
 
         // bind with credentials or anonymously
-        if($this->options['binddn'] && $this->options['bindpw']) {
+        if ($this->options['binddn'] && $this->options['bindpw']) {
             $this->_debug('Binding with credentials', __LINE__);
             $bind_params = array($this->conn_id, $this->options['binddn'], $this->options['bindpw']);
         } else {
@@ -224,7 +224,7 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _disconnect() 
     {
-        if($this->_isValidLink()) {
+        if ($this->_isValidLink()) {
             $this->_debug('disconnecting from server');
             @ldap_unbind($this->conn_id);
         }
@@ -273,8 +273,8 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _isValidLink() 
     {
-        if(is_resource($this->conn_id)) {
-            if(get_resource_type($this->conn_id) == 'ldap link') {
+        if (is_resource($this->conn_id)) {
+            if (get_resource_type($this->conn_id) == 'ldap link') {
                 return true;
             }
         }
@@ -386,7 +386,7 @@ class Auth_Container_LDAP extends Auth_Container
                     $this->_debug('Bind successful', __LINE__);
 
                     // check group if appropiate
-                    if(isset($this->options['group'])) {
+                    if (isset($this->options['group'])) {
                         // decide whether memberattr value is a dn or the username
                         $this->_debug('Checking group membership', __LINE__);
                         return $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $username);
@@ -426,7 +426,7 @@ class Auth_Container_LDAP extends Auth_Container
 
         // make search base dn
         $search_basedn = $this->options['groupdn'];
-        if($search_basedn != '' && substr($search_basedn, -1) != ',') {
+        if ($search_basedn != '' && substr($search_basedn, -1) != ',') {
             $search_basedn .= ',';
         }
         $search_basedn .= $this->options['basedn'];
@@ -436,8 +436,8 @@ class Auth_Container_LDAP extends Auth_Container
         $this->_debug("Searching with $filter in $search_basedn", __LINE__);
         
         // search
-        if(($result_id = @call_user_func_array($this->ldap_search_func, $func_params)) != false) {
-            if(ldap_count_entries($this->conn_id, $result_id) == 1) {                
+        if (($result_id = @call_user_func_array($this->ldap_search_func, $func_params)) != false) {
+            if (ldap_count_entries($this->conn_id, $result_id) == 1) {                
                 ldap_free_result($result_id);
                 $this->_debug('User is member of group', __LINE__);
                 $this->_disconnect();
@@ -460,8 +460,8 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _debug($msg = '', $line = 0)
     {
-        if($this->options['debug'] === true) {
-            if($msg == '' && $this->_isValidLink()) {
+        if ($this->options['debug'] === true) {
+            if ($msg == '' && $this->_isValidLink()) {
                 $msg = 'LDAP_Error: ' . @ldap_err2str(@ldap_errno($this->_conn_id));
             }
             print("$line: $msg <br />");

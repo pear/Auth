@@ -57,23 +57,20 @@ class Auth_Container_POP3 extends Auth_Container
      */
     function Auth_Container_POP3($server=null)
     {
-        if(isset($server)){
-            if(is_array($server)){
-                if(isset($server['host'])){
+        if (isset($server)) {
+            if (is_array($server)) {
+                if (isset($server['host'])) {
                     $this->server = $server['host'];
                 }
-                if(isset($server['port'])){
+                if (isset($server['port'])) {
                     $this->port = $server['port'];
                 }
-            }
-            else{
-                if(strstr($server, ':')){
+            } else {
+                if (strstr($server, ':')) {
                     $serverparts = explode(':', trim($server));
                     $this->server = $serverparts[0];
                     $this->port = $serverparts[1];
-                }
-                else
-                {
+                } else {
                     $this->server = $server;
                 }
             }
@@ -94,8 +91,8 @@ class Auth_Container_POP3 extends Auth_Container
     {
         $pop3 =& new Net_POP3();
         $res = $pop3->connect($this->server, $this->port);
-        if(!$res){
-            return($res);
+        if (!$res) {
+            return $res;
         }
         $result = $pop3->login($username, $password);
         $pop3->disconnect();

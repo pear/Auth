@@ -57,11 +57,11 @@ class Auth {
     var $expired = false;
 
     /**
-     * Maximum time of idleness in seconds
+     * Maximum idletime in seconds
      *
      * The difference to $expire is, that the idletime gets
-     * refreshed each time, checkAuth() is called. If this
-     * variable is set to 0, idle time is never checked.
+     * refreshed each time checkAuth() is called. If this
+     * variable is set to 0, idletime is never checked.
      *
      * @var integer
      * @see setIdle(), checkAuth()
@@ -85,14 +85,14 @@ class Auth {
     var $storage = '';
 
     /**
-     * Function defined by the user, that creates the login screen
+     * User-defined function that creates the login screen
      *
      * @var string
      */
     var $loginFunction = '';
 
     /**
-     * Should the login form be displayed?
+     * Should the login form be displayed, and are users allowed to authenticate via this page?
      *
      * @var   bool
      * @see   setShowlogin()
@@ -160,8 +160,9 @@ class Auth {
 
     /**
      * Flag to use advanced security
-     * when set extra checks will be made, to see if the user ip 
-     * or useragent have changed accross requests, set to off by default to preserve BC
+     * When set extra checks will be made to see if the 
+     * user's IP or useragent have changed across requests. 
+     * Turned off by default to preserve BC.
      *
      * @var boolean
      */     
@@ -261,12 +262,12 @@ class Auth {
      * Assign data from login form to internal values
      *
      * This function takes the values for username and password
-     * from $HTTP_POST_VARS and assigns them to internal variables.
-     * If you wish to use another source apart from $HTTP_POST_VARS,
+     * from $HTTP_POST_VARS/$_POST and assigns them to internal variables.
+     * If you wish to use another source apart from $HTTP_POST_VARS/$_POST,
      * you have to derive this function.
      *
      * @access private
-     * @global $HTTP_POST_VARS
+     * @global $HTTP_POST_VARS, $_POST
      * @see    Auth
      * @return void
      */
@@ -506,12 +507,12 @@ class Auth {
     function getAuthData($name = null)
     {
         $session = &Auth::_importGlobalVariable('session');
-        if(!isset($session[$this->_sessionName]['data'])){
-            return(null);
+        if (!isset($session[$this->_sessionName]['data'])) {
+            return null;
         }
 
         if (is_null($name)) {
-            if(isset($session[$this->_sessionName]['data'])) {
+            if (isset($session[$this->_sessionName]['data'])) {
                 return $session[$this->_sessionName]['data'];
             } else {
                 return null;
@@ -548,7 +549,7 @@ class Auth {
             $session[$this->_sessionName] = array();
         }
 
-        if(!isset($session[$this->_sessionName]['data'])){
+        if (!isset($session[$this->_sessionName]['data'])) {
             $session[$this->_sessionName]['data']       = array();
         }
 
@@ -561,7 +562,7 @@ class Auth {
         $session[$this->_sessionName]['idle']       = time();
     }
     
-    function setAdvancedSecurity($flag=true){
+    function setAdvancedSecurity($flag=true) {
         $this->advancedsecurity = $flag;
     }
 
@@ -578,23 +579,24 @@ class Auth {
     {
         $session = &$this->_importGlobalVariable('session');
         
-        if($this->advancedsecurity){
+        if ($this->advancedsecurity) {
             // Check for ip change
-            if(isset($session[$this->_sessionName]['sessionip']) && isset($_SERVER['REMOTE_ADDR']) && $session[$this->_sessionName]['sessionip'] != $_SERVER['REMOTE_ADDR']){
-                // Check if the ip of the user has changed, if so we assume a man in the middle attach an log him out
-                $this->logout();
+            if (isset($session[$this->_sessionName]['sessionip']) && isset($_SERVER['REMOTE_ADDR']) && $session[$this->_sessionName]['sessionip'] != $_SERVER['REMOTE_ADDR']) {
+                // Check if the IP of the user has changed, if so we assume a man in the middle attack and log him out
                 $this->expired = true;
                 $this->status = AUTH_SECURITY_BREACH;
+                $this->logout();
                 return false;
             }
             
             // Check for useragent change
-            if(isset($session[$this->_sessionName]['sessionuseragent']) && isset($_SERVER['HTTP_USER_AGENT']) && $session[$this->_sessionName]['sessionuseragent'] != $_SERVER['HTTP_USER_AGENT']){
-                // Check if the ip of the user has changed, if so we assume a man in the middle attach an log him out
-                $this->logout();
+            if (isset($session[$this->_sessionName]['sessionuseragent']) && isset($_SERVER['HTTP_USER_AGENT']) && $session[$this->_sessionName]['sessionuseragent'] != $_SERVER['HTTP_USER_AGENT']) {
+                // Check if the User-Agent of the user has changed, if so we assume a man in the middle attack and log him out
+
                 $this->expired = true;
                 $this->status = AUTH_SECURITY_BREACH;
                 return false;
+                $this->logout();
             }
             
         }
@@ -604,11 +606,9 @@ class Auth {
             if ($this->expire > 0 &&
                 isset($session[$this->_sessionName]['timestamp']) &&
                 ($session[$this->_sessionName]['timestamp'] + $this->expire) < time()) {
-
-                $this->logout();
                 $this->expired = true;
                 $this->status = AUTH_EXPIRED;
-
+                $this->logout();
                 return false;
             }
 
@@ -617,10 +617,10 @@ class Auth {
                 isset($session[$this->_sessionName]['idle']) &&
                 ($session[$this->_sessionName]['idle'] + $this->idle) < time()) {
 
-                $this->logout();
+
                 $this->idled = true;
                 $this->status = AUTH_IDLED;
-
+                $this->logout();
                 return false;
             }
 
@@ -686,13 +686,13 @@ class Auth {
             echo '<center>'."\n";
 
             if (!empty($this->status) && $this->status == AUTH_EXPIRED) {
-                echo '<i>Your session expired. Please login again!</i>'."\n";
+                echo '<i>Your session has expired. Please login again!</i>'."\n";
             } else if (!empty($this->status) && $this->status == AUTH_IDLED) {
                 echo '<i>You have been idle for too long. Please login again!</i>'."\n";
             } else if (!empty ($this->status) && $this->status == AUTH_WRONG_LOGIN) {
                 echo '<i>Wrong login data!</i>'."\n";
             } else if (!empty ($this->status) && $this->status == AUTH_SECURITY_BREACH) {
-                echo '<i>Security problem your ip has changed!</i>'."\n";
+                echo '<i>Security problem. Either your IP or your User-Agent(Browser) has changed!</i>'."\n";
             }
             PEAR::raiseError('You are using the built-in login screen of PEAR::Auth.<br />See the <a href="http://pear.php.net/manual/">manual</a> for details on how to create your own login function.', null);
 
@@ -762,7 +762,7 @@ class Auth {
     function updateIdle()
     {
         $session = &$this->_importGlobalVariable('session');
-       $session[$this->_sessionName]['idle'] = time();
+        $session[$this->_sessionName]['idle'] = time();
     }
 
     // }}}
@@ -862,6 +862,23 @@ class Auth {
     function removeUser($username)
     {
         return $this->storage->removeUser($username);
+    }
+
+    // }}}
+    // {{{ changePassword()
+
+    /**
+     * Change password for user in the storage container
+     *
+     * @access public
+     * @param string Username
+     * @param string The new password 
+     * @return mixed True on success, PEAR error object on error
+     *               and AUTH_METHOD_NOT_SUPPORTED otherwise.
+     */
+    function changePassword($username, $password)
+    {
+        return $this->storage->changePassword($username, $password);
     }
 
     // }}}

@@ -227,7 +227,7 @@ class Auth_Container_MDB extends Auth_Container
         // Find if db_fileds contains a *, i so assume all col are selected
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = '*';
-        } else{
+        } else {
             $sql_from = $this->options['usernamecol'] . ', '. $this->options['passwordcol'] . $this->options['db_fields'];
         }
 
@@ -258,7 +258,7 @@ class Auth_Container_MDB extends Auth_Container
                 }
                 // Use reference to the auth object if exists
                 // This is because the auth session variable can change so a static call to setAuthData does not make sence
-                if(is_object($this->_auth_obj)){
+                if (is_object($this->_auth_obj)) {
                     $this->_auth_obj->setAuthData($key, $value);
                 } else {
                     Auth::setAuthData($key, $value);
@@ -287,7 +287,7 @@ class Auth_Container_MDB extends Auth_Container
         // Find if db_fileds contains a *, i so assume all col are selected
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = '*';
-        } else{
+        } else {
             $sql_from = $this->options['db_fields'];
         }
 
@@ -325,10 +325,9 @@ class Auth_Container_MDB extends Auth_Container
     function addUser($username, $password, $additional = "")
     {
     
-        if(isset($this->options['cryptType']) && $this->options['cryptType'] == 'none'){
+        if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
-        }
-        elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
+        } elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
             $cryptFunction = $this->options['cryptType'];
         } else {
             $cryptFunction = 'md5';
@@ -392,5 +391,41 @@ class Auth_Container_MDB extends Auth_Container
     }
 
     // }}}
+    // {{{ changePassword()
+
+    /**
+     * Change password for user in the storage container
+     *
+     * @param string Username
+     * @param string The new password 
+     */
+    function changePassword($username, $password)
+    {
+        if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
+            $cryptFunction = 'strval';
+        } elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
+            $cryptFunction = $this->options['cryptType'];
+        } else {
+            $cryptFunction = 'md5';
+        }
+        
+        $query = sprintf("UPDATE %s SET %s = %s WHERE %s = %s",
+                         $this->options['table'],
+                         $this->options['passwordcol'],
+                         $password,
+                         $this->options['usernamecol'],
+                         $username
+                         );
+
+        $res = $this->query($query);
+
+        if (MDB::isError($res)) {
+            return PEAR::raiseError($res->getMessage(), $res->code);
+        } else {
+            return true;
+        }
+    }
+    // }}}
+
 }
 ?>

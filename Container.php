@@ -96,8 +96,7 @@ class Auth_Container
             default :
                 if (function_exists($cryptType)) {
                     return ($cryptType($password1) == $password2);
-                }
-                else if (method_exists($this,$cryptType)) { 
+                } elseif (method_exists($this,$cryptType)) { 
                     return ($this->$cryptType($password1) == $password2);
                 } else {
                     return false;
@@ -127,15 +126,15 @@ class Auth_Container
     function getUser($username)
     {
         $users = $this->listUsers();
-        if($users === AUTH_METHOD_NOT_SUPPORTED){
-            return(AUTH_METHOD_NOT_SUPPORTED);
+        if ($users === AUTH_METHOD_NOT_SUPPORTED) {
+            return AUTH_METHOD_NOT_SUPPORTED;
         }
-        for($i=0;$c = count($users),$i<$c;$i++){
-            if($users[$i]['username'] == $username){
-                return($users[$i]);
+        for ($i=0; $c = count($users), $i<$c; $i++) {
+            if ($users[$i]['username'] == $username) {
+                return $users[$i];
             }
         }
-        return(false);
+        return false;
         
     }
 
@@ -165,6 +164,22 @@ class Auth_Container
      * @param string Username
      */
     function removeUser($username)
+    {
+        return AUTH_METHOD_NOT_SUPPORTED;
+    }
+
+    // }}}
+
+
+    // {{{ changePassword()
+
+    /**
+     * Change password for user in the storage container
+     *
+     * @param string Username
+     * @param string The new password
+     */
+    function changePassword($username, $password)
     {
         return AUTH_METHOD_NOT_SUPPORTED;
     }

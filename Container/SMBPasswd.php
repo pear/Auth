@@ -129,6 +129,24 @@ class Auth_Container_SMBPasswd extends Auth_Container
     }
 
     // }}}
+    // {{{ changePassword()
+
+    /**
+     * Change password for user in the storage container
+     *
+     * @param string Username
+     * @param string The new password 
+     */
+    function changePassword($username, $password)
+    {
+         $res = $this->pwfile->modUser($username, '', $password);
+         if ($res === true) {
+             return $this->pwfile->save();
+         }
+         return $res;
+    }
+
+    // }}}
 
 }
 ?>

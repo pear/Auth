@@ -157,7 +157,7 @@ class Auth_Container_IMAP extends Auth_Container
     {
         $dsn = '{'.$this->options['host'].':'.$this->options['port'].$this->options['baseDSN'].'}';
         $conn = @imap_open ($dsn, $username, $password, OP_HALFOPEN);
-        if (is_resource($conn)){
+        if (is_resource($conn)) {
             $this->activeUser = $username;
             @imap_close($conn);
             return true;

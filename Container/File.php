@@ -124,7 +124,7 @@ class Auth_Container_File extends Auth_Container
         }
         
         $res = $pw_obj->addUser($user, $pass, $cvs);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
             return false;
         }
         
@@ -154,7 +154,36 @@ class Auth_Container_File extends Auth_Container
         
         
         $res = $pw_obj->delUser($user);
-        if(PEAR::isError($res)){
+        if (PEAR::isError($res)) {
+            return false;
+        }
+        
+        $res = $pw_obj->save();
+        if (PEAR::isError($res)) {
+            return false;
+        }
+        
+        return true;
+    }
+
+    // }}}
+    // {{{ changePassword()
+
+    /**
+     * Change password for user in the storage container
+     *
+     * @param string Username
+     * @param string The new password 
+     */
+    function changePassword($username, $password)
+    {
+        $pw_obj = &$this->_load();
+        if (PEAR::isError($pw_obj)) {
+            return false;
+        }
+        
+        $res = $pw_obj->changePasswd($user, $pass);
+        if (PEAR::isError($res)) {
             return false;
         }
         
