@@ -319,7 +319,7 @@ class Auth
          * When the user has already entered a username,
          * we have to validate it.
          */
-        if ($this->username != "") {
+        if (!empty($this->username)) {
             $login_ok = $this->storage->fetchData($this->username, $this->password);
         }
 
@@ -327,11 +327,11 @@ class Auth
          * If the login failed or the user entered no username,
          * output the login screen again.
          */
-        if ($this->username != "" && !$login_ok) {
+        if (!empty($this->username) && !$login_ok) {
             $this->status = AUTH_WRONG_LOGIN;
         }
 
-        if (($this->username == "" || !$login_ok) && $this->showLogin) {
+        if ((empty($this->username) || !$login_ok) && $this->showLogin) {
             $this->drawLogin($this->storage->activeUser);
             return;
         }
@@ -455,7 +455,7 @@ class Auth
     {
         $session = &$this->_importGlobalVariable("session");
         
-        return (true == $session['auth']['registered']) ? true : false;
+        return (true == !empty($session) && $session['auth']['registered']) ? true : false;
     }
 
     // }}}
@@ -498,11 +498,11 @@ class Auth
 
             echo "<center>\n";
 
-            if ($this->status == AUTH_EXPIRED) {
+            if (!empty($this->status) && $this->status == AUTH_EXPIRED) {
                 echo "<i>Your session expired. Please login again!</i>\n";
-            } else if ($this->status == AUTH_IDLED) {
+            } else if (!empty($this->status) && $this->status == AUTH_IDLED) {
                 echo "<i>You have been idle for too long. Please login again!</i>\n";
-            } else if ($this->status == AUTH_WRONG_LOGIN) {
+            } else if (!empty ($this->status) && $this->status == AUTH_WRONG_LOGIN) {
                 echo "<i>Wrong login data!</i>\n";
             }
 
