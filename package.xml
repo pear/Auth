@@ -47,6 +47,11 @@ the login data:
     <state>beta</state>
     <notes>
 <![CDATA[
+* Changes to LDAP container:
+  - check for loaded ldap extension at startup as suggested by Markku Turunen
+  - make ldap version configurable via config array
+  - documentation fix for active directory default user container
+  [ 14/Jun/2004 - jw]
 * Added an Auth_Controller class, to manage automatic redirection to login page and redirect back
   to the calling page [04/06/2004 - Yavo]
 * Changes to LDAP container:
