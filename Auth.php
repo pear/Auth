@@ -19,11 +19,11 @@
 // $Id$
 //
 
-require_once "PEAR.php";
+require_once 'PEAR.php';
 
-define("AUTH_IDLED",       -1);
-define("AUTH_EXPIRED",     -2);
-define("AUTH_WRONG_LOGIN", -3);
+define('AUTH_IDLED',       -1);
+define('AUTH_EXPIRED',     -2);
+define('AUTH_WRONG_LOGIN', -3);
 
 /**
  * PEAR::Auth
@@ -81,14 +81,14 @@ class Auth {
      * @var object
      * @see Auth(), validateLogin()
      */
-    var $storage = "";
+    var $storage = '';
 
     /**
      * Function defined by the user, that creates the login screen
      *
      * @var string
      */
-    var $loginFunction = "";
+    var $loginFunction = '';
 
     /**
      * Should the login form be displayed?
@@ -103,21 +103,21 @@ class Auth {
      *
      * @var string
      */
-    var $status = "";
+    var $status = '';
 
     /**
      * Username
      *
      * @var string
      */
-    var $username = "";
+    var $username = '';
 
     /**
      * Password
      *
      * @var string
      */
-    var $password = "";
+    var $password = '';
 
     /**
      * Login callback function name
@@ -125,7 +125,7 @@ class Auth {
      * @var string
      * @see setLoginCallback()
      */
-    var $loginCallback = "";
+    var $loginCallback = '';
 
     /**
      * Failed Login callback function name
@@ -133,7 +133,7 @@ class Auth {
      * @var string
      * @see setLoginFailedCallback()
      */
-    var $loginFailedCallback = "";
+    var $loginFailedCallback = '';
 
     /**
      * Logout callback function name
@@ -141,7 +141,7 @@ class Auth {
      * @var string
      * @see setLogoutCallback()
      */
-    var $logoutCallback = "";
+    var $logoutCallback = '';
 
     /**
      * Auth session-array name
@@ -166,14 +166,14 @@ class Auth {
      * @param boolean   Should the login form be displayed if neccessary?
      * @return void
      */
-    function Auth($storageDriver, $options = "", $loginFunction = "", $showLogin = true)
+    function Auth($storageDriver, $options = '', $loginFunction = '', $showLogin = true)
     {
         if (!empty($options['sessionName'])) {
             $this->_sessionName = $options['sessionName'];
             unset($options['sessionName']);
         }
 
-        if ($loginFunction != "" && is_callable($loginFunction)) {
+        if ($loginFunction != '' && is_callable($loginFunction)) {
             $this->loginFunction = $loginFunction;
         }
 
@@ -203,10 +203,10 @@ class Auth {
      * @param  string $options Optional parameters for the storage class
      * @return object Object   Storage object
      */
-    function _factory($driver, $options = "")
+    function _factory($driver, $options = '')
     {
-        $storage_path = "Auth/Container/" . $driver . ".php";
-        $storage_class = "Auth_Container_" . $driver;
+        $storage_path = 'Auth/Container/' . $driver . '.php';
+        $storage_class = 'Auth_Container_' . $driver;
 
         require_once $storage_path;
 
@@ -231,13 +231,13 @@ class Auth {
      */
     function assignData()
     {
-        $post = &$this->_importGlobalVariable("post");
+        $post = &$this->_importGlobalVariable('post');
 
-        if (isset($post['username']) && $post['username'] != "") {
+        if (isset($post['username']) && $post['username'] != '') {
             $this->username = (get_magic_quotes_gpc() == 1 ? stripslashes($post['username']) : $post['username']);
         }
 
-        if (isset($post['password']) && $post['password'] != "") {
+        if (isset($post['password']) && $post['password'] != '') {
             $this->password = (get_magic_quotes_gpc() == 1 ? stripslashes($post['password']) : $post['password'] );
         }
 
@@ -365,7 +365,7 @@ class Auth {
      * @param  string New name for the session
      * @return void
      */
-    function setSessionname($name = "PHPSESSID")
+    function setSessionname($name = 'PHPSESSID')
     {
         @session_name($name);
     }
@@ -442,7 +442,7 @@ class Auth {
      */
     function setAuthData($name, $value, $overwrite = true)
     {
-        $session = &Auth::_importGlobalVariable("session");
+        $session = &Auth::_importGlobalVariable('session');
 
         if (!empty($session[$this->_sessionName]['data'][$name]) && $overwrite == false) {
             return;
@@ -465,7 +465,7 @@ class Auth {
      */
     function getAuthData($name = null)
     {
-        $session = &Auth::_importGlobalVariable("session");
+        $session = &Auth::_importGlobalVariable('session');
         if(!isset($session[$this->_sessionName]['data'])){
             return(null);
         }
@@ -497,7 +497,7 @@ class Auth {
      */
     function setAuth($username)
     {
-        $session = &Auth::_importGlobalVariable("session");
+        $session = &Auth::_importGlobalVariable('session');
 
         if (!isset($session[$this->_sessionName]) && !isset($_SESSION)) {
             session_register($this->_sessionName);
@@ -527,10 +527,10 @@ class Auth {
      */
     function checkAuth()
     {
-        $session = &$this->_importGlobalVariable("session");
+        $session = &$this->_importGlobalVariable('session');
 
         if (isset($session[$this->_sessionName])) {
-            /** Check if authentication session is expired */
+            // Check if authentication session is expired
             if ($this->expire > 0 &&
                 isset($session[$this->_sessionName]['timestamp']) &&
                 ($session[$this->_sessionName]['timestamp'] + $this->expire) < time()) {
@@ -542,7 +542,7 @@ class Auth {
                 return false;
             }
 
-            /** Check if maximum idle time is reached */
+            // Check if maximum idle time is reached
             if ($this->idle > 0 &&
                 isset($session[$this->_sessionName]['idle']) &&
                 ($session[$this->_sessionName]['idle'] + $this->idle) < time()) {
@@ -557,7 +557,7 @@ class Auth {
             if (isset($session[$this->_sessionName]['registered']) &&
                 isset($session[$this->_sessionName]['username']) &&
                 $session[$this->_sessionName]['registered'] == true &&
-                $session[$this->_sessionName]['username'] != "") {
+                $session[$this->_sessionName]['username'] != '') {
 
                 Auth::updateIdle();
 
@@ -579,7 +579,7 @@ class Auth {
      */
     function getAuth()
     {
-        $session = &$this->_importGlobalVariable("session");
+        $session = &$this->_importGlobalVariable('session');
 
         if (!empty($session) &&
             (isset($session[$this->_sessionName]['registered']) &&
@@ -606,44 +606,44 @@ class Auth {
      * @param  string  Username if already entered
      * @return void
      */
-    function drawLogin($username = "")
+    function drawLogin($username = '')
     {
         if (is_callable($this->loginFunction)) {
             call_user_func($this->loginFunction, $username, $this->status, $this);
         } else {
-            $server = &$this->_importGlobalVariable("server");
+            $server = &$this->_importGlobalVariable('server');
 
-            echo "<center>\n";
+            echo '<center>'."\n";
 
             if (!empty($this->status) && $this->status == AUTH_EXPIRED) {
-                echo "<i>Your session expired. Please login again!</i>\n";
+                echo '<i>Your session expired. Please login again!</i>'."\n";
             } else if (!empty($this->status) && $this->status == AUTH_IDLED) {
-                echo "<i>You have been idle for too long. Please login again!</i>\n";
+                echo '<i>You have been idle for too long. Please login again!</i>'."\n";
             } else if (!empty ($this->status) && $this->status == AUTH_WRONG_LOGIN) {
-                echo "<i>Wrong login data!</i>\n";
+                echo '<i>Wrong login data!</i>'."\n";
             }
 
-            PEAR::raiseError("You are using the built-in login screen of PEAR::Auth.<br/>See the <a href=\"http://pear.php.net/manual/\">manual</a> for details on how to create your own login function.", null);
+            PEAR::raiseError('You are using the built-in login screen of PEAR::Auth.<br />See the <a href="http://pear.php.net/manual/">manual</a> for details on how to create your own login function.', null);
 
-            echo "<form method=\"post\" action=\"" . $server['PHP_SELF'] . "\">\n";
-            echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
-            echo "<tr>\n";
-            echo "    <td colspan=\"2\" bgcolor=\"#eeeeee\"><b>Login:</b></td>\n";
-            echo "</tr>\n";
-            echo "<tr>\n";
-            echo "    <td>Username:</td>\n";
-            echo "    <td><input type=\"text\" name=\"username\" value=\"" . $username . "\"></td>\n";
-            echo "</tr>\n";
-            echo "<tr>\n";
-            echo "    <td>Password:</td>\n";
-            echo "    <td><input type=\"password\" name=\"password\"></td>\n";
-            echo "</tr>\n";
-            echo "<tr>\n";
-            echo "    <td colspan=\"2\" bgcolor=\"#eeeeee\"><input type=\"submit\"></td>\n";
-            echo "</tr>\n";
-            echo "</table>\n";
-            echo "</form>\n";
-            echo "</center>\n\n";
+            echo '<form method="post" action="' . $server['PHP_SELF'] . '">'."\n";
+            echo '<table border="0" cellpadding="2" cellspacing="0" summary="login form">'."\n";
+            echo '<tr>'."\n";
+            echo '    <td colspan="2" bgcolor="#eeeeee"><b>Login:</b></td>'."\n";
+            echo '</tr>'."\n";
+            echo '<tr>'."\n";
+            echo '    <td>Username:</td>'."\n";
+            echo '    <td><input type="text" name="username" value="' . $username . '" /></td>'."\n";
+            echo '</tr>'."\n";
+            echo '<tr>'."\n";
+            echo '    <td>Password:</td>'."\n";
+            echo '    <td><input type="password" name="password" /></td>'."\n";
+            echo '</tr>'."\n";
+            echo '<tr>'."\n";
+            echo '    <td colspan="2" bgcolor="#eeeeee"><input type="submit" /></td>'."\n";
+            echo '</tr>'."\n";
+            echo '</table>'."\n";
+            echo '</form>'."\n";
+            echo '</center>'."\n\n";
         }
     }
 
@@ -662,14 +662,14 @@ class Auth {
      */
     function logout()
     {
-        $session = &$this->_importGlobalVariable("session");
+        $session = &$this->_importGlobalVariable('session');
 
         if (is_callable($this->logoutCallback)) {
             call_user_func($this->logoutCallback, $session[$this->_sessionName]['username'], $this);
         }
 
-        $this->username = "";
-        $this->password = "";
+        $this->username = '';
+        $this->password = '';
 
         $session[$this->_sessionName] = array();
         if (isset($_SESSION)) {
@@ -690,8 +690,8 @@ class Auth {
      */
     function updateIdle()
     {
-        $session = &$this->_importGlobalVariable("session");
-        $session[$this->_sessionName]['idle'] = time();
+        $session = &$this->_importGlobalVariable('session');
+       $session[$this->_sessionName]['idle'] = time();
     }
 
     // }}}
@@ -705,9 +705,9 @@ class Auth {
      */
     function getUsername()
     {
-        $session = &$this->_importGlobalVariable("session");
+        $session = &$this->_importGlobalVariable('session');
         if (!isset($session[$this->_sessionName]['username'])) {
-            return "";
+            return '';
         }
         return $session[$this->_sessionName]['username'];
     }
@@ -737,7 +737,7 @@ class Auth {
      */
     function sessionValidThru()
     {
-        $session = &$this->_importGlobalVariable("session");
+        $session = &$this->_importGlobalVariable('session');
         if (!isset($session[$this->_sessionName]['idle'])) {
             return 0;
         }
@@ -772,7 +772,7 @@ class Auth {
      * @return mixed  True on success, PEAR error object on error
      *                and AUTH_METHOD_NOT_SUPPORTED otherwise.
      */
-    function addUser($username, $password, $additional = "")
+    function addUser($username, $password, $additional = '')
     {
         return $this->storage->addUser($username, $password, $additional);
     }
@@ -784,7 +784,7 @@ class Auth {
      * Remove user from the storage container
      *
      * @access public
-     * @param string Username
+     * @param  string Username
      * @return mixed  True on success, PEAR error object on error
      *                and AUTH_METHOD_NOT_SUPPORTED otherwise.
      */
@@ -809,7 +809,7 @@ class Auth {
 
         switch (strtolower($variable)) {
 
-            case "server" :
+            case 'server' :
                 if (isset($_SERVER)) {
                     $var = &$_SERVER;
                 } else {
@@ -817,7 +817,7 @@ class Auth {
                 }
                 break;
 
-            case "session" :
+            case 'session' :
                 if (isset($_SESSION)) {
                     $var = &$_SESSION;
                 } else {
@@ -825,7 +825,7 @@ class Auth {
                 }
                 break;
 
-            case "post" :
+            case 'post' :
                 if (isset($_POST)) {
                     $var = &$_POST;
                 } else {
@@ -833,7 +833,7 @@ class Auth {
                 }
                 break;
 
-            case "cookie" :
+            case 'cookie' :
                 if (isset($_COOKIE)) {
                     $var = &$_COOKIE;
                 } else {
@@ -841,7 +841,7 @@ class Auth {
                 }
                 break;
 
-            case "get" :
+            case 'get' :
                 if (isset($_GET)) {
                     $var = &$_GET;
                 } else {
