@@ -96,7 +96,7 @@ class Auth_Container_DB extends Auth_Container
         } elseif (get_parent_class($dsn) == "db_common") {
             $this->db = $dsn;
         } elseif (is_object($dsn) && DB::isError($dsn)) {
-            return PEAR::raiseError($dsn->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError("", $dsn->code, PEAR_ERROR_DIE);
         } else {
             return PEAR::raiseError("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__,
                                     41,
@@ -108,7 +108,7 @@ class Auth_Container_DB extends Auth_Container
         }
 
         if (DB::isError($this->db)) {
-            return PEAR::raiseError($this->db->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError("", $this->db->code, PEAR_ERROR_DIE);
         } else {
             return true;
         }
@@ -210,7 +210,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError($res->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError("", $res->code, PEAR_ERROR_DIE);
         } else {
             $entry = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
@@ -248,7 +248,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError($res->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError("", $res->code, PEAR_ERROR_DIE);
         } else {
             while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
                 $retVal[] = $row;
@@ -302,7 +302,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-           return PEAR::raiseError($res->code, PEAR_ERROR_DIE);
+           return PEAR::raiseError("", $res->code, PEAR_ERROR_DIE);
         } else {
           return true;
         }
@@ -330,7 +330,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-           return PEAR::raiseError($res->code, PEAR_ERROR_DIE);
+           return PEAR::raiseError("", $res->code, PEAR_ERROR_DIE);
         } else {
           return true;
         }
