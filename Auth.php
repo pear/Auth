@@ -19,7 +19,7 @@
 // $Id$
 //
 
- /**
+/**
  * PEAR::Auth
  *
  * The PEAR::Auth class provides methods for creating an
@@ -45,7 +45,7 @@
  *
  * @author  Martin Jansen <mj@php.net>
  * @package Auth
- * @version 0.2   2001-07-21
+ * @version 0.3   2001-08-22
  */
 class Auth
 {
@@ -116,6 +116,7 @@ class Auth
 
     // }}}
     // {{{ _factory
+
     /**
      * Return a storage driver based on $driver and $options
      *
@@ -168,6 +169,8 @@ class Auth
 
     /**
      * Start new auth session
+     *
+     * @access private
      */
     function start() 
     {
@@ -185,6 +188,8 @@ class Auth
 
     /**
      * Login function
+     *
+     * @access private
      */
     function login()
     {
@@ -231,6 +236,7 @@ class Auth
     /**
      * Checks if there is a session with valid auth information.
      *
+     * @access private
      * @return boolean  Whether or not the user is authenticated.
      */
     function checkAuth() 
@@ -321,12 +327,14 @@ class Auth
      * this, it will look terrible :-).
      *
      * @access public
+     * @global $HTTP_SERVER_VARS
      * @param  string  Username if already entered
      * @param  string  Password if already entered
      */
     function drawLogin($username = "", $password = "") 
     {
-
+        global $HTTP_SERVER_VARS;
+     
         echo "<center>\n";
         
         if ($this->expired) {
@@ -335,7 +343,7 @@ class Auth
             echo "<i>You have been idle for too long. Please login again!</i>\n";
         }
 
-        echo "<form method=\"post\" action=\"".$GLOBALS['PHP_SELF']."\">\n";
+        echo "<form method=\"post\" action=\"".$HTTP_SERVER_VARS['PHP_SELF']."\">\n";
         echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
         echo "<tr>\n";
         echo "    <td colspan=\"2\" bgcolor=\"#eeeeee\"><b>Login:</b></td>\n";
@@ -412,5 +420,4 @@ class Auth
 
     // }}}
 }
-
 ?>
