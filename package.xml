@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!DOCTYPE package SYSTEM "../package.dtd">
-<!-- do not use the "Type" attribute here, that one is only for
-     generated package.xml files -->
 <package version="1.0">
   <name>Auth</name>
   <summary>Creating an authentication system.</summary>
-  <description>
-The PEAR::Auth package provides methods for creating an authentication
+  <description>The PEAR::Auth package provides methods for creating an authentication
 system using PHP.
 
 Currently it supports the following storage containers to read/write
@@ -14,153 +10,34 @@ the login data:
 
 * All databases supported by the PEAR database layer
 * Plaintext files
-* LDAP servers
-  </description>
+* LDAP servers</description>
   <maintainers>
     <maintainer>
       <user>MJ</user>
       <name>Martin Jansen</name>
       <email>mj@php.net</email>
+      <role>lead</role>
     </maintainer>
   </maintainers>
-  <license>PHP License</license>
   <release>
-    <version>0.1</version>
-    <date>2001-07-11</date>
-    <notes>
-      This is the initial independent release of the Auth package.
-    </notes>
-    <filelist>
-      <dir name="/" baseinstalldir="Auth">
-        <file role="php" name="Auth.php" />
-        <file role="php" name="Container.php" />
-        <file role="doc" name="README.Auth" />
-        <dir name="Container">
-          <file role="php" name="DB.php" />
-          <file role="php" name="File.php" />
-          <file role="php" name="LDAP.php" />
-        </dir>
-      </dir>
-    </filelist>
-  </release>
-
-  <release>
-    <version>0.2</version>
-    <date>2001-07-22</date>
-    <notes>
-      Improved a bunch of things:
-      
-      *  Renamed some internal functions to be more compliant
-         to the coding standards
-      *  Moved some parts of the code to the storage
-         container.  
-      *  Fixed a bug with expire time.
-      *  Added maximum idle time, which is (unlike expire
-         time) refreshed on every request.
-      *  Improved behaviour of Container/DB.php
-    </notes>
-    <filelist>
-      <dir name="/" baseinstalldir="Auth">
-        <file role="php" name="Auth.php" />
-        <file role="php" name="Container.php" />
-        <file role="doc" name="README.Auth" />
-        <dir name="Container">
-          <file role="php" name="DB.php" />
-          <file role="php" name="File.php" />
-          <file role="php" name="LDAP.php" />
-        </dir>
-      </dir>
-    </filelist>
-  </release>
-
-  <release>
-    <version>0.3</version>
-    <date>2001-11-04</date>
-    <notes>
-     * It is now possible to pass a third parameter to the
-       constructor to pass user defined function to print
-       the login form.
-
-     * Improved behaviour of the PEAR:DB storage container: One can
-       now pass an array to the container to use more individual
-       table layouts.
-     
-     * Add function sessionValidThru(), that returns the time up to
-       the session is valid.
-     
-     * Beginning with this release, there is a proper documentation
-       available. (See README.Auth for the location of it.)
-    </notes>
-    <filelist>
-      <dir name="/" baseinstalldir="Auth">
-        <file role="php" name="Auth.php" />
-        <file role="php" name="Container.php" />
-        <file role="doc" name="README.Auth" />
-        <dir name="Container">
-          <file role="php" name="DB.php" />
-          <file role="php" name="File.php" />
-          <file role="php" name="LDAP.php" />
-        </dir>
-      </dir>
-    </filelist>
-  </release>
-
-  <release>
-    <version>1.0</version>
-    <date>2001-12-23</date>
+    <version>1.1.0</version>
+    <date>2002-XX-XX</date>
+    <license>PHP License</license>
     <state>stable</state>
-    <notes>
-     This is the first stable version of PEAR::Auth.
-     
-     Currently it features:
-     
-     * Customized login functions.
-
-     * 3 different storage containers: database, text file, LDAP.
-       Customized containers can be easily written.
-
-     * Via the function setShowLogin() it is possible to create sites
-       that have an optional login function, that makes it possible
-       to create parts of the site without authentication and the
-       rest only when the user has been authenicated.
-
-     * idle- and expire time.    
-    </notes>
+    <notes>* Make it possible to use different encrypting methods than
+md5. Right now the system supports plaintext, md5 and crypt.
+* Database storage container: Only open connection to SQL server if it
+is really necessary.</notes>
     <filelist>
-      <dir name="/" baseinstalldir="Auth">
-        <file role="php" name="Auth.php" />
-        <file role="php" name="Container.php" />
-        <file role="doc" name="README.Auth" />
-        <dir name="Container">
-          <file role="php" name="DB.php" />
-          <file role="php" name="File.php" />
-          <file role="php" name="LDAP.php" />
-        </dir>
+      <file role="php" baseinstalldir="Auth" name="Auth.php"/>
+      <file role="php" baseinstalldir="Auth" name="Container.php"/>
+      <file role="doc" baseinstalldir="Auth" name="README.Auth"/>
+      <dir name="Container" role="php" baseinstalldir="Auth/Container">
+       <file name="DB.php"/>
+       <file name="File.php"/>
+       <file name="LDAP.php"/>
       </dir>
     </filelist>
   </release>
 
-  <release>
-    <version>1.0.1</version>
-    <date>2002-02-07</date>
-    <state>stable</state>
-    <notes>
-     This release includes a new function setSessionname, that allows
-     the user of the package to change the name of the session to
-     a value different than default ("PHPSESSID"). This is useful, if
-     one uses two different auth systems on the same domain.
-    </notes>
-    <filelist>
-      <dir name="/" baseinstalldir="Auth">
-        <file role="php" name="Auth.php" />
-        <file role="php" name="Container.php" />
-        <file role="doc" name="README.Auth" />
-        <dir name="Container">
-          <file role="php" name="DB.php" />
-          <file role="php" name="File.php" />
-          <file role="php" name="LDAP.php" />
-        </dir>
-      </dir>
-    </filelist>
-  </release>
 </package>
