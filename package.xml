@@ -29,7 +29,7 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.1.2</version>
+    <version>1.2.0</version>
     <date>2003-XX-XX</date>
     <license>PHP License</license>
     <state>stable</state>
@@ -43,6 +43,7 @@ the login data:
   <jeroen@terena.nl>.
 * Added new POP3 storage container written by Yavor
   <yavo@siava.org>.
+* Fixed some smaller bugs.
 ]]>
     </notes>
     <filelist>
