@@ -718,7 +718,7 @@ class Auth {
      */
     function getAuth() {
         if ( isset($this->session['registered']) ) {
-            $this->session['registered'];
+            return $this->session['registered'];
         }
         return false;
     }
