@@ -125,7 +125,7 @@ class Auth
      */
     function Auth($storageDriver = "DB", $options = "", $loginFunction = "")
     {
-        if ($loginFunc != "" && function_exists($loginFunction)) {
+        if ($loginFunction != "" && function_exists($loginFunction)) {
             $this->loginFunction = $loginFunction;
         }
 
