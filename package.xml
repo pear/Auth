@@ -40,23 +40,27 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.2.1</version>
-    <date>2003-07-29</date>
+    <version>1.2.3</version>
+    <date>2003-xx-xx</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
 <![CDATA[
-* Added support for passing contaner as an object
-* Added fix when db_fileds is *
-* Added Test Suite (experimental)
-* Added generic support for arbitrary password crypting functions
-  different than MD5, DES and plain text. (Patch by Tom Anderson)
-* Added new MDB storage container written by Lorenzo Alberton
-* Added new Container for SAMBA password files (SMBPasswd)
+* Auth is now installed in /pear-dir/Auth.php instead of /pear-dir/Auth/Auth.php, an 
+  empty file /pear-dev/Auth/Auth.php wich includes Auth.php is added for BC
+* The contaner now gets a reference to the auth object ($auth->storage->_auth_obj)
+*Some patches from the pear-dev list bellow
+    -maka3d@yahoo.com.br - Patch to use a method of the container in Auth_Container::verifyPassword
+    -Lorenzo Alberton <l.alberton@quipo.it> - Patch to use variable session variable name, untill now the variable auth was used
+    -Marcos Neves <maka3d@yahoo.com.br> - Avaoid error when calling getAuthData() before the login
 ]]>
     </notes>
     <filelist>
-      <file role="php" baseinstalldir="Auth" name="Auth.php"/>
+      <file role="php" baseinstalldir="" name="Auth.php"/>
+      <!-- Added for compatibility with the previous Auth -->
+      <dir name="Auth" role="php" baseinstalldir="">
+          <file name="Auth.php"/>
+      </dir>
       <file role="php" baseinstalldir="Auth" name="Container.php"/>
       <file role="doc" baseinstalldir="Auth" name="README.Auth"/>
       <dir name="Container" role="php" baseinstalldir="Auth">
@@ -89,4 +93,25 @@ the login data:
     </filelist>
   </release>
 
+  <changelog>
+      <release>
+        <version>1.2.2</version>
+        <date>2003-07-29</date>
+        <license>PHP License</license>
+        <state>stable</state>
+        <notes>
+<![CDATA[
+* Added support for passing contaner as an object
+* Added fix when db_fileds is *
+* Added Test Suite (experimental)
+* Added generic support for arbitrary password crypting functions
+  different than MD5, DES and plain text. (Patch by Tom Anderson)
+* Added new MDB storage container written by Lorenzo Alberton
+* Added new Container for SAMBA password files (SMBPasswd)
+]]>
+        </notes>
+      </release>
+  </changelog>
+  
+  
 </package>
