@@ -14,7 +14,6 @@
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
 // | Authors: Jan Wagner <wagner@netsols.de>                              |
-// |          Martin Jansen <mj@php.net>                                  |
 // +----------------------------------------------------------------------+
 //
 // $Id$
@@ -27,10 +26,10 @@ require_once "PEAR.php";
  * Storage driver for fetching login data from LDAP
  *
  * This class is heavily based on the DB and File containers.
- * It takes four parameters (host,port,base and userattr),
- * from which only base as the ldap search base is required
- * if your server runs on localhost:389 and the user-
- * attribute is uid (i.e. dn: uid=wagner,o=netsols,c=de).
+ * By default it connects to localhost:389 and searches for
+ * uid=$username. If no search base is specified, it will
+ * try to determine it via the namingContexts attribute.
+ * It takes four parameters (host,port,basedn and userattr),
  * in a associative hash, connects to the ldap server,
  * binds anonymously, searches for the user, and tries to
  * bind as the user with the supplied password. If all
@@ -45,11 +44,11 @@ require_once "PEAR.php";
  * $a = new Auth("LDAP", array(
  *       'host' => 'localhost',
  *       'port' => '389';
- *       'base' => 'o=netsols,c=de',
+ *       'basedn' => 'o=netsols,c=de',
  *       'userattr' => 'uid'
  *       );
  *
- * The values for host, port and base have to correspond
+ * The values for host, port and basedn have to correspond
  * to the ones for your LDAP server of course.
  *
  * @author   Jan Wagner <wagner@netsols.de>
@@ -73,7 +72,7 @@ class Auth_Container_LDAP extends Auth_Container
     /**
      * Constructor of the container class
      *
-     * @param  $params, associative hash with host,port,base and userattr key
+     * @param  $params, associative hash with host,port,basedn and userattr key
      * @return object Returns an error object if something went wrong
      */
     function Auth_Container_LDAP($params)
@@ -81,18 +80,32 @@ class Auth_Container_LDAP extends Auth_Container
         $this->_setDefaults();
 
         if (is_array($params)) {
-
             $this->_parseOptions($params);
-
-            if ($this->options['base'] != "") {
-                $this->_connect();
-                return true;
-            } else {
-                return new Pear_Error("No LDAP Search Base specified!", 41, PEAR_ERROR_DIE);
-            }        
         }
 
-        return new Pear_Error("No parameters specified", 41, PEAR_ERROR_DIE);
+        $this->_connect();
+
+        // if basedn is not specified, try to find it via namingContexts
+        if ($this->options['basedn'] == "") {           
+            $result_id = @ldap_read($this->conn_id, "", "(objectclass=*)", array("namingContexts"));
+
+            if (ldap_count_entries($this->conn_id, $result_id) == 1) {
+                $entry_id = ldap_first_entry($this->conn_id, $result_id);
+                $attrs = ldap_get_attributes($this->conn_id, $entry_id);
+                $basedn = $attrs['namingContexts'][0];
+
+                if ($basedn != "") {
+                    $this->options['basedn'] = $basedn;
+                }
+            }
+        }
+
+        // if base ist still not set, raise error
+        if ($this->options['basedn'] == "") {
+            return new Pear_Error("LDAP search base not specified!", 41, PEAR_ERROR_DIE);
+        } else {
+            return true;
+        }
     }
 
     // }}}
@@ -107,13 +120,13 @@ class Auth_Container_LDAP extends Auth_Container
     function _connect()
     {
         // connect
-		if (($this->conn_id = @ldap_connect($this->options['host'], $this->options['port'])) == false) {
-			return new PEAR_Error("Error connecting to LDAP.", 41, PEAR_ERROR_DIE);
-		}
+        if (($this->conn_id = @ldap_connect($this->options['host'], $this->options['port'])) == false) {
+            return new PEAR_Error("Error connecting to LDAP.", 41, PEAR_ERROR_DIE);
+        }
         // bind anonymously for searching
-		if ((@ldap_bind($this->conn_id)) == false) {
+        if ((@ldap_bind($this->conn_id)) == false) {
             return new PEAR_Error("Error binding anonymously to LDAP.", 41, PEAR_ERROR_DIE);
-		}
+        }
     }
 
     // }}}
@@ -128,7 +141,7 @@ class Auth_Container_LDAP extends Auth_Container
     {
         $this->options['host']     = 'localhost';
         $this->options['port']     = '389';
-        $this->options['base']     = '';
+        $this->options['basedn']     = '';
         $this->options['userattr'] = "uid";
     }
 
@@ -158,27 +171,33 @@ class Auth_Container_LDAP extends Auth_Container
     function fetchData($username, $password)
     {
         // search
-        if (($result_id = @ldap_search($this->conn_id,$this->options['basedn'],$this->options['userattr']."=".$username)) == false) {
+        if (($result_id = @ldap_search($this->conn_id, $this->options['basedn'], $this->options['userattr']."=".$username)) == false) {
             return new PEAR_Error("Error searching LDAP.", 41, PEAR_ERROR_DIE);
         }
-
         // did we get just one entry?
         if (ldap_count_entries($this->conn_id, $result_id) == 1) {
 
             // then get the user dn
             $entry_id = ldap_first_entry($this->conn_id, $result_id);
-            $user_dn = ldap_get_dn($this->conn_id, $entry_id);
+            $user_dn  = ldap_get_dn($this->conn_id, $entry_id);
 
-            // and try binding as this user with the supplied password
-            if (@ldap_bind($this->conn_id, $user_dn, $password)) {
-                // auth successful
-                Auth::setAuth($username);
-                return true;
+            // need to catch an empty password as openldap seems to return true
+            // if anonymous binding is allowed
+            if ($password != "") {
+                // try binding as this user with the supplied password
+                if (@ldap_bind($this->conn_id, $user_dn, $password)) {
+                    // auth successfull
+                    Auth::setAuth($username);
+                    return true;
+                }
             }
+            $this->activeUser = $username;
+        } else {
+            $this->activeUser = '';
         }
-
         // default
         return false;
     }
 }
+
 ?>
