@@ -84,6 +84,22 @@ require_once "PEAR.php";
  * The parameter values have to correspond
  * to the ones for your LDAP server of course.
  *
+ * When talking to a Microsoft ActiveDirectory server you have to
+ * use 'samaccountname' as the 'userattr' and follow special rules
+ * to translate the ActiveDirectory directory names into 'basedn'.
+ * The 'basedn' for the default 'Users' folder on an ActiveDirectory
+ * server for the ActiveDirectory Domain (which is not related to
+ * its DNS name) "win2000.example.org" would be:
+ * "CN=Users, DC=win2000, DC=example, DC=org'
+ * where every component of the domain name becomes a DC attribute
+ * of its own. If you want to use a custom users folder you have to
+ * replace "CN=Users" with a sequence of "OU" attributes that specify
+ * the path to your custom folder in reverse order.
+ * So the ActiveDirectory folder
+ *   "win2000.example.org\Custom\Accounts"
+ * would become
+ *   "OU=Accounts, OU=Custom, DC=win2000, DC=example, DC=org'
+ *
  * @author   Jan Wagner <wagner@netsols.de>
  * @package  Auth
  * @version  $Revision$
