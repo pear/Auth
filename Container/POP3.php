@@ -91,43 +91,5 @@ class Auth_Container_POP3 extends Auth_Container
     }
 
     // }}}
-    // {{{ listUsers()
-    
-    function listUsers()
-    {
-        return(AUTH_METHOD_NOT_SUPPORTED);
-    }
-
-    // }}}
-
-    /**
-     * Add a new user to the storage container
-     *
-     * @param string Username
-     * @param string Password
-     * @param mixed  Additional Info
-     *
-     * @return boolean
-     */
-    function addUser($username, $password, $additional='')
-    {
-        return(AUTH_METHOD_NOT_SUPPORTED);
-    }
-
-    // }}}
-    // {{{ removeUser()
-
-    /**
-     * Remove user from the storage container
-     *
-     * @param string Username
-     */
-    function removeUser($username)
-    {
-        return(false);
-    }
-
-    // }}}
-
 }
 ?>
