@@ -54,11 +54,11 @@ class Auth_Container_File extends Auth_Container
     function Auth_Container_File($filename)
     {
         if (!is_file($filename)) {
-            return PEAR::raiseError("Illegal filename.", 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError("File \"$filename\" is not a valid filename.", 41);
         }
 
         if (!$this->pwfile = new File_Passwd($filename,0)) {
-            return PEAR::raiseError("Error while reading file contents.", 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError("Error while reading file contents of file \"$filename\" .", 41);
         }
 
         $this->pwfile->close();
