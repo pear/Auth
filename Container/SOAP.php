@@ -136,7 +136,7 @@ class Auth_Container_SOAP extends Auth_Container
         if (!PEAR::isError($soapResponse)) {
             // check if passwords match
             if ($password == $soapResponse->{$this->_options['passwordfield']}) {
-                return $soapResponse;
+                return true;
             } else {
                 return false;
             }
