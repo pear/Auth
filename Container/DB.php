@@ -173,6 +173,8 @@ class Auth_Container_DB extends Auth_Container
         /* Include additional fields if they exist */
         if ($this->options["db_fields"] != "*") {
             $cols = "," . $this->options["db_fields"];
+        } else {
+            $cols = "";
         }
 
         $query = sprintf("SELECT %s FROM %s
