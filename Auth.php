@@ -262,7 +262,7 @@ class Auth {
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (!empty($this->loginCallback)) {
-            	call_user_func($this->loginCallback,$this->username);
+                call_user_func($this->loginCallback,$this->username);
             }
         }
 
