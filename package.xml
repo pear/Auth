@@ -24,9 +24,9 @@
         <file role="php">Container.php</file>
         <file role="doc">README.Auth</file>
         <dir name="Container">
-	  <file role="php">DB.php</file>
-	  <file role="php">File.php</file>
-	  <file role="php">LDAP.php</file>
+          <file role="php">DB.php</file>
+          <file role="php">File.php</file>
+          <file role="php">LDAP.php</file>
         </dir>
       </dir>
     </filelist>
@@ -53,9 +53,9 @@
         <file role="php">Container.php</file>
         <file role="doc">README.Auth</file>
         <dir name="Container">
-	  <file role="php">DB.php</file>
-	  <file role="php">File.php</file>
-	  <file role="php">LDAP.php</file>
+          <file role="php">DB.php</file>
+          <file role="php">File.php</file>
+          <file role="php">LDAP.php</file>
         </dir>
       </dir>
     </filelist>
@@ -85,9 +85,9 @@
         <file role="php">Container.php</file>
         <file role="doc">README.Auth</file>
         <dir name="Container">
-	  <file role="php">DB.php</file>
-	  <file role="php">File.php</file>
-	  <file role="php">LDAP.php</file>
+          <file role="php">DB.php</file>
+          <file role="php">File.php</file>
+          <file role="php">LDAP.php</file>
         </dir>
       </dir>
     </filelist>
@@ -120,9 +120,9 @@
         <file role="php">Container.php</file>
         <file role="doc">README.Auth</file>
         <dir name="Container">
-	  <file role="php">DB.php</file>
-	  <file role="php">File.php</file>
-	  <file role="php">LDAP.php</file>
+          <file role="php">DB.php</file>
+          <file role="php">File.php</file>
+          <file role="php">LDAP.php</file>
         </dir>
       </dir>
     </filelist>
@@ -144,9 +144,9 @@
         <file role="php">Container.php</file>
         <file role="doc">README.Auth</file>
         <dir name="Container">
-	  <file role="php">DB.php</file>
-	  <file role="php">File.php</file>
-	  <file role="php">LDAP.php</file>
+          <file role="php">DB.php</file>
+          <file role="php">File.php</file>
+          <file role="php">LDAP.php</file>
         </dir>
       </dir>
     </filelist>
