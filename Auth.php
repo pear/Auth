@@ -24,7 +24,6 @@ require_once "PEAR.php";
 define("AUTH_IDLED",       -1);
 define("AUTH_EXPIRED",     -2);
 define("AUTH_WRONG_LOGIN", -3);
-define("AUTH_USER_NOBODY", "nobody");
 
 /**
  * PEAR::Auth
