@@ -81,30 +81,28 @@ class Auth_Container
     function verifyPassword($password1, $password2, $cryptType = "md5")
     {
         switch ($cryptType) {
-        case "crypt" :
-            return (($password2 == "**" . $password1) ||
-                    (crypt($password1, $password2) == $password2)
-                    );
-            break;
-
-        case "none" :
-            return ($password1 == $password2);
-            break;
-
-        case "md5" :
-            return (md5($password1) == $password2);
-            break;
-
-        default :
-            if (function_exists($cryptType)) {
-                return ($cryptType($password1) == $password2);
-            }
-            else if (method_exists($this,$cryptType)) { 
-                return ($this->$cryptType($password1) == $password2);
-            } else {
-                return false;
-            }
-            break;
+            case "crypt" :
+                return ( crypt($password1, $password2) == $password2 );
+                break;
+    
+            case "none" :
+                return ($password1 == $password2);
+                break;
+    
+            case "md5" :
+                return (md5($password1) == $password2);
+                break;
+    
+            default :
+                if (function_exists($cryptType)) {
+                    return ($cryptType($password1) == $password2);
+                }
+                else if (method_exists($this,$cryptType)) { 
+                    return ($this->$cryptType($password1) == $password2);
+                } else {
+                    return false;
+                }
+                break;
         }
     }
 
