@@ -55,16 +55,28 @@ class Auth_Container_POP3 extends Auth_Container
      * @param  $server string server or server:port combination
      * @return object Returns an error object if something went wrong
      */
-    function Auth_Container_POP3($server)
+    function Auth_Container_POP3($server=null)
     {
-        if(strstr($server, ':')){
-            $serverparts = explode(':', trim($server));
-            $this->server = $serverparts[0];
-            $this->port = $serverparts[1];
-        }
-        else
-        {
-            $this->server = $server;
+        if(isset($server)){
+            if(is_array($server)){
+                if(isset($server['host'])){
+                    $this->server = $server['host'];
+                }
+                if(isset($server['port'])){
+                    $this->port = $server['port'];
+                }
+            }
+            else{
+                if(strstr($server, ':')){
+                    $serverparts = explode(':', trim($server));
+                    $this->server = $serverparts[0];
+                    $this->port = $serverparts[1];
+                }
+                else
+                {
+                    $this->server = $server;
+                }
+            }
         }
     }
 
