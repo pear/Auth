@@ -43,7 +43,7 @@ require_once "PEAR.php";
  *
  * $a = new Auth("LDAP", array(
  *       'host' => 'localhost',
- *       'port' => '389';
+ *       'port' => '389',
  *       'basedn' => 'o=netsols,c=de',
  *       'userattr' => 'uid'
  *       );
