@@ -19,7 +19,7 @@
 // $Id$
 //
 
-require_once 'Auth/Container.php';
+require_once 'Auth/Container/DB.php';
 require_once 'MDB.php';
 
 /**
@@ -32,7 +32,7 @@ require_once 'MDB.php';
  * @package  Auth
  * @version  $Revision$
  */
-class Auth_Container_MDB extends Auth_Container
+class Auth_Container_MDB extends Auth_Container_DB
 {
 
     /**
@@ -142,42 +142,6 @@ class Auth_Container_MDB extends Auth_Container
     }
 
     // }}}
-    // {{{ _setDefaults()
-
-    /**
-     * Set some default options
-     *
-     * @access private
-     */
-    function _setDefaults()
-    {
-        $this->options['table']       = "auth";
-        $this->options['usernamecol'] = "username";
-        $this->options['passwordcol'] = "password";
-        $this->options['dsn']         = "";
-        $this->options['db_fields']   = "*";
-        $this->options['cryptType']   = "md5";
-    }
-
-    // }}}
-    // {{{ _parseOptions()
-
-    /**
-     * Parse options passed to the container class
-     *
-     * @access private
-     * @param  array
-     */
-    function _parseOptions($array)
-    {
-        foreach ($array as $key => $value) {
-            if (isset($this->options[$key])) {
-                $this->options[$key] = $value;
-            }
-        }
-    }
-
-    // }}}
     // {{{ fetchData()
 
     /**
@@ -224,8 +188,6 @@ class Auth_Container_MDB extends Auth_Container
                                           $entry[$this->options['passwordcol']],
                                           $this->options['cryptType']))
                 {
-                    @$this->db->freeResult($res);
-
                     return true;
                 } else {
                     $this->activeUser = $entry[$this->options['usernamecol']];
