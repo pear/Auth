@@ -266,7 +266,7 @@ class Auth {
 
         @session_start();
 
-        if (!$this->checkAuth()) {
+        if (!$this->checkAuth() && $this->showLogin) {
             $this->login();
         }
     }
