@@ -158,6 +158,16 @@ class Auth {
      */
     var $version = "@version@";
 
+    /**
+     * Flag to use advanced security
+     * when set extra checks will be made, to see if the user ip 
+     * or useragent have changed accross requests, set to off by default to preserve BC
+     *
+     * @var boolean
+     */     
+    var $advancedsecurity = false;
+
+
     // {{{ Constructor
 
     /**
@@ -519,11 +529,16 @@ class Auth {
         }
 
         $session[$this->_sessionName]['sessionip'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+        $session[$this->_sessionName]['sessionuseragent'] = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
         $session[$this->_sessionName]['registered'] = true;
         $session[$this->_sessionName]['username']   = $username;
         $session[$this->_sessionName]['timestamp']  = time();
         $session[$this->_sessionName]['idle']       = time();
+    }
+    
+    function setAdvancedSecurity($flag=true){
+        $this->advancedsecurity = $flag;
     }
 
     // }}}
@@ -538,12 +553,26 @@ class Auth {
     function checkAuth()
     {
         $session = &$this->_importGlobalVariable('session');
-        if(isset($session[$this->_sessionName]['sessionip']) && isset($_SERVER['REMOTE_ADDR']) && $session[$this->_sessionName]['sessionip'] != $_SERVER['REMOTE_ADDR']){
-            // Check if the ip of the user has changed, if so we assume a man in the middle attach an log him out
-            $this->logout();
-            $this->expired = true;
-            $this->status = AUTH_SECURITY_BREACH;
-            return false;
+        
+        if($this->advancedsecurity){
+            // Check for ip change
+            if(isset($session[$this->_sessionName]['sessionip']) && isset($_SERVER['REMOTE_ADDR']) && $session[$this->_sessionName]['sessionip'] != $_SERVER['REMOTE_ADDR']){
+                // Check if the ip of the user has changed, if so we assume a man in the middle attach an log him out
+                $this->logout();
+                $this->expired = true;
+                $this->status = AUTH_SECURITY_BREACH;
+                return false;
+            }
+            
+            // Check for useragent change
+            if(isset($session[$this->_sessionName]['sessionuseragent']) && isset($_SERVER['HTTP_USER_AGENT']) && $session[$this->_sessionName]['sessionuseragent'] != $_SERVER['HTTP_USER_AGENT']){
+                // Check if the ip of the user has changed, if so we assume a man in the middle attach an log him out
+                $this->logout();
+                $this->expired = true;
+                $this->status = AUTH_SECURITY_BREACH;
+                return false;
+            }
+            
         }
 
         if (isset($session[$this->_sessionName])) {
