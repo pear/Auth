@@ -19,8 +19,8 @@
 // $Id$
 //
 
-require_once "Auth/Container.php";
-require_once "DB.php";
+require_once 'Auth/Container.php';
+require_once 'DB.php';
 
 /**
  * Storage driver for fetching login data from a database
@@ -46,13 +46,13 @@ class Auth_Container_DB extends Auth_Container
      * @var object
      */
     var $db = null;
-    var $dsn = "";
+    var $dsn = '';
 
     /**
      * User that is currently selected from the DB.
      * @var string
      */
-    var $activeUser = "";
+    var $activeUser = '';
 
     // {{{ Constructor
 
@@ -72,7 +72,7 @@ class Auth_Container_DB extends Auth_Container
             $this->_parseOptions($dsn);
 
             if (empty($this->options['dsn'])) {
-                PEAR::raiseError("No connection parameters specified!");
+                PEAR::raiseError('No connection parameters specified!');
             }
         } else {
             $this->options['dsn'] = $dsn;
@@ -98,7 +98,7 @@ class Auth_Container_DB extends Auth_Container
         } elseif (DB::isError($dsn)) {
             return PEAR::raiseError($dsn->getMessage(), $dsn->getCode());
         } else {
-            return PEAR::raiseError("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__,
+            return PEAR::raiseError('The given dsn was not valid in file ' . __FILE__ . ' at line ' . __LINE__,
                                     41,
                                     PEAR_ERROR_RETURN,
                                     null,
@@ -171,12 +171,12 @@ class Auth_Container_DB extends Auth_Container
      */
     function _setDefaults()
     {
-        $this->options['table']       = "auth";
-        $this->options['usernamecol'] = "username";
-        $this->options['passwordcol'] = "password";
-        $this->options['dsn']         = "";
-        $this->options['db_fields']   = "*";
-        $this->options['cryptType']   = "md5";
+        $this->options['table']       = 'auth';
+        $this->options['usernamecol'] = 'username';
+        $this->options['passwordcol'] = 'password';
+        $this->options['dsn']         = ';
+        $this->options['db_fields']   = '';
+        $this->options['cryptType']   = 'md5';
     }
 
     // }}}
@@ -206,7 +206,7 @@ class Auth_Container_DB extends Auth_Container
      * This function uses the given username to fetch
      * the corresponding login data from the database
      * table. If an account that matches the passed username
-     * and password is found, the function returns true. 
+     * and password is found, the function returns true.
      * Otherwise it returns false.
      *
      * @param   string Username
@@ -215,21 +215,20 @@ class Auth_Container_DB extends Auth_Container
      */
     function fetchData($username, $password)
     {
-        /* Prepare for a database query */
+        // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
-        /* Include additional fields if they exist */
-        $cols = "";
+        // Include additional fields if they exist
+        $cols = '';
         if (!empty($this->options['db_fields'])) {
-            $cols = "," . $this->options['db_fields'];
+            $cols = ',' . $this->options['db_fields'];
         }
 
-        $query = sprintf("SELECT %s FROM %s
-                             WHERE %s = '%s'",
-                         $this->options['usernamecol'] . ", "
+        $query = sprintf("SELECT %s FROM %s WHERE %s = '%s'",
+                         $this->options['usernamecol'] . ', '
                          . $this->options['passwordcol']
                          . $cols,
                          $this->options['table'],
@@ -242,10 +241,10 @@ class Auth_Container_DB extends Auth_Container
             return PEAR::raiseError($res->getMessage(), $res->getCode());
         }
         if (!is_array($res)) {
-            $this->activeUser = "";
+            $this->activeUser = '';
             return false;
         }
-        if ($this->verifyPassword(trim($password), 
+        if ($this->verifyPassword(trim($password),
                                   trim($res[$this->options['passwordcol']]),
                                   $this->options['cryptType'])) {
             // Store additional field values in the session
@@ -277,7 +276,7 @@ class Auth_Container_DB extends Auth_Container
         $retVal = array();
 
         $query = sprintf("SELECT %s FROM %s",
-                         $this->options['db_fields'],
+                         (empty($this->options['db_fields']) ? '*' : $this->options['db_fields']),
                          $this->options['table']
                          );
         $res = $this->db->getAll($query, null, DB_FETCHMODE_ASSOC);
@@ -311,15 +310,15 @@ class Auth_Container_DB extends Auth_Container
         if (function_exists($this->options['cryptType'])) {
             $cryptFunction = $this->options['cryptType'];
         } else {
-            $cryptFunction = "md5";
+            $cryptFunction = 'md5';
         }
 
-        $additional_key = "";
-        $additional_value = "";
+        $additional_key   = '';
+        $additional_value = '';
 
         if (is_array($additional)) {
             foreach ($additional as $key => $value) {
-                $additional_key .= ", " . $key;
+                $additional_key .= ', ' . $key;
                 $additional_value .= ", '" . $value . "'";
             }
         }
