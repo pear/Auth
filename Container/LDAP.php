@@ -49,21 +49,29 @@ require_once "PEAR.php";
  *              This has to be a complete dn for now (basedn and
  *              userdn will not be appended).
  * bindpw:      The password to use for binding with binddn
- * scope:       one, sub (default), or base
  * basedn:      the base dn of your server
  * userdn:      gets prepended to basedn when searching for user
+ * userscope:   Scope for user searching: one, sub (default), or base
  * userattr:    the user attribute to search for (default: uid)
- * useroc:      objectclass of user (for the search filter)
- *              (default: posixAccount)
+ * userfilter:  filter that will be added to the search filter
+ *              this way: (&(userattr=username)(userfilter))
+ *              default: (objectClass=posixAccount)
+ * attributes:  array of additional attributes to fetch from entry.
+ *              these will added to auth data and can be retrieved via
+ *              Auth::getAuthData(). An empty array will fetch all attributes,
+ *              array('') will fetch no attributes at all (default)
  * groupdn:     gets prepended to basedn when searching for group
- * groupattr  : the group attribute to search for (default: cn)
- * groupoc    : objectclass of group (for the search filter)
- *              (default: groupOfUniqueNames)
+ * groupattr:   the group attribute to search for (default: cn)
+ * groupfilter: filter that will be added to the search filter when
+ *              searching for a group:
+ *              (&(groupattr=group)(memberattr=username)(groupfilter))
+ *              default: (objectClass=groupOfUniqueNames)
  * memberattr : the attribute of the group object where the user dn
  *              may be found (default: uniqueMember)
  * memberisdn:  whether the memberattr is the dn of the user (default)
  *              or the value of userattr (usually uid)
  * group:       the name of group to search for
+ * groupscope:  Scope for group searching: one, sub (default), or base
  * debug:       Enable/Disable debugging output (default: false)
  *
  * To use this storage container, you have to use the following syntax:
@@ -82,25 +90,34 @@ require_once "PEAR.php";
  * $a2 = new Auth('LDAP', array(
  *       'url' => 'ldaps://ldap.netsols.de',
  *       'basedn' => 'o=netsols,c=de',
- *       'scope' => 'one',
+ *       'userscope' => 'one',
  *       'userdn' => 'ou=People',
  *       'groupdn' => 'ou=Groups',
- *       'groupoc' => 'posixGroup',
+ *       'groupfilter' => '(objectClass=posixGroup)',
  *       'memberattr' => 'memberUid',
  *       'memberisdn' => false,
  *       'group' => 'admin'
  *       ));
  *
+ * This is a full blown example with user/group checking to an Active Directory
+ *
  * $a3 = new Auth('LDAP', array(
- *         'host' => 'ad.netsols.de',
- *         'basedn' => 'dc=netsols,dc=de',
- *         'userdn' => 'ou=Users',
- *         'binddn' => 'cn=Jan Wagner,ou=Users,dc=netsols,dc=de',
- *         'bindpw' => '*******',
- *         'userattr' => 'samAccountName',
- *         'useroc' => 'user',
- *          'debug' => true
- *         ));             
+ *       'host' => 'ldap.netsols.de',
+ *       'port' => 389,
+ *       'basedn' => 'dc=netsols,dc=de',
+ *       'binddn' => 'cn=Jan Wagner,ou=Users,dc=netsols,dc=de',
+ *       'bindpw' => 'password',
+ *       'userattr' => 'samAccountName',
+ *       'userfilter' => '(objectClass=user)',
+ *       'attributes' => array(''),
+ *       'group' => 'testing',
+ *       'groupattr' => 'samAccountName',
+ *       'groupfilter' => '(objectClass=group)',
+ *       'memberattr' => 'member',
+ *       'memberisdn' => true,
+ *       'groupdn' => 'ou=Users',
+ *       'groupscope' => 'one',
+ *       'debug' => true);
  *
  * The parameter values have to correspond
  * to the ones for your LDAP server of course.
@@ -147,12 +164,6 @@ class Auth_Container_LDAP extends Auth_Container
     var $conn_id = false;
 
     /**
-     * LDAP search function to use
-     * @var string
-     */
-    var $ldap_search_func;
-
-    /**
      * Constructor of the container class
      *
      * @param  $params, associative hash with host,port,basedn and userattr key
@@ -192,13 +203,11 @@ class Auth_Container_LDAP extends Auth_Container
         }
         $this->_debug('Successfully connected to server', __LINE__);
 
-        // try switchig to LDAPv3
-        $ver = 0;
+        // try switchig to LDAPv3        
         if (@ldap_get_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $ver) && $ver >= 2) {
             $this->_debug('Switching to LDAPv3', __LINE__);
             @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, 3);
         }
-
         // bind with credentials or anonymously
         if ($this->options['binddn'] && $this->options['bindpw']) {
             $this->_debug('Binding with credentials', __LINE__);
@@ -206,8 +215,7 @@ class Auth_Container_LDAP extends Auth_Container
         } else {
             $this->_debug('Binding anonymously', __LINE__);
             $bind_params = array($this->conn_id);
-        }
-        
+        }        
         // bind for searching
         if ((@call_user_func_array('ldap_bind', $bind_params)) == false) {
             $this->_debug();
@@ -242,12 +250,12 @@ class Auth_Container_LDAP extends Auth_Container
 
             $result_id = @ldap_read($this->conn_id, "", "(objectclass=*)", array("namingContexts"));
             
-            if (ldap_count_entries($this->conn_id, $result_id) == 1) {
+            if (@ldap_count_entries($this->conn_id, $result_id) == 1) {
                 
                 $this->_debug("got result for namingContexts", __LINE__);
                 
-                $entry_id = ldap_first_entry($this->conn_id, $result_id);
-                $attrs = ldap_get_attributes($this->conn_id, $entry_id);
+                $entry_id = @ldap_first_entry($this->conn_id, $result_id);
+                $attrs = @ldap_get_attributes($this->conn_id, $entry_id);
                 $basedn = $attrs['namingContexts'][0];
 
                 if ($basedn != "") {
@@ -255,7 +263,7 @@ class Auth_Container_LDAP extends Auth_Container
                     $this->options['basedn'] = $basedn;
                 }
             }
-            ldap_free_result($result_id);
+            @ldap_free_result($result_id);
         }
 
         // if base ist still not set, raise error
@@ -288,18 +296,22 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _setDefaults()
     {
+        $this->options['url']         = '';
         $this->options['host']        = 'localhost';
         $this->options['port']        = '389';
         $this->options['binddn']      = '';
-        $this->options['bindpw']      = '';
-        $this->options['scope']       = 'sub';
+        $this->options['bindpw']      = '';        
         $this->options['basedn']      = '';
         $this->options['userdn']      = '';
+        $this->options['userscope']   = 'sub';
         $this->options['userattr']    = "uid";
-        $this->options['useroc']      = 'posixAccount';
+        $this->options['userfilter']  = '(objectClass=posixAccount)';
+        $this->options['attributes']  = array(''); // no attributes
+        $this->options['group']       = '';
         $this->options['groupdn']     = '';
+        $this->options['groupscope']  = 'sub';
         $this->options['groupattr']   = 'cn';
-        $this->options['groupoc']     = 'groupOfUniqueNames';
+        $this->options['groupfilter'] = '(objectClass=groupOfUniqueNames)';
         $this->options['memberattr']  = 'uniqueMember';
         $this->options['memberisdn']  = true;
         $this->options['debug']       = false;
@@ -314,22 +326,32 @@ class Auth_Container_LDAP extends Auth_Container
     function _parseOptions($array)
     {
         foreach ($array as $key => $value) {
-            $this->options[$key] = $value;
+            if (array_key_exists($key, $this->options)) {
+                $this->options[$key] = $value;
+            }
         }
-
-        // get the according search function for selected scope
-        switch($this->options['scope']) {
+    }
+    
+    /**
+     * Get search function for scope
+     *
+     * @param  string scope
+     * @return string ldap search function
+     */
+    function _scope2function($scope)
+    {
+        switch($scope) {
         case 'one':
-            $this->ldap_search_func = 'ldap_list';
+            $function = 'ldap_list';
             break;
         case 'base':
-            $this->ldap_search_func = 'ldap_read';
+            $function = 'ldap_read';
             break;
         default:
-            $this->ldap_search_func = 'ldap_search';
+            $function = 'ldap_search';
             break;
         }
-        $this->_debug("LDAP search function will be: {$this->ldap_search_func}", __LINE__);
+        return $function;
     }
 
     /**
@@ -343,38 +365,59 @@ class Auth_Container_LDAP extends Auth_Container
      * @return boolean
      */
     function fetchData($username, $password)
-    {        
-
+    {                
         $this->_connect();
         $this->_getBaseDN();
-        
-        // make search filter
-        $filter = sprintf('(&(objectClass=%s)(%s=%s))', $this->options['useroc'], $this->options['userattr'], $username);
 
+        // UTF8 Encode username for LDAPv3
+        if (@ldap_get_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $ver) && $ver == 3) {
+            $this->_debug('UTF8 encoding username for LDAPv3', __LINE__);
+            $username = utf8_encode($username);
+        }
+        // make search filter
+        $filter = sprintf('(&(%s=%s)%s)',
+                          $this->options['userattr'],
+                          $username,
+                          $this->options['userfilter']);
         // make search base dn
         $search_basedn = $this->options['userdn'];
         if ($search_basedn != '' && substr($search_basedn, -1) != ',') {
             $search_basedn .= ',';
         }
         $search_basedn .= $this->options['basedn'];
-        
-        // make functions params array
-        $func_params = array($this->conn_id, $search_basedn, $filter, array($this->options['userattr']));
 
-        $this->_debug("Searching with $filter in $search_basedn", __LINE__);
+        // attributes
+        $attributes = $this->options['attributes'];
+
+        // make functions params array
+        $func_params = array($this->conn_id, $search_basedn, $filter, $attributes);
+
+        // search function to use
+        $func_name = $this->_scope2function($this->options['userscope']);
+        
+        $this->_debug("Searching with $func_name and filter $filter in $search_basedn", __LINE__);
 
         // search
-        if (($result_id = @call_user_func_array($this->ldap_search_func, $func_params)) == false) {
+        if (($result_id = @call_user_func_array($func_name, $func_params)) == false) {
             $this->_debug('User not found', __LINE__);
-        } elseif (ldap_count_entries($this->conn_id, $result_id) == 1) { // did we get just one entry?
+        } elseif (@ldap_count_entries($this->conn_id, $result_id) == 1) { // did we get just one entry?
 
             $this->_debug('User was found', __LINE__);
             
             // then get the user dn
-            $entry_id = ldap_first_entry($this->conn_id, $result_id);
-            $user_dn  = ldap_get_dn($this->conn_id, $entry_id);
+            $entry_id = @ldap_first_entry($this->conn_id, $result_id);
+            $user_dn  = @ldap_get_dn($this->conn_id, $entry_id);
 
-            ldap_free_result($result_id);
+            // fetch attributes
+            if ($attributes = @ldap_get_attributes($this->conn_id, $entry_id)) {
+                if (is_array($attributes) && isset($attributes['count']) &&
+                     $attributes['count'] > 0)
+                {
+                    $this->_debug('Saving attributes to Auth data', __LINE__);
+                    $this->_auth_obj->setAuthData('attributes', $attributes);
+                }
+            }
+            @ldap_free_result($result_id);
 
             // need to catch an empty password as openldap seems to return TRUE
             // if anonymous binding is allowed
@@ -386,7 +429,7 @@ class Auth_Container_LDAP extends Auth_Container
                     $this->_debug('Bind successful', __LINE__);
 
                     // check group if appropiate
-                    if (isset($this->options['group'])) {
+                    if (strlen($this->options['group'])) {
                         // decide whether memberattr value is a dn or the username
                         $this->_debug('Checking group membership', __LINE__);
                         return $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $username);
@@ -416,13 +459,12 @@ class Auth_Container_LDAP extends Auth_Container
     function checkGroup($user) 
     {
         // make filter
-        $filter = sprintf('(&(%s=%s)(objectClass=%s)(%s=%s))',
+        $filter = sprintf('(&(%s=%s)(%s=%s)%s)',
                           $this->options['groupattr'],
                           $this->options['group'],
-                          $this->options['groupoc'],
                           $this->options['memberattr'],
-                          $user
-                          );
+                          $user,
+                          $this->options['groupfilter']);
 
         // make search base dn
         $search_basedn = $this->options['groupdn'];
@@ -431,20 +473,21 @@ class Auth_Container_LDAP extends Auth_Container
         }
         $search_basedn .= $this->options['basedn'];
         
-        $func_params = array($this->conn_id, $search_basedn, $filter, array($this->options['memberattr']));
+        $func_params = array($this->conn_id, $search_basedn, $filter,
+                             array($this->options['memberattr']));
+        $func_name = $this->_scope2function($this->options['groupscope']);
 
-        $this->_debug("Searching with $filter in $search_basedn", __LINE__);
+        $this->_debug("Searching with $func_name and filter $filter in $search_basedn", __LINE__);
         
         // search
-        if (($result_id = @call_user_func_array($this->ldap_search_func, $func_params)) != false) {
-            if (ldap_count_entries($this->conn_id, $result_id) == 1) {                
-                ldap_free_result($result_id);
+        if (($result_id = @call_user_func_array($func_name, $func_params)) != false) {
+            if (@ldap_count_entries($this->conn_id, $result_id) == 1) {                
+                @ldap_free_result($result_id);
                 $this->_debug('User is member of group', __LINE__);
                 $this->_disconnect();
                 return true;
             }
         }
-
         // default
         $this->_debug('User is NOT member of group', __LINE__);
         $this->_disconnect();
