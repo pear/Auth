@@ -69,7 +69,7 @@ class TestAuthContainer extends PHPUnit_TestCase
         }
 
         if (PEAR::isError($res)) {
-            $error = $res->getMessage().' ['.$res->UserInfo().']';
+            $error = $res->getMessage().' ['.$res->getUserInfo().']';
         } else {
             $error = '';
         }
@@ -99,6 +99,39 @@ class TestAuthContainer extends PHPUnit_TestCase
         }
 
         $this->assertTrue($fetch_res,sprintf('Could not verify with the default username (%s) and passwd (%s)', $opt['username'], $opt['passwd']));
+    }
+    
+    
+    /**
+     * Tjis test depends on add user & remove user to work
+     */
+    function testFetchDataSpaceInPassword()
+    {
+    
+        if ($this->skip_tests) {
+            $this->fail($this->skip_tests_message.'');
+            return(false);
+        }
+        
+        $user = uniqid('user');
+        $pass = 'Some Pass ';
+        
+        $res = $this->container->addUser($user, $pass, array());
+        if (AUTH_METHOD_NOT_SUPPORTED === $res) {
+            $this->fail("This operation is not supported by ".get_class($this->container));
+            return(false);
+        } else {
+            $fetch_res = $this->container->fetchData($user, $pass);
+            if (AUTH_METHOD_NOT_SUPPORTED === $fetch_res) {
+                $this->fail("This operation is not supported by ".get_class($this->container));
+                return(false);
+            } else {
+                $this->assertTrue($fetch_res, 'Could not verify user with space password');
+            }           
+        }
+        
+        print "Removing user:".$user;
+        $remove_res = $this->container->removeUser($user);
     }
 
     function testFetchDataFail()
