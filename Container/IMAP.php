@@ -122,7 +122,7 @@ class Auth_Container_IMAP extends Auth_Container
      */
     function _checkServer() {
         $fp = @fsockopen ($this->options['host'], $this->options['port'],
-                          $errno, $errstr, $timeout);
+                          $errno, $errstr, $this->options['timeout']);
         if (is_resource($fp)) {
             @fclose($fp);
         } else {
