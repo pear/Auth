@@ -276,11 +276,7 @@ class Auth_Container_MDB extends Auth_Container
                 }
                 // Use reference to the auth object if exists
                 // This is because the auth session variable can change so a static call to setAuthData does not make sense
-                if (is_object($this->_auth_obj)) {
-                    $this->_auth_obj->setAuthData($key, $value);
-                } else {
-                    Auth::setAuthData($key, $value);
-                }
+                $this->_auth_obj->setAuthData($key, $value);
             }
             return true;
         }
@@ -293,7 +289,10 @@ class Auth_Container_MDB extends Auth_Container
     // {{{ listUsers()
 
     /**
-     * @return array
+     * Returns a list of users from the container
+     *
+     * @return mixed array|PEAR_Error
+     * @access public
      */
     function listUsers()
     {
@@ -451,22 +450,22 @@ class Auth_Container_MDB extends Auth_Container
     // {{{ supportsChallengeResponse()
 
     /**
-     * Check if challenge response is supported
+     * Determine if this container supports
+     * password authentication with challenge response
      *
-     * @return boolean
+     * @return bool
+     * @access public
      */
     function supportsChallengeResponse()
     {
-        return ($this->options['cryptType'] == 'md5' ||
-            $this->options['cryptType'] == 'none' ||
-            $this->options['cryptType'] == '');
+        return in_array($this->options['cryptType'], array('md5', 'none', ''));
     }
 
     // }}}
     // {{{ getCryptType()
 
     /**
-     * Get the crypt function name
+     * Returns the selected crypt type for this container
      *
      * @return string Function used to crypt the password
      */
