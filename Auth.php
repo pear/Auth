@@ -299,7 +299,7 @@ class Auth
 
         $this->assignData();
 
-        if (!$this->checkAuth() && $this->showLogin) {
+        if (!$this->checkAuth()) {
             $this->login();
         }
     }
@@ -331,7 +331,7 @@ class Auth
             $this->status = AUTH_WRONG_LOGIN;
         }
 
-        if ($this->username == "" || !$login_ok) {
+        if (($this->username == "" || !$login_ok) && $this->showLogin) {
             $this->drawLogin($this->storage->activeUser);
             return;
         }
