@@ -81,7 +81,8 @@ the login data:
       </file>
       <!-- Added for compatibility with the previous Auth -->
       <dir name="Auth" role="php" baseinstalldir="">
-          <file name="Auth.php"/>
+          <file name="Auth.php" />
+          <file name="Controller.php" />
       </dir>
       <file role="php" baseinstalldir="Auth" name="Container.php"/>
       <file role="doc" baseinstalldir="Auth" name="README.Auth"/>
