@@ -77,7 +77,7 @@ require_once "PEAR.php";
  *       'basedn' => 'o=netsols,c=de',
  *       'userattr' => 'uid'
  *       'binddn' => 'cn=admin,o=netsols,c=de',
- *       'bindpw' => 'password');
+ *       'bindpw' => 'password'));
  *
  * $a2 = new Auth('LDAP', array(
  *       'url' => 'ldaps://ldap.netsols.de',
@@ -89,7 +89,18 @@ require_once "PEAR.php";
  *       'memberattr' => 'memberUid',
  *       'memberisdn' => false,
  *       'group' => 'admin'
- *       );
+ *       ));
+ *
+ * $a3 = new Auth('LDAP', array(
+ *         'host' => 'ad.netsols.de',
+ *         'basedn' => 'dc=netsols,dc=de',
+ *         'userdn' => 'ou=Users',
+ *         'binddn' => 'cn=Jan Wagner,ou=Users,dc=netsols,dc=de',
+ *         'bindpw' => '*******',
+ *         'userattr' => 'samAccountName',
+ *         'useroc' => 'user',
+ *          'debug' => true
+ *         ));             
  *
  * The parameter values have to correspond
  * to the ones for your LDAP server of course.
@@ -114,6 +125,9 @@ require_once "PEAR.php";
  * is not allowed, so you have to set binddn and bindpw for
  * user searching,
  *
+ * Example a3 shows a tested example for connenction to Windows 2000
+ * Active Directory
+ *
  * @author   Jan Wagner <wagner@netsols.de>
  * @package  Auth
  * @version  $Revision$
@@ -127,7 +141,7 @@ class Auth_Container_LDAP extends Auth_Container
     var $options = array();
 
     /**
-     * Connection ID of LDAP
+     * Connection ID of LDAP Link
      * @var string
      */
     var $conn_id = false;
@@ -151,37 +165,6 @@ class Auth_Container_LDAP extends Auth_Container
         if (is_array($params)) {
             $this->_parseOptions($params);
         }
-
-        $this->_connect();
-
-        // if basedn is not specified, try to find it via namingContexts
-        if ($this->options['basedn'] == "") {           
-            $this->_debug("basedn not set, searching via namingContexts.", __LINE__);
-
-            $result_id = @ldap_read($this->conn_id, "", "(objectclass=*)", array("namingContexts"));
-
-            if (ldap_count_entries($this->conn_id, $result_id) == 1) {
-
-                $this->_debug("got result for namingContexts", __LINE__);
-
-                $entry_id = ldap_first_entry($this->conn_id, $result_id);
-                $attrs = ldap_get_attributes($this->conn_id, $entry_id);
-                $basedn = $attrs['namingContexts'][0];
-
-                if ($basedn != "") {
-                    $this->_debug("result for namingContexts was $basedn", __LINE__);
-                    $this->options['basedn'] = $basedn;
-                }
-            }
-            ldap_free_result($result_id);
-        }
-
-        // if base ist still not set, raise error
-        if ($this->options['basedn'] == "") {
-            return PEAR::raiseError("Auth_Container_LDAP: LDAP search base not specified!", 41, PEAR_ERROR_DIE);
-        }
-
-        return true;
     }
 
     // }}}
@@ -226,14 +209,77 @@ class Auth_Container_LDAP extends Auth_Container
         }
         
         // bind for searching
-        if ((@call_user_func_array("ldap_bind", $bind_params)) == false) {
+        if ((@call_user_func_array('ldap_bind', $bind_params)) == false) {
+            $this->_debug();
+            $this->_disconnect();
             return PEAR::raiseError("Auth_Container_LDAP: Could not bind to LDAP server.", 41, PEAR_ERROR_DIE);
         }
         $this->_debug('Binding was successful', __LINE__);
     }
 
-    // }}}
-    // {{{ _setDefaults()
+    /**
+     * Disconnects (unbinds) from ldap server
+     *
+     * @access private
+     */
+    function _disconnect() 
+    {
+        if($this->_isValidLink()) {
+            $this->_debug('disconnecting from server');
+            @ldap_unbind($this->conn_id);
+        }
+    }
+
+    /**
+     * Tries to find Basedn via namingContext Attribute
+     *
+     * @access private
+     */
+    function _getBaseDN()
+    {
+        if ($this->options['basedn'] == "" && $this->_isValidLink()) {           
+            $this->_debug("basedn not set, searching via namingContexts.", __LINE__);
+
+            $result_id = @ldap_read($this->conn_id, "", "(objectclass=*)", array("namingContexts"));
+            
+            if (ldap_count_entries($this->conn_id, $result_id) == 1) {
+                
+                $this->_debug("got result for namingContexts", __LINE__);
+                
+                $entry_id = ldap_first_entry($this->conn_id, $result_id);
+                $attrs = ldap_get_attributes($this->conn_id, $entry_id);
+                $basedn = $attrs['namingContexts'][0];
+
+                if ($basedn != "") {
+                    $this->_debug("result for namingContexts was $basedn", __LINE__);
+                    $this->options['basedn'] = $basedn;
+                }
+            }
+            ldap_free_result($result_id);
+        }
+
+        // if base ist still not set, raise error
+        if ($this->options['basedn'] == "") {
+            return PEAR::raiseError("Auth_Container_LDAP: LDAP search base not specified!", 41, PEAR_ERROR_DIE);
+        }        
+        return true;
+    }
+
+    /**
+     * determines whether there is a valid ldap conenction or not
+     *
+     * @accessd private
+     * @return boolean
+     */
+    function _isValidLink() 
+    {
+        if(is_resource($this->conn_id)) {
+            if(get_resource_type($this->conn_id) == 'ldap link') {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Set some default options
@@ -298,6 +344,10 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function fetchData($username, $password)
     {        
+
+        $this->_connect();
+        $this->_getBaseDN();
+        
         // make search filter
         $filter = sprintf('(&(objectClass=%s)(%s=%s))', $this->options['useroc'], $this->options['userattr'], $username);
 
@@ -316,18 +366,13 @@ class Auth_Container_LDAP extends Auth_Container
         // search
         if (($result_id = @call_user_func_array($this->ldap_search_func, $func_params)) == false) {
             $this->_debug('User not found', __LINE__);
-            return false;
-        }
+        } elseif (ldap_count_entries($this->conn_id, $result_id) == 1) { // did we get just one entry?
 
-        // did we get just one entry?
-        if (ldap_count_entries($this->conn_id, $result_id) == 1) {
-
+            $this->_debug('User was found', __LINE__);
+            
             // then get the user dn
             $entry_id = ldap_first_entry($this->conn_id, $result_id);
             $user_dn  = ldap_get_dn($this->conn_id, $entry_id);
-            $attrval  = ldap_get_values($this->conn_id, $entry_id, $this->options['userattr']);
-
-            $this->_debug("Found $user_dn", __LINE__);
 
             ldap_free_result($result_id);
 
@@ -342,19 +387,20 @@ class Auth_Container_LDAP extends Auth_Container
 
                     // check group if appropiate
                     if(isset($this->options['group'])) {
-                        // decide whether memberattr value is a dn or the unique useer attribute (uid)
+                        // decide whether memberattr value is a dn or the username
                         $this->_debug('Checking group membership', __LINE__);
-                        return $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $attrval[0]);
+                        return $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $username);
                     } else {
                         $this->_debug('Authenticated', __LINE__);
+                        $this->_disconnect();
                         return true; // user authenticated
-                    }
-                }
-            }
-            $this->activeUser = $username; // maybe he mistype his password?
-        }
+                    } // checkGroup
+                } // bind
+            } // non-empty password
+        } // one entry
         // default
         $this->_debug('NOT authenticated!', __LINE__);
+        $this->_disconnect();
         return false;
     }
 
@@ -394,12 +440,14 @@ class Auth_Container_LDAP extends Auth_Container
             if(ldap_count_entries($this->conn_id, $result_id) == 1) {                
                 ldap_free_result($result_id);
                 $this->_debug('User is member of group', __LINE__);
+                $this->_disconnect();
                 return true;
             }
         }
 
         // default
         $this->_debug('User is NOT member of group', __LINE__);
+        $this->_disconnect();
         return false;
     }
 
@@ -410,9 +458,12 @@ class Auth_Container_LDAP extends Auth_Container
      * @param string Debugging Message
      * @param integer Line number
      */
-    function _debug($msg, $line = 0)
+    function _debug($msg = '', $line = 0)
     {
         if($this->options['debug'] === true) {
+            if($msg == '' && $this->_isValidLink()) {
+                $msg = 'LDAP_Error: ' . @ldap_err2str(@ldap_errno($this->_conn_id));
+            }
             print("$line: $msg <br />");
         }
     }
