@@ -67,30 +67,13 @@ class Auth_Container_DB extends Auth_Container
 
             if ($this->options['dsn'] != "") {
                 $this->_connect($this->options['dsn']);
+                return true;
             } else {
                 return new DB_Error("No connection parameters specified!");
-            }
-        } else if (is_string($dsn)) {
-            $this->_connect($dsn);
+            }        
         }
-
-        elseif (is_object($dsn) && DB::isError($dsn)) {
-            return new DB_Error($dsn->code, PEAR_ERROR_DIE);
-        }
-
-        // if parent class is db_common, then it's already a connected identifier
-        elseif (get_parent_class($dsn) == "db_common") {
-            $this->db = $dsn;
-        }
-
-        else {
-            return new PEAR_Error("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__,
-                                  41,
-                                  PEAR_ERROR_RETURN,
-                                  null,
-                                  null
-                                  );
-        }
+        
+        $this->_connect($dsn);
     }
 
     // }}}
@@ -105,7 +88,21 @@ class Auth_Container_DB extends Auth_Container
      */
     function _connect($dsn)
     {
-        $this->db = DB::Connect($dsn);
+        if (is_string($dsn)) {
+            $this->db = DB::Connect($dsn);
+        } elseif (get_parent_class($dsn) == "db_common") {
+            $this->db = $dsn;
+        } elseif (is_object($dsn) && DB::isError($dsn)) {
+            return new DB_Error($dsn->code, PEAR_ERROR_DIE);
+        } else {
+            return new PEAR_Error("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__,
+                                  41,
+                                  PEAR_ERROR_RETURN,
+                                  null,
+                                  null
+                                  );
+
+        }
 
         if (DB::isError($this->db)) {
             return new DB_Error($this->db->code, PEAR_ERROR_DIE);
