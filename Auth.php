@@ -291,10 +291,6 @@ class Auth {
         if (!empty($this->username)) {
             if (true === $this->storage->fetchData($this->username, $this->password)) {
                 $login_ok = true;
-            } else {
-                if (is_callable($this->loginFailedCallback)) {
-                    call_user_func($this->loginFailedCallback,$this->username, $this);
-                }
             }
         }
 
@@ -311,6 +307,9 @@ class Auth {
          */
         if (!empty($this->username) && !$login_ok) {
             $this->status = AUTH_WRONG_LOGIN;
+            if (is_callable($this->loginFailedCallback)) {
+                call_user_func($this->loginFailedCallback,$this->username, $this);
+            }
         }
 
         if ((empty($this->username) || !$login_ok) && $this->showLogin) {
