@@ -19,7 +19,6 @@
 // $Id$
 //
 
-
 /**
  * PEAR::Auth
  *
@@ -312,10 +311,11 @@ class Auth
      * has logged in successfully
      *
      * @param string Username
+     * @param array  Additional information that is stored in
+     *               the session.
      */
-    function setAuth($username)
+    function setAuth($username, $data = array())
     {
-
         if (!isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
             session_register('auth');
         }
@@ -325,6 +325,10 @@ class Auth
         $GLOBALS['auth']['username']   = $username;
         $GLOBALS['auth']['timestamp']  = time();
         $GLOBALS['auth']['idle']       = time();
+
+        if (count($data) > 0) {
+            $GLOBALS['auth']['data']   = $data;
+        }
     }
 
     // }}}
@@ -337,7 +341,6 @@ class Auth
      */
     function getAuth()
     {
-
         if ($GLOBALS['HTTP_SESSION_VARS']['auth']['registered'] == true) {
             return true;
         } else {
