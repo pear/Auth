@@ -107,7 +107,7 @@ class Auth_Container_DB extends Auth_Container
 
         }
 
-        if (DB::isError($this->db)) {
+        if (DB::isError($this->db) || PEAR::isError($this->db)) {
             return PEAR::raiseError("", $this->db->code, PEAR_ERROR_DIE);
         } else {
             return true;
@@ -131,7 +131,10 @@ class Auth_Container_DB extends Auth_Container
     function query($query)
     {
         if (!DB::isConnection($this->db)) {
-            $this->_connect($this->options['dsn']);
+            $res = $this->_connect($this->options['dsn']);
+            if(DB::isError($res) || PEAR::isError($res)){
+                return $res;
+            }
         }
         return $this->db->query($query);
     }
@@ -209,8 +212,8 @@ class Auth_Container_DB extends Auth_Container
 
         $res = $this->query($query);
 
-        if (DB::isError($res)) {
-            return PEAR::raiseError("", $res->code, PEAR_ERROR_DIE);
+        if (DB::isError($res) || PEAR::isError($res)) {
+            return PEAR::raiseError($res->getMessage(), $res->code, PEAR_ERROR_DIE);
         } else {
             $entry = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
