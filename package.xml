@@ -85,7 +85,7 @@
      This release includes a new function setSessionname, that allows
      the user of the package to change the name of the session to
      a value different than default ("PHPSESSID"). This is useful, if
-     one uses two different auth systems on one domain.
+     one uses two different auth systems on the same domain.
     </notes>
   </release>
 
