@@ -26,12 +26,12 @@
  * authentication system using PHP.
  *
  * Usage example:
- *   
+ *
  *    require_once "Auth/Auth.php";
- *    
+ *
  *    // We use a MySQL as storage container in this example
  *    $a = new Auth("DB","mysql://martin:test@localhost/test");
- *    
+ *
  *    // Detect, if the user is already logged in. If not, draw the
  *    // login form.
  *    $a->start();
@@ -48,8 +48,6 @@
  * @version $Revision$
  */
 
-require_once "PEAR.php";
-
 define("AUTH_IDLED",       -1);
 define("AUTH_EXPIRED",     -2);
 define("AUTH_WRONG_LOGIN", -3);
@@ -60,7 +58,7 @@ class Auth
 
     /**
      * Auth lifetime in seconds
-     * 
+     *
      * If this variable is set to 0, auth never expires
      *
      * @var  integer
@@ -109,7 +107,7 @@ class Auth
      *
      * @var string
      */
-    var $loginFunc = "";
+    var $loginFunction = "";
 
     // {{{ Constructor
 
@@ -126,11 +124,11 @@ class Auth
      * @param string    Name of the function that creates the login form
      * @param bool      Is authentication necessary or not
      */
-    function Auth($storageDriver = "DB", $options = "", $loginFunc = "")
-    {                
-        if ($loginFunc != "" && function_exists($loginFunc)) {            
-            $this->loginFunc = $loginFunc;
-        }        
+    function Auth($storageDriver = "DB", $options = "", $loginFunction = "")
+    {
+        if ($loginFunc != "" && function_exists($loginFunction)) {
+            $this->loginFunction = $loginFunction;
+        }
 
         $this->storage = $this->_factory($storageDriver,$options);
     }
@@ -172,10 +170,10 @@ class Auth
      * @global $HTTP_POST_VARS
      * @see    Auth
      */
-    function assignData() 
+    function assignData()
     {
         global $HTTP_POST_VARS;
-        
+
         if ($HTTP_POST_VARS['username'] != "") {
             $this->username = $HTTP_POST_VARS['username'];
         }
@@ -193,12 +191,12 @@ class Auth
      *
      * @access private
      */
-    function start() 
+    function start()
     {
         session_start();
 
         $this->assignData();
-        
+
         if (!$this->checkAuth()) {
             $this->login();
         }
@@ -214,7 +212,6 @@ class Auth
      */
     function login()
     {
-
         /**
          * When the user has already entered a username,
          * we have to validate it.
@@ -227,7 +224,6 @@ class Auth
          * If the login failed or the user entered not username,
          * output the login screen again.
          */
-
         if ($this->username != "" && !$login_ok) {
             $this->status = AUTH_WRONG_LOGIN;
         }
@@ -246,9 +242,9 @@ class Auth
      *
      * @access private
      * @param  integer time in seconds
-     * @param  bool    add time to current expire time or not 
+     * @param  bool    add time to current expire time or not
      */
-    function setExpire($time,$add = false) 
+    function setExpire($time,$add = false)
     {
         if ($add) {
             $this->expire += $time;
@@ -266,12 +262,12 @@ class Auth
      * @access private
      * @return boolean  Whether or not the user is authenticated.
      */
-    function checkAuth() 
+    function checkAuth()
     {
         if (isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
 
             /** Check if authentication session is expired */
-            if ($this->expire > 0 && 
+            if ($this->expire > 0 &&
                 ($GLOBALS['HTTP_SESSION_VARS']['auth']['timestamp'] + $this->expire) < time()) {
 
                 $this->logout();
@@ -315,9 +311,9 @@ class Auth
      *
      * @param string Username
      */
-    function setAuth($username) 
+    function setAuth($username)
     {
-        
+
         if (!isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
             session_register('auth');
         }
@@ -328,7 +324,7 @@ class Auth
         $GLOBALS['auth']['timestamp']  = time();
         $GLOBALS['auth']['idle']       = time();
     }
-    
+
     // }}}
     // {{{ getAuth()
 
@@ -362,21 +358,21 @@ class Auth
      * @param  string  Username if already entered
      */
     function drawLogin($username = "")
-    {       
-        if ($this->loginFunc != "") {            
-            call_user_func($this->loginFunc, $username, $this->status);
+    {
+        if ($this->loginFunction != "") {
+            call_user_func($this->loginFunction, $username, $this->status);
         } else {
             global $HTTP_SERVER_VARS;
-     
+
             echo "<center>\n";
-        
+
             if ($this->status == AUTH_EXPIRED) {
                 echo "<i>Your session expired. Please login again!</i>\n";
             } else if ($this->status == AUTH_IDLED) {
                 echo "<i>You have been idle for too long. Please login again!</i>\n";
             } else if ($this->status == AUTH_WRONG_LOGIN) {
-                echo "<i>Wrong login data!</i>\n";                
-            }            
+                echo "<i>Wrong login data!</i>\n";
+            }
 
             echo "<form method=\"post\" action=\"" . $HTTP_SERVER_VARS['PHP_SELF'] . "\">\n";
             echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
@@ -397,7 +393,7 @@ class Auth
             echo "</table>\n";
             echo "</form>\n";
             echo "</center>\n\n";
-        }        
+        }
     }
 
     // }}}
@@ -409,7 +405,7 @@ class Auth
      * This function clears any auth tokes in the currently
      * active session
      */
-    function logout() 
+    function logout()
     {
         $this->username = "";
         $this->password = "";
@@ -448,7 +444,7 @@ class Auth
      * Returns the time up to the session is valid
      *
      * @return integer
-     */    
+     */
     function sessionValidThru()
     {
         return ($GLOBALS['HTTP_SESSION_VARS']['auth']['idle'] + $this->idle);
