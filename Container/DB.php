@@ -263,23 +263,26 @@ class Auth_Container_DB extends Auth_Container
 
     function listUsers()
     {
+        $err = $this->_prepare();
+        if ($err !== true) {
+            return PEAR::raiseError($err->getMessage(), $err->code, PEAR_ERROR_DIE);
+        }
+
         $retVal = array();
 
         $query = sprintf("SELECT %s FROM %s",
                          $this->options['db_fields'],
                          $this->options['table']
                          );
-
-        $res = $this->query($query);
+        $res = $this->db->getAll($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
             return PEAR::raiseError("", $res->code, PEAR_ERROR_DIE);
         } else {
-            while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
-                $retVal[] = $row;
+            foreach ($res as $user) {
+                $retVal[] = $user;
             }
         }
-
         return $retVal;
     }
 
