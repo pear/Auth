@@ -166,7 +166,20 @@ class Auth {
      * @var boolean
      */     
     var $advancedsecurity = false;
-
+    
+    /**
+     * Username key in POST array
+     *
+     * @var string
+     */
+    var $_postUsername = 'username';
+    
+    /**
+     * Password key in POST array
+     *
+     * @var string
+     */
+    var $_postPassword = 'password';
 
     // {{{ Constructor
 
@@ -190,7 +203,17 @@ class Auth {
             $this->_sessionName = $options['sessionName'];
             unset($options['sessionName']);
         }
-
+        
+        if (!empty($options['postUsername'])) {
+            $this->_postUsername = $options['postUsername'];
+            unset($options['postUsername']);
+        }
+        
+        if (!empty($options['postPassword'])) {
+            $this->_postPassword = $options['postPassword'];
+            unset($options['postPassword']);
+        }
+        
         if ($loginFunction != '' && is_callable($loginFunction)) {
             $this->loginFunction = $loginFunction;
         }
@@ -251,12 +274,12 @@ class Auth {
     {
         $post = &$this->_importGlobalVariable('post');
 
-        if (isset($post['username']) && $post['username'] != '') {
-            $this->username = (get_magic_quotes_gpc() == 1 ? stripslashes($post['username']) : $post['username']);
+        if (isset($post[$this->_postUsername]) && $post[$this->_postUsername] != '') {
+            $this->username = (get_magic_quotes_gpc() == 1 ? stripslashes($post[$this->_postUsername]) : $post[$this->_postUsername]);
         }
 
-        if (isset($post['password']) && $post['password'] != '') {
-            $this->password = (get_magic_quotes_gpc() == 1 ? stripslashes($post['password']) : $post['password'] );
+        if (isset($post[$this->_postPassword]) && $post[$this->_postPassword] != '') {
+            $this->password = (get_magic_quotes_gpc() == 1 ? stripslashes($post[$this->_postPassword]) : $post[$this->_postPassword] );
         }
 
     }
