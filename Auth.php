@@ -427,7 +427,7 @@ class Auth
      * @return void
      */
     function setAuth($username, $data = null)
-    {              
+    {
         $session = &Auth::_importGlobalVariable("session");
 
         if (!isset($session['auth'])) {
@@ -469,8 +469,6 @@ class Auth
                 $this->expired = true;
                 $this->status = AUTH_EXPIRED;
 
-                Auth::updateIdle();
-
                 return false;
             }
 
@@ -509,8 +507,15 @@ class Auth
     function getAuth()
     {
         $session = &$this->_importGlobalVariable("session");
-        
-        return (true == !empty($session) && $session['auth']['registered']) ? true : false;
+
+        if (!empty($session) && 
+            (isset($session['auth']['registered']) && 
+             $session['auth']['registered'] === true))
+        {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // }}}
@@ -525,7 +530,6 @@ class Auth
      * consult the documentation.
      *
      * @access private
-     * @global $HTTP_SERVER_VARS
      * @param  string  Username if already entered
      * @return void
      */
@@ -667,6 +671,7 @@ class Auth
         return $this->storage->listUsers();
     }
 
+    // }}}
     // {{{ addUser()
 
     /**
@@ -712,7 +717,6 @@ class Auth
      */
     function &_importGlobalVariable($variable) 
     {
-      
         $var = null;
 
         switch (strtolower($variable)) {
@@ -750,6 +754,5 @@ class Auth
     } 
 
     // }}}
-
 }
 ?>
