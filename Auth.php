@@ -557,7 +557,7 @@ class Auth
         $session['auth']['idle']       = time();
 
         if (!empty($data)) {
-            $this->setAuthData($data);
+            Auth::setAuthData($data);
         }
     }
     
