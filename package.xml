@@ -11,6 +11,8 @@ the login data:
 * All databases supported by the PEAR database layer
 * Plaintext files
 * LDAP servers
+* POP3 servers
+* IMAP servers
 * vpopmail accounts</description>
   <maintainers>
     <maintainer>
@@ -38,6 +40,8 @@ the login data:
   (<tacho@orbitel.bg>).
 * Added new IMAP storage container written by Jeroen Houben
   <jeroen@terena.nl>.
+* Added new POP3 storage container written by Yavor
+  <yavo@siava.org>.
 ]]>
     </notes>
     <filelist>
@@ -48,6 +52,7 @@ the login data:
        <file name="DB.php"/>
        <file name="File.php"/>
        <file name="IMAP.php"/>
+       <file name="POP3.php"/>
        <file name="LDAP.php"/>
        <file name="vpopmail.php"/>
       </dir>
