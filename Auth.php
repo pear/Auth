@@ -474,8 +474,8 @@ class Auth {
      * @return void
      * @access public
      */
-    function setSessionname($name = 'PHPSESSID') {
-        @session_name($name);
+    function setSessionName($name = 'session') {
+        $this->_sessionName = '_auth'.$name;
     }
 
     /**
