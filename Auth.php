@@ -149,7 +149,7 @@ class Auth
      * If this variable is set to 0, auth never expires
      *
      * @var  integer
-     * @see  checkAuth()
+     * @see  setExpire(), checkAuth()
      */
     var $expire = 0;
 
@@ -169,7 +169,7 @@ class Auth
      * variable is set to 0, idle time is never checked.
      *
      * @var integer
-     * @see checkAuth()
+     * @see setIdle(), checkAuth()
      */
     var $idle = 0;
 
@@ -401,6 +401,26 @@ class Auth
         }
     }
 
+    // }}}
+    // {{{ setIdle()
+
+    /**
+     * Set the maximum idle time
+     * 
+     * @access public
+     * @param  integer time in seconds
+     * @param  bool    add time to current maximum idle time or not
+     * @return void
+     */
+    function setIdle($time, $add = false)
+    {
+        if ($add) {
+            $this->idle += $time;
+        } else {
+            $this->idle = $time;
+        }
+    }
+    
     // }}}
     // {{{ setSessionname()
 
