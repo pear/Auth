@@ -128,6 +128,14 @@ class Auth {
     var $loginCallback = "";
 
     /**
+     * Failed Login callback function name
+     *
+     * @var string
+     * @see setLoginFailedCallback()
+     */
+    var $loginFailedCallback = "";
+
+    /**
      * Logout callback function name
      *
      * @var string
@@ -275,13 +283,17 @@ class Auth {
         if (!empty($this->username)) {
             if (true === $this->storage->fetchData($this->username, $this->password)) {
                 $login_ok = true;
+            } else {
+                if (!empty($this->loginFailedCallback)) {
+                    call_user_func($this->loginFailedCallback,$this->username, &$this);
+                }
             }
         }
 
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (!empty($this->loginCallback)) {
-                call_user_func($this->loginCallback,$this->username);
+                call_user_func($this->loginCallback,$this->username, &$this);
             }
         }
 
@@ -375,7 +387,7 @@ class Auth {
 
     /**
      * Register a callback function to be called on user login.
-     * The function will receive a single parameter, the username.
+     * The function will receive two parameters, the username and a reference to the auth object.
      *
      * @access public
      * @param  string  callback function name
@@ -388,8 +400,21 @@ class Auth {
     }
 
     /**
+     * Register a callback function to be called on failed user login.
+     * The function will receive a single parameter, the username and a reference to the auth object.
+     *
+     * @access public
+     * @param  string  callback function name
+     * @return void
+     */
+    function setFailedLoginCallback($loginFailedCallback)
+    {
+        $this->loginFailedCallback = $loginFailedCallback;
+    }
+
+    /**
      * Register a callback function to be called on user logout.
-     * The function will receive a single parameter, the username.
+     * The function will receive three parameters, the username and a reference to the auth object.
      *
      * @access public
      * @param  string  callback function name
@@ -584,7 +609,7 @@ class Auth {
     function drawLogin($username = "")
     {
         if ($this->loginFunction != "") {
-            call_user_func($this->loginFunction, $username, $this->status);
+            call_user_func($this->loginFunction, $username, $this->status, &$this);
         } else {
             $server = &$this->_importGlobalVariable("server");
 
@@ -640,7 +665,7 @@ class Auth {
         $session = &$this->_importGlobalVariable("session");
 
         if (!empty($this->logoutCallback)) {
-            call_user_func($this->logoutCallback, $session[$this->_sessionName]['username']);
+            call_user_func($this->logoutCallback, $session[$this->_sessionName]['username'], &$this);
         }
 
         $this->username = "";

@@ -41,11 +41,14 @@ the login data:
   </maintainers>
   <release>
     <version>1.2.3</version>
-    <date>2003-xx-xx</date>
+    <date>2003-09-08</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
 <![CDATA[
+* Login/Logout callbacks now get a reference to auth
+* New Login Failed Callback added (method setFailedLoginCallback)
+* SOAP container patch to keep a reference to the Soap responce by Bruno Pedro <bpedro@co.sapo.pt>
 * Auth is now installed in /pear-dir/Auth.php instead of /pear-dir/Auth/Auth.php, an 
   empty file /pear-dev/Auth/Auth.php wich includes Auth.php is added for BC
 * The contaner now gets a reference to the auth object ($auth->storage->_auth_obj)
