@@ -67,11 +67,16 @@ class Auth_Container_DB extends Auth_Container
      */
     function Auth_Container_DB($dsn)
     {
-        $this->_setDefaults();
+        $this->options['table']       = 'auth';
+        $this->options['usernamecol'] = 'username';
+        $this->options['passwordcol'] = 'password';
+        $this->options['dsn']         = '';
+        $this->options['db_fields']   = '';
+        $this->options['cryptType']   = 'md5';
+        $this->options['db_options']  = array();
 
         if (is_array($dsn)) {
             $this->_parseOptions($dsn);
-
             if (empty($this->options['dsn'])) {
                 PEAR::raiseError('No connection parameters specified!');
             }
@@ -80,9 +85,6 @@ class Auth_Container_DB extends Auth_Container
         }
     }
 
-    // }}}
-    // {{{ _connect()
-
     /**
      * Connect to database by using the given DSN string
      *
@@ -90,21 +92,14 @@ class Auth_Container_DB extends Auth_Container
      * @param  string DSN string
      * @return mixed  Object on error, otherwise bool
      */
-    function _connect($dsn)
+    function _connect(&$dsn)
     {
         if (is_string($dsn) || is_array($dsn)) {
-            $this->db = DB::Connect($dsn, $this->options['db_options']);
+            $this->db =& DB::connect($dsn, $this->options['db_options']);
         } elseif (get_parent_class($dsn) == "db_common") {
-            $this->db = $dsn;
-        } elseif (DB::isError($dsn)) {
-            return PEAR::raiseError($dsn->getMessage(), $dsn->getCode());
+            $this->db =& $dsn;
         } else {
-            return PEAR::raiseError('The given dsn was not valid in file ' . __FILE__ . ' at line ' . __LINE__,
-                                    41,
-                                    PEAR_ERROR_RETURN,
-                                    null,
-                                    null
-                                    );
+            return PEAR::raiseError("Invalid dsn or db object given");
         }
 
         if (DB::isError($this->db) || PEAR::isError($this->db)) {
@@ -113,9 +108,6 @@ class Auth_Container_DB extends Auth_Container
             return true;
         }
     }
-
-    // }}}
-    // {{{ _prepare()
 
     /**
      * Prepare database connection
@@ -126,8 +118,7 @@ class Auth_Container_DB extends Auth_Container
      * @access private
      * @return mixed True or a DB error object.
      */
-    function _prepare()
-    {
+    function _prepare() {
         if (!DB::isConnection($this->db)) {
             $res = $this->_connect($this->options['dsn']);
             if (DB::isError($res) || PEAR::isError($res)) {
@@ -137,61 +128,13 @@ class Auth_Container_DB extends Auth_Container
         return true;
     }
 
-    // }}}
-    // {{{ query()
-
-    /**
-     * Prepare query to the database
-     *
-     * This function checks if we have already opened a connection to
-     * the database. If that's not the case, a new connection is opened.
-     * After that the query is passed to the database.
-     *
-     * @access public
-     * @param  string Query string
-     * @return mixed  a DB_result object or DB_OK on success, a DB
-     *                or PEAR error on failure
-     */
-    function query($query)
-    {
-        $err = $this->_prepare();
-        if ($err !== true) {
-            return $err;
-        }
-        return $this->db->query($query);
-    }
-
-    // }}}
-    // {{{ _setDefaults()
-
-    /**
-     * Set some default options
-     *
-     * @access private
-     * @return void
-     */
-    function _setDefaults()
-    {
-        $this->options['table']       = 'auth';
-        $this->options['usernamecol'] = 'username';
-        $this->options['passwordcol'] = 'password';
-        $this->options['dsn']         = '';
-        $this->options['db_fields']   = '';
-        $this->options['cryptType']   = 'md5';
-        $this->options['db_options']  = array();
-    }
-
-    // }}}
-    // {{{ _parseOptions()
-
     /**
      * Parse options passed to the container class
      *
      * @access private
      * @param  array
      */
-    function _parseOptions($array)
-    {
+    function _parseOptions($array) {
         foreach ($array as $key => $value) {
             if (isset($this->options[$key])) {
                 $this->options[$key] = $value;
@@ -206,9 +149,6 @@ class Auth_Container_DB extends Auth_Container
             $this->options['db_fields'] = ', '.$this->options['db_fields'];
         }
     }
-
-    // }}}
-    // {{{ fetchData()
 
     /**
      * Get user information from database
@@ -238,25 +178,10 @@ class Auth_Container_DB extends Auth_Container
         else{
             $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
         }
-        /**
-         Old Style, removed to go around the oci8 
-         problem 
-         See bug 206
-         http://pear.php.net/bugs/bug.php?id=206
-         
-        $query = "SELECT ! FROM ! WHERE ! = ?";
-        $query_params = array(
-                         $sql_from,
-                         $this->options['table'],
-                         $this->options['usernamecol'],
-                         $username
-                         );
-        */
         
         $query = "SELECT ".$sql_from.
                 " FROM ".$this->options['table'].
                 " WHERE ".$this->options['usernamecol']." = '".$this->db->quoteString($username)."'";
-        
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
@@ -283,13 +208,11 @@ class Auth_Container_DB extends Auth_Container
                     Auth::setAuthData($key, $value);
                 }
             }
-
+            $this->activeUser = $res[$this->options['usernamecol']];
             return true;
         }
-
         $this->activeUser = $res[$this->options['usernamecol']];
         return false;
     }
-
 }
 ?>
