@@ -35,10 +35,12 @@
   </Release>
 
   <FileList>
-    <Dir>/</Dir>
-    <File>Auth.php</File>
-    <File>Container.php</File>    
-    <Dir>/Container</Dir>
-    <File>DB.php</File>
+    <Dir Name="/">
+        <File Role="php">Auth.php</File>
+        <File Role="php">Container.php</File>    
+        <Dir Name="Container">
+            <File Role="php">DB.php</File>
+        </Dir>
+    </Dir>
   </FileList>
 </Package>
