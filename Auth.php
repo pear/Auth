@@ -273,14 +273,14 @@ class Auth
      */
     function assignData()
     {
-        global $HTTP_POST_VARS;
+        $post = &$this->_importGlobalVariable('post');
 
-        if ($HTTP_POST_VARS['username'] != "") {
-            $this->username = $HTTP_POST_VARS['username'];
+        if ($post['username'] != "") {
+            $this->username = $post['username'];
         }
 
-        if ($HTTP_POST_VARS['password'] != "") {
-            $this->password = $HTTP_POST_VARS['password'];
+        if ($post['password'] != "") {
+            $this->password = $post['password'];
         }
     }
 
@@ -365,11 +365,13 @@ class Auth
      */
     function checkAuth()
     {
-        if (isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
+        $session = &$this->_importGlobalVariable("session");
+
+        if (isset($session['auth'])) {
 
             /** Check if authentication session is expired */
             if ($this->expire > 0 &&
-                ($GLOBALS['HTTP_SESSION_VARS']['auth']['timestamp'] + $this->expire) < time()) {
+                ($session['auth']['timestamp'] + $this->expire) < time()) {
 
                 $this->logout();
                 $this->expired = true;
@@ -382,7 +384,7 @@ class Auth
 
             /** Check if maximum idle time is reached */
             if ($this->idle > 0 &&
-                ($GLOBALS['HTTP_SESSION_VARS']['auth']['idle'] + $this->idle) < time()) {
+                ($session['auth']['idle'] + $this->idle) < time()) {
 
                 $this->logout();
                 $this->idled = true;
@@ -391,8 +393,8 @@ class Auth
                 return false;
             }
 
-            if ($GLOBALS['HTTP_SESSION_VARS']['auth']['registered'] == true &&
-                $GLOBALS['HTTP_SESSION_VARS']['auth']['username'] != "") {
+            if ($session['auth']['registered'] == true &&
+                $session['auth']['username'] != "") {
 
                 Auth::updateIdle();
 
@@ -414,23 +416,61 @@ class Auth
      * @param  string Username
      * @param  array  Additional information that is stored in
      *                the session.
+     * @global  $HTTP_SESSION_VARS
      */
     function setAuth($username, $data = array())
     {
-        if (!isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
-            session_register('auth');
-        }
+        
+        if (isset($_SESSION)) {
 
-        $GLOBALS['auth']               = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
-        $GLOBALS['auth']['registered'] = true;
-        $GLOBALS['auth']['username']   = $username;
-        $GLOBALS['auth']['timestamp']  = time();
-        $GLOBALS['auth']['idle']       = time();
+            if (!isset($_SESSION['auth'])) {
+                session_register('auth');
+            }
 
-        if (count($data) > 0) {
-            $GLOBALS['auth']['data']   = $data;
+            $_SESSION['auth'] = array(
+                                    'registered'    => true,
+                                    'username'      => $username,
+                                    'timestamp'     => time(),
+                                    'idle'          => time()
+                                );
+            
+            if (!empty($data))
+                $_SESSION['auth']['data'] = $data;
+            
+        } else {
+
+            if (!isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
+                session_register('auth');
+            }
+
+            $GLOBALS['auth']               = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
+            $GLOBALS['auth']['registered'] = true;
+            $GLOBALS['auth']['username']   = $username;
+            $GLOBALS['auth']['timestamp']  = time();
+            $GLOBALS['auth']['idle']       = time();
+
+            if (!empty($data)) {
+                $GLOBALS['auth']['data']   = $data;
+            }
         }
     }
+    
+     function _setAuth($username, $data = array())
+     {
+         if (!isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
+             session_register('auth');
+         }
+
+         $GLOBALS['auth']               = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
+         $GLOBALS['auth']['registered'] = true;
+         $GLOBALS['auth']['username']   = $username;
+         $GLOBALS['auth']['timestamp']  = time();
+         $GLOBALS['auth']['idle']       = time();
+
+         if (count($data) > 0) {
+             $GLOBALS['auth']['data']   = $data;
+         }
+     }
 
     // }}}
     // {{{ getAuth()
@@ -443,11 +483,9 @@ class Auth
      */
     function getAuth()
     {
-        if ($GLOBALS['HTTP_SESSION_VARS']['auth']['registered'] == true) {
-            return true;
-        } else {
-            return false;
-        }
+        $session = &$this->_importGlobalVariable('session');
+        
+        return (true == $session['auth']['registered']) ? true : false;
     }
 
     // }}}
@@ -484,7 +522,7 @@ class Auth
         if ($this->loginFunction != "") {
             call_user_func($this->loginFunction, $username, $this->status);
         } else {
-            global $HTTP_SERVER_VARS;
+            $server = &$this->_importGlobalVariable("server");
 
             echo "<center>\n";
 
@@ -496,7 +534,7 @@ class Auth
                 echo "<i>Wrong login data!</i>\n";
             }
 
-            echo "<form method=\"post\" action=\"" . $HTTP_SERVER_VARS['PHP_SELF'] . "\">\n";
+            echo "<form method=\"post\" action=\"" . $server['PHP_SELF'] . "\">\n";
             echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
             echo "<tr>\n";
             echo "    <td colspan=\"2\" bgcolor=\"#eeeeee\"><b>Login:</b></td>\n";
@@ -534,7 +572,8 @@ class Auth
         $this->username = "";
         $this->password = "";
 
-        $GLOBALS['HTTP_SESSION_VARS']['auth'] = "";
+        $session = &$this->_importGlobalVariable("session");
+        $session['auth'] = "";
         session_unregister("auth");
     }
 
@@ -548,7 +587,8 @@ class Auth
      */
     function updateIdle()
     {
-        $GLOBALS['auth'] = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
+        $session = &$this->_importGlobalVariable("session");
+        $GLOBALS['auth'] = &$session['auth'];
         $GLOBALS['auth']['idle'] = time();
     }
 
@@ -563,7 +603,8 @@ class Auth
      */
     function getUsername()
     {
-        return $GLOBALS['HTTP_SESSION_VARS']['auth']['username'];
+        $session = &$this->_importGlobalVariable("session");
+        return $session['auth']['username'];
     }
 
     // }}}
@@ -577,7 +618,8 @@ class Auth
      */
     function sessionValidThru()
     {
-        return ($GLOBALS['HTTP_SESSION_VARS']['auth']['idle'] + $this->idle);
+        $session = &$this->_importGlobalVariable("session");
+        return ($session['auth']['idle'] + $this->idle);
     }
 
     // }}}
@@ -625,5 +667,54 @@ class Auth
     }
 
     // }}}
+    // {{{ _importGlobalVariable()
+
+    /**
+     * Import variables from special namespaces.
+     *
+     * @param string Type of variable (server, session, post)
+     * @return array
+     */
+    function &_importGlobalVariable($variable) 
+    {
+      
+        $var = null;
+
+        switch (strtolower($variable)) {
+
+            case "server" :
+                if (isset($_SERVER)) {
+                    $var = &$_SERVER;
+                } else {
+                    $var = &$GLOBALS['HTTP_SERVER_VARS'];
+                }
+                break;
+
+            case "session" :
+                if (isset($_SESSION)) {
+                    $var = &$_SESSION;
+                } else {
+                    $var = &$GLOBALS['HTTP_SESSION_VARS'];
+                }
+                break;
+
+            case "post" :
+                if (isset($_POST)) {
+                    $var = &$_POST;
+                } else {
+                    $var = &$GLOBALS['HTTP_POST_VARS'];
+                }
+                break;
+
+            default:
+                break;
+
+        }
+
+        return $var;
+    } 
+
+    // }}}
+
 }
 ?>
