@@ -81,7 +81,8 @@ require_once "PEAR.php";
  *    $options = array(
  *      'table'         => 'myuser',
  *      'usernamecol'   => 'userlogin',
- *      'passwordcol'   => 'cryptpassword'
+ *      'passwordcol'   => 'cryptpassword',
+ *      'dns'           => $dsn
  *    );
  *
  *    // define login form function
@@ -91,7 +92,7 @@ require_once "PEAR.php";
  *    }
  *
  *    // create auth object
- *    $myauth = new Auth( $dsn, $options, 'myloginform', true);
+ *    $myauth = new Auth('DB', $options, 'myloginform', true);
  *
  *  You can now use the $myauth object on all your pages like 
  *  in the example above:
