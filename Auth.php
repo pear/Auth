@@ -469,13 +469,16 @@ class Auth {
      * If you are using multiple instances of PEAR::Auth
      * on the same domain, you can change the name of
      * session per application via this function.
+     * This will chnage the name of the session variable 
+     * auth uses to store it's data in the session
      *
      * @param  string New name for the session
      * @return void
      * @access public
      */
     function setSessionName($name = 'session') {
-        $this->_sessionName = '_auth'.$name;
+        $this->_sessionName = '_auth_'.$name;
+        isset($_SESSION) ? $this->session =& $_SESSION[$this->_sessionName] : $this->session =& $GLOBALS['HTTP_SESSION_VARS'][$this->_sessionName] ;
     }
 
     /**
