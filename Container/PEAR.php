@@ -3,7 +3,7 @@
 include_once('XML/RPC.php');
 
 class Auth_Container_Pear {
-    function Auth_Container_Pear(){
+    function Auth_Container_pear(){
     
     }
     

@@ -73,6 +73,7 @@ Added PEAR container, authenticate the use against the pear web site (probably p
        <file name="SMBPasswd.php"/>
        <file name="SOAP.php"/>
        <file name="vpopmail.php"/>
+       <file name="pear.php"/>
       </dir>
       
       <!-- The Test suite -->
