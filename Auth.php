@@ -24,6 +24,7 @@ require_once 'PEAR.php';
 define('AUTH_IDLED',       -1);
 define('AUTH_EXPIRED',     -2);
 define('AUTH_WRONG_LOGIN', -3);
+define('AUTH_SECURITY_BREACH', -4);
 
 /**
  * PEAR::Auth
@@ -517,6 +518,11 @@ class Auth {
         if(!isset($session[$this->_sessionName]['data'])){
             $session[$this->_sessionName]['data']       = array();
         }
+        
+        isset($_SERVER['REMOTE_ADDR']) ?
+            $session[$this->_sessionName]['sessionip'] = $_SERVER['REMOTE_ADDR']:
+            $session[$this->_sessionName]['sessionip'] = '';
+
         $session[$this->_sessionName]['registered'] = true;
         $session[$this->_sessionName]['username']   = $username;
         $session[$this->_sessionName]['timestamp']  = time();
@@ -535,6 +541,13 @@ class Auth {
     function checkAuth()
     {
         $session = &$this->_importGlobalVariable('session');
+        if(isset($session[$this->_sessionName]) && isset($_SERVER['REMOTE_ADDR']) && $session[$this->_sessionName]['sessionip'] != $_SERVER['REMOTE_ADDR']){
+            // Check if the ip of the user has changed, if so we assume a man in the middle attach an log him out
+            $this->logout();
+            $this->expired = true;
+            $this->status = AUTH_SECURITY_BREACH;
+            return false;
+        }
 
         if (isset($session[$this->_sessionName])) {
             // Check if authentication session is expired
@@ -628,8 +641,9 @@ class Auth {
                 echo '<i>You have been idle for too long. Please login again!</i>'."\n";
             } else if (!empty ($this->status) && $this->status == AUTH_WRONG_LOGIN) {
                 echo '<i>Wrong login data!</i>'."\n";
+            } else if (!empty ($this->status) && $this->status == AUTH_SECURITY_BREACH) {
+                echo '<i>Security problem your ip has changed!</i>'."\n";
             }
-
             PEAR::raiseError('You are using the built-in login screen of PEAR::Auth.<br />See the <a href="http://pear.php.net/manual/">manual</a> for details on how to create your own login function.', null);
 
             echo '<form method="post" action="' . $server['PHP_SELF'] . '">'."\n";
