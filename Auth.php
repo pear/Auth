@@ -37,7 +37,7 @@
  *    $a->start();
  *
  *    if ($a->getAuth()) {
- *        echo "Welcome user ".$a->getUsername()."!<br>\n";
+ *        echo "Welcome user ".$a->getUsername()."!<br />\n";
  *        // output the content of your site, that is only visible
  *        // for users which have been authenticated successfully.
  *    }
@@ -45,8 +45,16 @@
  *
  * @author  Martin Jansen <mj@php.net>
  * @package Auth
- * @version 0.3   2001-08-22
+ * @version $Revision$
  */
+
+require_once "PEAR.php";
+
+define("AUTH_IDLED",       -1);
+define("AUTH_EXPIRED",     -2);
+define("AUTH_WRONG_LOGIN", -3);
+define("AUTH_USER_NOBODY", "nobody");
+
 class Auth
 {
 
@@ -83,7 +91,7 @@ class Auth
     /**
      * Is the maximum idletime over?
      *
-     * @var bool
+     * @var boolean
      * @see checkAuth(), drawLogin();
      */
     var $idled = false;
@@ -96,6 +104,13 @@ class Auth
      */
     var $storage = "";
 
+    /**
+     * Function defined by the user, that creates the login screen
+     *
+     * @var string
+     */
+    var $loginFunc = "";
+
     // {{{ Constructor
 
     /**
@@ -104,14 +119,20 @@ class Auth
      * Set up the storage driver.
      *
      * @param string    Type of the storage driver
-     * @param string    Additinal options for the storage driver
+     * @param mixed     Additional options for the storage driver
      *                  (example: if you are using DB as the storage
      *                   driver, you have to pass the dsn string here)
+     *
+     * @param string    Name of the function that creates the login form
+     * @param bool      Is authentication necessary or not
      */
-    function Auth($storage_driver = "DB",$storage_options = "") 
-    {
-        $this->storage = $this->_factory($storage_driver,$storage_options);
+    function Auth($storageDriver = "DB", $options = "", $loginFunc = "")
+    {                
+        if ($loginFunc != "" && function_exists($loginFunc)) {            
+            $this->loginFunc = $loginFunc;
+        }        
 
+        $this->storage = $this->_factory($storageDriver,$options);
     }
 
     // }}}
@@ -203,12 +224,18 @@ class Auth
         }
 
         /**
-         * If the login failed, output the login screen again
+         * If the login failed or the user entered not username,
+         * output the login screen again.
          */
-        if (!$login_ok || $this->username == "") {
-            $this->drawLogin();
+
+        if ($this->username != "" && !$login_ok) {
+            $this->status = AUTH_WRONG_LOGIN;
         }
 
+        if ($this->username == "" || !$login_ok) {
+            $this->drawLogin();
+            return;
+        }
     }
 
     // }}}
@@ -249,6 +276,7 @@ class Auth
 
                 $this->logout();
                 $this->expired = true;
+                $this->status = AUTH_EXPIRED;
 
                 Auth::updateIdle();
 
@@ -261,6 +289,8 @@ class Auth
 
                 $this->logout();
                 $this->idled = true;
+                $this->status = AUTH_IDLED;
+
                 return false;
             }
 
@@ -322,46 +352,52 @@ class Auth
     /**
      * Draw the login form
      *
-     * This function _has_ to be overwritten by the programmer in
-     * order to get a proper login form. If you don't overwrite
-     * this, it will look terrible :-).
+     * Normally you will use this output in your application,
+     * because you can pass a different function name to the
+     * constructor. For more information on this, please
+     * consult the documentation.
      *
      * @access public
      * @global $HTTP_SERVER_VARS
      * @param  string  Username if already entered
-     * @param  string  Password if already entered
      */
-    function drawLogin($username = "", $password = "") 
-    {
-        global $HTTP_SERVER_VARS;
+    function drawLogin($username = "")
+    {       
+        if ($this->loginFunc != "") {            
+            call_user_func($this->loginFunc, $username, $this->status);
+        } else {
+            global $HTTP_SERVER_VARS;
      
-        echo "<center>\n";
+            echo "<center>\n";
         
-        if ($this->expired) {
-            echo "<i>Your session expired. Please login again!</i>\n";
-        } else if ($this->idled) {
-            echo "<i>You have been idle for too long. Please login again!</i>\n";
-        }
+            if ($this->status == AUTH_EXPIRED) {
+                echo "<i>Your session expired. Please login again!</i>\n";
+            } else if ($this->status == AUTH_IDLED) {
+                echo "<i>You have been idle for too long. Please login again!</i>\n";
+            } else if ($this->status == AUTH_WRONG_LOGIN) {
+                echo "<i>Wrong login data!</i>\n";                
+            }            
 
-        echo "<form method=\"post\" action=\"".$HTTP_SERVER_VARS['PHP_SELF']."\">\n";
-        echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
-        echo "<tr>\n";
-        echo "    <td colspan=\"2\" bgcolor=\"#eeeeee\"><b>Login:</b></td>\n";
-        echo "</tr>\n";
-        echo "<tr>\n";
-        echo "    <td>Username:</td>\n";
-        echo "    <td><input type=\"text\" name=\"username\" value=\"".$username."\"></td>\n";
-        echo "</tr>\n";
-        echo "<tr>\n";
-        echo "    <td>Password:</td>\n";
-        echo "    <td><input type=\"password\" name=\"password\"></td>\n";
-        echo "</tr>\n";
-        echo "<tr>\n";
-        echo "    <td colspan=\"2\" bgcolor=\"#eeeeee\"><input type=\"submit\"></td>\n";
-        echo "</tr>\n";
-        echo "</table>\n";
-        echo "</form>\n";
-        echo "</center>\n\n";        
+            echo "<form method=\"post\" action=\"" . $HTTP_SERVER_VARS['PHP_SELF'] . "\">\n";
+            echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
+            echo "<tr>\n";
+            echo "    <td colspan=\"2\" bgcolor=\"#eeeeee\"><b>Login:</b></td>\n";
+            echo "</tr>\n";
+            echo "<tr>\n";
+            echo "    <td>Username:</td>\n";
+            echo "    <td><input type=\"text\" name=\"username\" value=\"" . $username . "\"></td>\n";
+            echo "</tr>\n";
+            echo "<tr>\n";
+            echo "    <td>Password:</td>\n";
+            echo "    <td><input type=\"password\" name=\"password\"></td>\n";
+            echo "</tr>\n";
+            echo "<tr>\n";
+            echo "    <td colspan=\"2\" bgcolor=\"#eeeeee\"><input type=\"submit\"></td>\n";
+            echo "</tr>\n";
+            echo "</table>\n";
+            echo "</form>\n";
+            echo "</center>\n\n";
+        }        
     }
 
     // }}}
@@ -403,6 +439,19 @@ class Auth
     function getUsername()
     {
         return $GLOBALS['HTTP_SESSION_VARS']['auth']['username'];
+    }
+
+    // }}}
+    // {{{ sessionValidThru()
+
+    /**
+     * Returns the time up to the session is valid
+     *
+     * @return integer
+     */    
+    function sessionValidThru()
+    {
+        return ($GLOBALS['HTTP_SESSION_VARS']['auth']['idle'] + $this->idle);
     }
 
     // }}}
