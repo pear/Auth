@@ -547,6 +547,7 @@ class Auth {
      */
     function setAuth($username)
     {
+        @session_start();
         $session = &Auth::_importGlobalVariable('session');
         $server = &$this->_importGlobalVariable('server');
 
