@@ -229,7 +229,7 @@ class Auth_Container_MDB extends Auth_Container
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
-        // Find if db_fileds contains a *, i so assume all col are selected
+        //Check if db_fields contains a *, if so assume all columns are selected
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = '*';
         } else {
@@ -457,10 +457,9 @@ class Auth_Container_MDB extends Auth_Container
      */
     function supportsChallengeResponse()
     {
-        if ($this->options['cryptType'] == 'md5' || $this->options['cryptType'] == 'none' || $this->options['cryptType'] == '') {
-            return true;
-        }
-        return false;
+        return ($this->options['cryptType'] == 'md5' ||
+            $this->options['cryptType'] == 'none' ||
+            $this->options['cryptType'] == '');
     }
 
     // }}}
