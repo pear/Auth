@@ -9,13 +9,15 @@ Currently it supports the following storage containers to read/write
 the login data:
 
 * All databases supported by the PEAR database layer
+* All databases supported by the MDB database layer
 * Plaintext files
 * LDAP servers
 * POP3 servers
 * IMAP servers
 * vpopmail accounts
 * RADIUS
-* SOAP</description>
+* SOAP
+</description>
   <maintainers>
     <maintainer>
       <user>MJ</user>
@@ -31,23 +33,13 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <date>2003-XX-XX</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
 <![CDATA[
-* Fixed code in error handling logic.
-* Added new storage container that uses vpopmail to authenticate
-  users. This feature has been implemented by Stanislav Grozev
-  (<tacho@orbitel.bg>).
-* Added new IMAP storage container written by Jeroen Houben
-  <jeroen@terena.nl>.
-* Added new POP3 storage container written by Yavor Shahpasov
-  <yavo@siava.org>.
-* Added new SOAP storage container written by Bruno Pedro
-  <bpedro@co.sapo.pt>.
-* Fixed some smaller bugs.
+* Added new MDB storage container written by  Lorenzo Alberton
 ]]>
     </notes>
     <filelist>
@@ -60,6 +52,7 @@ the login data:
        <file name="IMAP.php"/>
        <file name="POP3.php"/>
        <file name="LDAP.php"/>
+       <file name="MDB.php"/>
        <file name="RADIUS.php"/>
        <file name="SOAP.php"/>
        <file name="vpopmail.php"/>
