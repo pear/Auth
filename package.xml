@@ -27,13 +27,11 @@ the login data:
   </maintainers>
   <release>
     <version>1.1.0</version>
-    <date>2002-XX-XX</date>
+    <date>2002-09-02</date>
     <license>PHP License</license>
     <state>stable</state>
-    <notes>* Make it possible to use different encrypting methods than
-md5. Right now the system supports plaintext, md5 and crypt.
-* Database storage container: Only open connection to SQL server if it
-is really necessary.</notes>
+    <notes>This release contains a lot of fixes and massive
+improvements. See the changelog for the complete list.</notes>
     <filelist>
       <file role="php" baseinstalldir="Auth" name="Auth.php"/>
       <file role="php" baseinstalldir="Auth" name="Container.php"/>
@@ -46,4 +44,47 @@ is really necessary.</notes>
     </filelist>
   </release>
 
+  <changelog>
+    <release>
+      <version>1.1.0</version>
+      <state>stable</state>
+      <date>2002-09-26</date>
+      <notes>
+<![CDATA[
+* Silenced some warnings when working with
+
+    <?php error_reporting(E_ALL); ?>
+
+  and fixed two bugs.
+
+* Don't update idletime after the authentification session has expired.
+
+* Allow setting session ID in assignData(). This becomes handy when
+  using Auth_HTTP. (Patch by Marko Karppinen, <karppinen@pobox.com>)
+
+* Added optional setLoginCallback() and setLogoutCallback() methods.
+  (Patch by Marko Karppinen, <karppinen@pobox.com>)
+
+* Added method setIdle() that complements to setExpire().
+  (Patch by Marko Karppinen, <karppinen@pobox.com>)
+
+* Added new methods setAuthData() and getAuthData() that allow to write
+  and read additional data into/from the session pool.
+
+* Improved internal handling of session variables.
+
+* Instead of sticking to md5 as the password encryption method, one
+  can now choose between standard Unix DES-based encryption algorithm,
+  md5 hashing and using plain text passwords. Please note that the
+  last option is a security risk and shouldn't be used unless you
+  *really* now what you are doing.
+  
+* Database storage container: Only open connection to SQL server if it
+  is really necessary. This speeds up the whole process in a lot of
+  situations.
+
+]]>
+      </notes>
+    </release>
+   </changelog>
 </package>
