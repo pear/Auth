@@ -18,6 +18,12 @@ the login data:
       <email>mj@php.net</email>
       <role>lead</role>
     </maintainer>
+    <maintainer>
+      <user>jflemer</user>
+      <name>James E. Flemer</name>
+      <email>jflemer@acm.jhu.edu</email>
+      <role>developer</role>
+    </maintainer>
   </maintainers>
   <release>
     <version>1.1.0</version>
