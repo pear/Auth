@@ -1,0 +1,53 @@
+PEAR::Auth documentation
+========================
+
+Author:  Martin Jansen <mj@php.net>
+Version: $Id$
+
+Summary:
+========
+
+This document is the documentation for the PEAR::Auth package.
+It describes how to install, use and extend the package. If you
+have questions concerning PEAR::Auth, please send them via email
+to the mailing list pear-dev@lists.php.net or directly to the
+author (mj@php.net).
+
+Installation:
+=============
+
+In the near future, you'll be able to read here how to install
+PEAR::Auth ...
+
+Usage:
+======
+
+If you have set up PEAR::Auth correctly, you have to do the following
+to make it work:
+
+    <?php
+    require_once "Auth/Auth.php";
+    
+    $auth = new Auth("DB", "mysql://martin:test@localhost/test");
+    
+    $auth->start();
+    
+    if ($auth->getAuth()) {
+        echo "You are successfully logged in. Welcome to the system";
+    }
+    ?>
+
+This code first includes the necessary file 'Auth.php'. After that it
+creates a new auth object. The parameters for this object are the type
+of the storage container and additional parameters for the container.
+In this example we are using the database storage container
+(represendeted by the parameter "DB"). The second parameter has to be
+the dsn string for the PEAR database layer. For more information on
+layout of this string please consult the documentation to PEAR::DB.
+
+The method start() checks if the user is already known by the auth
+class. If he isn't know, the function draws a login screen. If the
+user is logged in, it does nothing more.
+
+The method getAuth() returns true, if the user is logged. Otherwise
+it returns false.
