@@ -183,7 +183,7 @@ class Auth_Container_DB extends Auth_Container
         if (DB::isError($res)) {
             return new DB_Error($res->code, PEAR_ERROR_DIE);
         } else {
-            $entry = $res->FetchRow(DB_FETCHMODE_ASSOC);
+            $entry = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
             if (is_array($entry)) {
                 if ($entry[$this->options['passwordcol']] == md5($password)) {
