@@ -30,7 +30,7 @@
 class Auth_Controller {
 
     /** var Auth An auth instance */
-    var $auth_obj = null;
+    var $auth = null;
     /** var string The login url */
     var $login = null;
     /** var string The default index page, used when login redirects and the caller page in not set or is the login page it's self */
@@ -58,8 +58,10 @@ class Auth_Controller {
             #print "Return: {$_GET['return']} <br/>";
             $this->auth->setAuthData('returnUrl', $_GET['return']);
         }
-        
-        //if()
+
+        if(!empty($_GET['authstatus']) && $this->auth->status == '') {
+            $this->auth->status = $_GET['authstatus'];
+        }
     }
     
     /** 
@@ -91,7 +93,11 @@ class Auth_Controller {
             $returnUrl .= '?';
         }
         $returnUrl .= uniqid('');
-        
+
+        // Track the auth status
+        if($this->auth->status != '') {
+            $url .= '&authstatus='.$this->auth->status;
+        }        
         header('Location:'.$returnUrl);
         print("You could not be redirected to <a href=\"$returnUrl\">$returnUrl</a>");
     }
@@ -116,6 +122,10 @@ class Auth_Controller {
         #print "ServerPhp:".$_SERVER['PHP_SELF'];
         if(!strstr($_SERVER['PHP_SELF'], $this->_loginPage)) {
             $url .= 'return='.urlencode($_SERVER['PHP_SELF']);
+        }
+        // Track the auth status
+        if($this->auth->status != '') {
+            $url .= '&authstatus='.$this->auth->status;
         }
         header('Location:'.$url);
         print("You could not be redirected to <a href=\"$url\">$url</a>");
