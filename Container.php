@@ -30,6 +30,13 @@ define("AUTH_METHOD_NOT_SUPPORTED", -4);
 class Auth_Container
 {
 
+    /**
+     * User that is currently selected from the storage container.
+     *
+     * @access public
+     */
+    var $activeUser = "";
+
     // {{{ Constructor
 
     /**
@@ -56,6 +63,7 @@ class Auth_Container
     function fetchData() 
     {
     }
+
     // }}}
     // {{{ listUsers()
 

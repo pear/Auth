@@ -231,7 +231,7 @@ class Auth
         }
 
         if ($this->username == "" || !$login_ok) {
-            $this->drawLogin();
+            $this->drawLogin($this->storage->activeUser);
             return;
         }
     }

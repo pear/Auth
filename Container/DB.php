@@ -47,6 +47,12 @@ class Auth_Container_DB extends Auth_Container
      */
     var $db = null;
 
+    /**
+     * User that is currently selected from the DB.
+     * @var string
+     */
+    var $activeUser = "";
+
     // {{{ Constructor
 
     /**
@@ -165,14 +171,11 @@ class Auth_Container_DB extends Auth_Container
     function fetchData($username, $password)
     {
         $query = sprintf("SELECT %s FROM %s
-                             WHERE %s = '%s'
-                             AND %s = '%s'",
-                         $this->options['usernamecol'],
+                             WHERE %s = '%s'",
+                         $this->options['usernamecol'] . ", " . $this->options['passwordcol'],
                          $this->options['table'],
                          $this->options['usernamecol'],
-                         $this->db->quoteString($username),
-                         $this->options['passwordcol'],
-                         md5($password)
+                         $this->db->quoteString($username)
                          );
 
         $res = $this->db->query($query);
@@ -183,16 +186,22 @@ class Auth_Container_DB extends Auth_Container
             $entry = $res->FetchRow(DB_FETCHMODE_ASSOC);
 
             if (is_array($entry)) {
-                Auth::setAuth($entry[$this->options['usernamecol']]);
-                $res->free();
+                if ($entry[$this->options['passwordcol']] == md5($password)) {
+                    Auth::setAuth($entry[$this->options['usernamecol']]);
+                    $res->free();
 
-                return true;
+                    return true;
+                } else {
+                    $this->activeUser = $entry[$this->options['usernamecol']];
+                    return false;
+                }
             } else {
+                $this->activeUser = "";
                 return false;
             }
         }
     }
-
+   
     // }}}
     // {{{ listUsers()
 
