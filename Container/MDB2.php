@@ -91,7 +91,7 @@ class Auth_Container_MDB2 extends Auth_Container
     function _connect($dsn)
     {
         if (is_string($dsn) || is_array($dsn)) {
-            $this->db =& MDB2::connect($dsn);
+            $this->db =& MDB2::connect($dsn, $this->options['db_options']);
         } elseif (is_a($dsn, 'MDB2_Driver_Common')) {
             $this->db = $dsn;
         } elseif (is_object($dsn) && MDB2::isError($dsn)) {
@@ -126,6 +126,9 @@ class Auth_Container_MDB2 extends Auth_Container
      */
     function _prepare()
     {
+        if (is_a($this->db, 'MDB2_Driver_Common')) {
+            return true;
+        }
         return $this->_connect($this->options['dsn']);
     }
 
@@ -170,6 +173,7 @@ class Auth_Container_MDB2 extends Auth_Container
         $this->options['dsn']         = '';
         $this->options['db_fields']   = '';
         $this->options['cryptType']   = 'md5';
+        $this->options['db_options']  = array();
     }
 
     // }}}
@@ -212,9 +216,12 @@ class Auth_Container_MDB2 extends Auth_Container
      *
      * @param   string Username
      * @param   string Password
+     * @param   boolean If true password is secured using a md5 hash
+     *                  the frontend and auth are responsible for making sure the container supports
+     *                  challenge response password authentication
      * @return  mixed  Error object or boolean
      */
-    function fetchData($username, $password)
+    function fetchData($username, $password, $isChallengeResponse=false)
     {
         // Prepare for a database query
         $err = $this->_prepare();
@@ -242,6 +249,19 @@ class Auth_Container_MDB2 extends Auth_Container
         if (!is_array($res)) {
             $this->activeUser = '';
             return false;
+        }
+
+        // Perform trimming here before the hashing
+        $password = trim($password, "\r\n");
+        $res[$this->options['passwordcol']] = trim($res[$this->options['passwordcol']], "\r\n");
+        // If using Challenge Response md5 the pass with the secret
+        if ($isChallengeResponse) {
+            $res[$this->options['passwordcol']] =
+                md5($res[$this->options['passwordcol']].$this->_auth_obj->session['loginchallenege']);
+            // UGLY cannot avoid without modifying verifyPassword
+            if ($this->options['cryptType'] == 'md5') {
+                $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']]);
+            }
         }
         if ($this->verifyPassword(trim($password, "\r\n"),
                                   trim($res[$this->options['passwordcol']], "\r\n"),
@@ -283,7 +303,7 @@ class Auth_Container_MDB2 extends Auth_Container
 
         $retVal = array();
 
-        // Find if db_fileds contains a *, i so assume all col are selected
+        //Check if db_fields contains a *, if so assume all columns are selected
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = '*';
         } else {
@@ -331,6 +351,8 @@ class Auth_Container_MDB2 extends Auth_Container
             $cryptFunction = 'md5';
         }
 
+        $password = $cryptFunction($password);
+
         $additional_key   = '';
         $additional_value = '';
 
@@ -347,7 +369,7 @@ class Auth_Container_MDB2 extends Auth_Container
                          $this->options['passwordcol'],
                          $additional_key,
                          $this->db->quote($username, 'text'),
-                         $this->db->quote($cryptFunction($password), 'text'),
+                         $this->db->quote($password, 'text'),
                          $additional_value
                          );
 
@@ -392,8 +414,8 @@ class Auth_Container_MDB2 extends Auth_Container
     /**
      * Change password for user in the storage container
      *
-    * @param string Username
-     * @param string The new password
+     * @param string Username
+     * @param string The new password (plain text)
      */
     function changePassword($username, $password)
     {
@@ -404,6 +426,8 @@ class Auth_Container_MDB2 extends Auth_Container
         } else {
             $cryptFunction = 'md5';
         }
+
+        $password = $cryptFunction($password);
 
         $query = sprintf("UPDATE %s SET %s = %s WHERE %s = %s",
                          $this->options['table'],
@@ -419,6 +443,35 @@ class Auth_Container_MDB2 extends Auth_Container
             return PEAR::raiseError($res->getMessage(), $res->code);
         }
         return true;
+    }
+
+    // }}}
+    // {{{ supportsChallengeResponse()
+
+    /**
+     * Check if challenge response is supported
+     *
+     * @return boolean
+     */
+    function supportsChallengeResponse()
+    {
+        if ($this->options['cryptType'] == 'md5' || $this->options['cryptType'] == 'none' || $this->options['cryptType'] == '') {
+            return true;
+        }
+        return false;
+    }
+
+    // }}}
+    // {{{ getCryptType()
+
+    /**
+     * Get the crypt function name
+     *
+     * @return string Function used to crypt the password
+     */
+    function getCryptType()
+    {
+        return $this->options['cryptType'];
     }
 
     // }}}
