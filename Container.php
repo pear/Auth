@@ -92,8 +92,16 @@ class Auth_Container
             break;
 
         case "md5" :
+            return (md5($password1) == $password2);
+            break;
+
         default :
-                return (md5($password1) == $password2);
+            if (function_exists($cryptType)) {
+                return ($cryptType($password1) == $password2);
+            } else {
+                return false;
+            }
+            break;
         }
     }
 
