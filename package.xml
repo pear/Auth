@@ -49,16 +49,17 @@ the login data:
 <![CDATA[
 * Implemented support for Challenge / Responce password authenthication, currently will work only with DB container and 
   cryptType = none|md5
-* Implemented setAllowLogin to controll which pages are allowed to perform login, 
+* Implemented setAllowLogin to control which pages are allowed to perform login, 
   to preservce BC. Previusly the showLogin flag was used to control this - yavo
 * Implmented lazy loading for the storage constructor, constructor is only created when needed
   to make Auth more lightweight (this might be adding a bit more overhead to login and usermanagement functions)
-* Removed include of PEAR, was not used anywhare
-* Created a new storage container DBLite same as DB but with the user manipulation functions removed
-* Added a new method staticCheckAuth which can be called statically with the auth options
-* Auth::importGlobalVariable method was removed 
+* Removed include of PEAR, was not used anywhare in Auth.php
+* Created a new storage container DBLite same as DB but with the user manipulation functions removed (50% smaller)
+* Added a new method staticCheckAuth which can be called statically with only the auth options
+* Auth::importGlobalVariable method was removed and replaced by references to global variables
+* Removed all calls to $session[$this->_sessionName], made local reference session point to that instead
 * Changed call_user_func to call_user_func_array for the callbacks, to avoid using @ for passing variables by reference
-* Code Cleanup
+* Code Cleanup, removed most vi comments
 ]]>
     </notes>
 
