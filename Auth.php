@@ -256,7 +256,7 @@ class Auth {
     {
         $this->assignData();
 
-        session_start();
+        @session_start();
 
         if (!$this->checkAuth()) {
             $this->login();
