@@ -189,6 +189,15 @@ class Auth_Container_MDB extends Auth_Container
                 $this->options[$key] = $value;
             }
         }
+
+        // Include additional fields if they exist
+        if (!empty($this->options['db_fields'])) {
+            if (is_array($this->options['db_fields'])) {
+                $this->options['db_fields'] = join($this->options['db_fields'], ', ');
+            }
+            $this->options['db_fields'] = ', ' . $this->options['db_fields'];
+        }
+
     }
 
     // }}}
@@ -215,16 +224,15 @@ class Auth_Container_MDB extends Auth_Container
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
-        // Include additional fields if they exist
-        $cols = '';
-        if (!empty($this->options['db_fields'])) {
-            $cols = ',' . $this->options['db_fields'];
+        // Find if db_fileds contains a *, i so assume all col are selected
+        if (strstr($this->options['db_fields'], '*')) {
+            $sql_from = '*';
+        } else{
+            $sql_from = $this->options['usernamecol'] . ', '. $this->options['passwordcol'] . $this->options['db_fields'];
         }
 
         $query = sprintf("SELECT %s FROM %s WHERE %s = %s",
-                         $this->options['usernamecol'] . ', '
-                         . $this->options['passwordcol']
-                         . $cols,
+                         $sql_from,
                          $this->options['table'],
                          $this->options['usernamecol'],
                          $this->db->getTextValue($username)
@@ -236,7 +244,7 @@ class Auth_Container_MDB extends Auth_Container
             return PEAR::raiseError($res->getMessage(), $res->getCode());
         }
         if (!is_array($res)) {
-            $this->activeUser = "";
+            $this->activeUser = '';
             return false;
         }
         if ($this->verifyPassword(trim($password),
@@ -270,8 +278,15 @@ class Auth_Container_MDB extends Auth_Container
 
         $retVal = array();
 
+        // Find if db_fileds contains a *, i so assume all col are selected
+        if (strstr($this->options['db_fields'], '*')) {
+            $sql_from = '*';
+        } else{
+            $sql_from = $this->options['db_fields'];
+        }
+
         $query = sprintf('SELECT %s FROM %s',
-                         (empty($this->options['db_fields']) ? '*' : $this->options['db_fields']),
+                         $sql_from,
                          $this->options['table']
                          );
 
