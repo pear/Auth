@@ -330,7 +330,7 @@ class Auth {
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (is_callable($this->loginCallback)) {
-                call_user_func($this->loginCallback,$this->username, $this);
+                call_user_func($this->loginCallback,$this->username, &$this);
             }
         }
 
@@ -341,7 +341,7 @@ class Auth {
         if (!empty($this->username) && !$login_ok) {
             $this->status = AUTH_WRONG_LOGIN;
             if (is_callable($this->loginFailedCallback)) {
-                call_user_func($this->loginFailedCallback,$this->username, $this);
+                call_user_func($this->loginFailedCallback,$this->username, &$this);
             }
         }
 
@@ -538,6 +538,7 @@ class Auth {
     function setAuth($username)
     {
         $session = &Auth::_importGlobalVariable('session');
+        $server = &$this->_importGlobalVariable('server');
 
         if (!isset($session[$this->_sessionName]) && !isset($_SESSION)) {
             session_register($this->_sessionName);
@@ -678,7 +679,7 @@ class Auth {
     function drawLogin($username = '')
     {
         if (is_callable($this->loginFunction)) {
-            call_user_func($this->loginFunction, $username, $this->status, $this);
+            call_user_func($this->loginFunction, $username, $this->status, &$this);
         } else {
             $server = &$this->_importGlobalVariable('server');
 
@@ -735,7 +736,7 @@ class Auth {
         $session = &$this->_importGlobalVariable('session');
 
         if (is_callable($this->logoutCallback)) {
-            call_user_func($this->logoutCallback, $session[$this->_sessionName]['username'], $this);
+            call_user_func($this->logoutCallback, $session[$this->_sessionName]['username'], &$this);
         }
 
         $this->username = '';
