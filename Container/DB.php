@@ -107,7 +107,7 @@ class Auth_Container_DB extends Auth_Container
         }
 
         if (DB::isError($this->db) || PEAR::isError($this->db)) {
-            return PEAR::raiseError($this->db->getMessage(), $this->db->getCode(), PEAR_ERROR_DIE);
+            return PEAR::raiseError($this->db->getMessage(), $this->db->getCode());
         } else {
             return true;
         }
