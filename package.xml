@@ -4,7 +4,18 @@
      generated package.xml files -->
 <package version="1.0">
   <name>Auth</name>
-  <summary>The PEAR::Auth package provides methods for creating an authentication system using PHP.</summary>
+  <summary>Creating an authentication system.</summary>
+  <description>
+The PEAR::Auth package provides methods for creating an authentication
+system using PHP.
+
+Currently it supports the following storage containers to read/write
+the login data:
+
+* All databases supported by the PEAR database layer
+* Plaintext files
+* LDAP servers
+  </description>
   <maintainers>
     <maintainer>
       <user>MJ</user>
@@ -12,6 +23,7 @@
       <email>mj@php.net</email>
     </maintainer>
   </maintainers>
+  <license>PHP License</license>
   <release>
     <version>0.1</version>
     <date>2001-07-11</date>
