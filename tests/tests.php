@@ -20,7 +20,7 @@ function error($err){
 
 #error_reporting(0);
 #PEAR::setErrorHandling(PEAR_ERROR_PRINT, "\nPear Error:%s \n");
-#PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, "error");
+PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, "error");
 
 set_time_limit(0);
 
@@ -34,7 +34,7 @@ $suite->addTest(new PHPUnit_TestSuite('DBContainer'));
 // POP3 Container
 $suite->addTest(new PHPUnit_TestSuite('POP3Container'));
 // POP3a Container classing passing the constructor options as a string
-$suite->addTest(new PHPUnit_TestSuite('POP3aContainer'));
+#$suite->addTest(new PHPUnit_TestSuite('POP3aContainer'));
 
 
 

@@ -151,7 +151,7 @@ class Auth {
      * @param boolean   Should the login form be displayed if neccessary?
      * @return void
      */
-    function Auth($storageDriver = "DB", $options = "", $loginFunction = "", $showLogin = true)
+    function Auth($storageDriver, $options = "", $loginFunction = "", $showLogin = true)
     {
         if ($loginFunction != "" && function_exists($loginFunction)) {
             $this->loginFunction = $loginFunction;
@@ -577,7 +577,7 @@ class Auth {
                 echo "<i>Wrong login data!</i>\n";
             }
 
-            PEAR::raiseError("You are using the built-in login screen of PEAR::Auth.<br/>See the <a href=\"http://pear.php.net/manual/\">manual</a> for details on how to create your own login function.", null, PEAR_ERROR_PRINT);
+            PEAR::raiseError("You are using the built-in login screen of PEAR::Auth.<br/>See the <a href=\"http://pear.php.net/manual/\">manual</a> for details on how to create your own login function.", null);
                     
             echo "<form method=\"post\" action=\"" . $server['PHP_SELF'] . "\">\n";
             echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n";
