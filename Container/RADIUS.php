@@ -110,7 +110,7 @@ class Auth_Container_RADIUS extends Auth_Container
                 $this->radius->chapid    = 1;
                 $this->radius->response  = pack('H*', $password);
             } else {
-                require_once 'Crypt_CHAP/CHAP.php';
+                require_once 'Crypt/CHAP.php';
                 $classname = 'Crypt_' . $this->authtype;
                 $crpt = new $classname;
                 $crpt->password = $password;
@@ -121,7 +121,7 @@ class Auth_Container_RADIUS extends Auth_Container
             }
 
         case 'MSCHAPv2':
-            require_once 'Crypt_CHAP/CHAP.php';
+            require_once 'Crypt/CHAP.php';
             $crpt = new Crypt_MSCHAPv2;
             $crpt->username = $username;
             $crpt->password = $password;
