@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- do not use the "Type" attribute here, that one is only for
+     generated package.xml files -->
+<Package>
+  <Name>Auth</Name>
+  <Summary>The PEAR::Auth class provides methods for creating an authentication system using PHP.</Summary>
+  <Maintainer>
+    <Initials>MJ</Initials>
+    <Name>Martin Jansen</Name>
+    <Email>mj@php.net</Email>
+  </Maintainer>
+  <Release>
+    <Version>0.1</Version>
+    <Date>2001-07-11</Date>
+    <Notes>
+      This is the initial independent release of the Auth package.
+    </Notes>
+  </Release>
+  <FileList>
+    <Dir>/</Dir>
+    <File>Auth.php</File>
+    <File>Container.php</File>    
+    <Dir>/Container</Dir>
+    <File>DB.php</File>
+  </FileList>
+</Package>
