@@ -39,7 +39,9 @@ the login data:
     <state>stable</state>
     <notes>
 <![CDATA[
-* Added new MDB storage container written by  Lorenzo Alberton
+* Added generic support for arbitrary password crypting functions
+  different than MD5, DES and plain text. (Patch by Tom Anderson)
+* Added new MDB storage container written by Lorenzo Alberton
 ]]>
     </notes>
     <filelist>
