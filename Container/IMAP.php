@@ -65,7 +65,8 @@ class Auth_Container_IMAP extends Auth_Container
     function Auth_Container_IMAP($params)
     {
         if (!extension_loaded('imap')) {
-            return PEAR::raiseError("Cannot use IMAP authentication, IMAP extension not loaded!", 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError("Cannot use IMAP authentication, IMAP extension not loaded!",
+                                    41, PEAR_ERROR_DIE);
         }
         $this->_setDefaults();
         
@@ -96,11 +97,15 @@ class Auth_Container_IMAP extends Auth_Container
      * @access private
      */
     function _checkServer($timeout=20) {
-        $fp = @fsockopen ($this->options['host'], $this->options['port'], $errno, $errstr, $timeout);
+        $fp = @fsockopen ($this->options['host'], $this->options['port'],
+                          $errno, $errstr, $timeout);
         if ($fp) {
             @fclose($fp);
         } else {
-            return PEAR::raiseError("Error connecting to IMAP server ".$this->options['host'].":".$this->options['port'], 41, PEAR_ERROR_DIE);
+            $message = "Error connecting to IMAP server "
+                . $this->options['host']
+                . ":" . $this->options['port'];
+            return PEAR::raiseError($message, 41, PEAR_ERROR_DIE);
         }
     }
 
