@@ -225,6 +225,22 @@ class Auth
      */
     var $password = "";
 
+    /**
+     * Login callback function name
+     *
+     * @var string
+     * @see setLoginCallback()
+     */
+    var $loginCallback = "";
+
+    /**
+     * Logout callback function name
+     *
+     * @var string
+     * @see setLogoutCallback()
+     */
+    var $logoutCallback = "";
+        
     // {{{ Constructor
 
     /**
@@ -346,6 +362,9 @@ class Auth
 
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
+            if (!empty($this->loginCallback)) {
+            	call_user_func($this->loginCallback,$this->username);
+            }
         }
 
         /**
@@ -416,6 +435,34 @@ class Auth
         $this->showLogin = $showLogin;
     }
 
+    /**
+     * Register a callback function to be called on user login.
+     * The function will receive a single parameter, the username.
+     *
+     * @access public
+     * @param  string  callback function name
+     * @return void
+     * @see    setLogoutCallback()
+     */
+    function setLoginCallback($loginCallback)
+    {
+        $this->loginCallback = $loginCallback;
+    }
+
+    /**
+     * Register a callback function to be called on user logout.
+     * The function will receive a single parameter, the username.
+     *
+     * @access public
+     * @param  string  callback function name
+     * @return void
+     * @see    setLoginCallback()
+     */
+    function setLogoutCallback($logoutCallback)
+    {
+        $this->logoutCallback = $logoutCallback;
+    }
+        
     // }}}
     // {{{ setAuthData()
     
@@ -633,13 +680,18 @@ class Auth
      * Logout function
      *
      * This function clears any auth tokens in the currently
-     * active session
+     * active session and executes the logout callback function,
+     * if any
      *
      * @access public
      * @return void
      */
     function logout()
     {
+        if (!empty($this->logoutCallback)) {
+            call_user_func($this->logoutCallback,$this->username);
+        }
+        
         $this->username = "";
         $this->password = "";
 
