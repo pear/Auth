@@ -102,7 +102,7 @@ class Auth_Container_LDAP extends Auth_Container
 
         // if base ist still not set, raise error
         if ($this->options['basedn'] == "") {
-            return new Pear_Error("LDAP search base not specified!", 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError("LDAP search base not specified!", 41, PEAR_ERROR_DIE);
         } else {
             return true;
         }
@@ -121,11 +121,11 @@ class Auth_Container_LDAP extends Auth_Container
     {
         // connect
         if (($this->conn_id = @ldap_connect($this->options['host'], $this->options['port'])) == false) {
-            return new PEAR_Error("Error connecting to LDAP.", 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError("Error connecting to LDAP.", 41, PEAR_ERROR_DIE);
         }
         // bind anonymously for searching
         if ((@ldap_bind($this->conn_id)) == false) {
-            return new PEAR_Error("Error binding anonymously to LDAP.", 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError("Error binding anonymously to LDAP.", 41, PEAR_ERROR_DIE);
         }
     }
 
@@ -172,7 +172,7 @@ class Auth_Container_LDAP extends Auth_Container
     {
         // search
         if (($result_id = @ldap_search($this->conn_id, $this->options['basedn'], $this->options['userattr']."=".$username)) == false) {
-            return new PEAR_Error("Error searching LDAP.", 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError("Error searching LDAP.", 41, PEAR_ERROR_DIE);
         }
         // did we get just one entry?
         if (ldap_count_entries($this->conn_id, $result_id) == 1) {

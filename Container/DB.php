@@ -72,7 +72,7 @@ class Auth_Container_DB extends Auth_Container
             $this->_parseOptions($dsn);
 
             if (empty($this->options['dsn'])) {
-                return new DB_Error("No connection parameters specified!");
+                PEAR::raiseError("No connection parameters specified!");
             }
         } else {
             $this->options['dsn'] = $dsn;
@@ -96,19 +96,19 @@ class Auth_Container_DB extends Auth_Container
         } elseif (get_parent_class($dsn) == "db_common") {
             $this->db = $dsn;
         } elseif (is_object($dsn) && DB::isError($dsn)) {
-            return new DB_Error($dsn->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($dsn->code, PEAR_ERROR_DIE);
         } else {
-            return new PEAR_Error("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__,
-                                  41,
-                                  PEAR_ERROR_RETURN,
-                                  null,
-                                  null
-                                  );
+            return PEAR::raiseError("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__,
+                                    41,
+                                    PEAR_ERROR_RETURN,
+                                    null,
+                                    null
+                                    );
 
         }
 
         if (DB::isError($this->db)) {
-            return new DB_Error($this->db->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($this->db->code, PEAR_ERROR_DIE);
         } else {
             return true;
         }
@@ -210,7 +210,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-            return new DB_Error($res->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($res->code, PEAR_ERROR_DIE);
         } else {
             $entry = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
@@ -248,7 +248,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-            return new DB_Error($res->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($res->code, PEAR_ERROR_DIE);
         } else {
             while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
                 $retVal[] = $row;
@@ -302,7 +302,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-           return new DB_Error($res->code, PEAR_ERROR_DIE);
+           return PEAR::raiseError($res->code, PEAR_ERROR_DIE);
         } else {
           return true;
         }
@@ -330,7 +330,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-           return new DB_Error($res->code, PEAR_ERROR_DIE);
+           return PEAR::raiseError($res->code, PEAR_ERROR_DIE);
         } else {
           return true;
         }
