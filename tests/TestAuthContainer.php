@@ -15,7 +15,7 @@ class TestAuthContainer extends PHPUnit_TestCase
         $this->container =& $this->getContainer();
         $this->user = 'joe';
         $this->pass = 'doe';
-        $this->opt = 'Very cool user';
+        $this->opt = 'VeryCoolUser';
     }
 
     // Abstract
@@ -99,6 +99,14 @@ class TestAuthContainer extends PHPUnit_TestCase
         }
 
         $this->assertTrue($fetch_res,sprintf('Could not verify with the default username (%s) and passwd (%s)', $opt['username'], $opt['passwd']));
+        
+        // Test for fail fetchData
+        $opt = $this->getExtraOptions();
+        $this->assertFalse(
+            $this->container->fetchData(md5($opt['username']), $opt['passwd']),
+            "fetchData returned true with invalid username and pass"
+        );
+        
     }
     
     
@@ -130,23 +138,11 @@ class TestAuthContainer extends PHPUnit_TestCase
             }           
         }
         
-        print "Removing user:".$user;
         $remove_res = $this->container->removeUser($user);
     }
 
-    function testFetchDataFail()
-    {
-        if ($this->skip_tests) {
-            $this->fail($this->skip_tests_message.'');
-            return(false);
-        }
 
-        $opt = $this->getExtraOptions();
-        $this->assertTrue(
-            $this->container->fetchData(md5($opt['username']), $opt['passwd']),
-            sprintf('This test should fail ... ')
-        );
-    }
+
 
     function testRemoveUser()
     {
