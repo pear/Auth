@@ -41,11 +41,14 @@ the login data:
   </maintainers>
   <release>
     <version>1.2.1</version>
-    <date>2003-XX-XX</date>
+    <date>2003-07-29</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
 <![CDATA[
+* Added support for passing contaner as an object
+* Added fix when db_fileds is *
+* Added Test Suite (experimental)
 * Added generic support for arbitrary password crypting functions
   different than MD5, DES and plain text. (Patch by Tom Anderson)
 * Added new MDB storage container written by Lorenzo Alberton
@@ -67,6 +70,21 @@ the login data:
        <file name="SMBPasswd.php"/>
        <file name="SOAP.php"/>
        <file name="vpopmail.php"/>
+      </dir>
+      
+      <!-- The Test suite -->
+      <dir name="tests" role="test" baseinstalldir="Auth">
+          <file name="auth_container_db_options.php"/>
+          <file name="DBContainer.php"/>
+          <file name="auth_container_file_options.php"/>
+          <file name="FileContainer.php"/>
+          <file name="auth_container_pop3_options.php"/>
+          <file name="POP3Container.php"/>
+          <file name="auth_container_pop3a_options.php"/>
+          <file name="POP3aContainer.php"/>
+          <file name="TestAuthContainer.php"/>
+          <file name="users"/>
+          <file name="tests.php"/>
       </dir>
     </filelist>
   </release>
