@@ -1,11 +1,11 @@
 <?php
 
 $options = array(
-    'host'=>'netsmart.com.cy',
+    'host'=>'example.com',
     'port'=>'110'
 );
 
-$extra_options['username'] = 'yavo@test.com';
+$extra_options['username'] = 'yavo@example.com';
 $extra_options['passwd'] = 'test';
 
 ?>
