@@ -114,6 +114,29 @@ class Auth_Container_DB extends Auth_Container
     }
 
     // }}}
+    // {{{ _prepare()
+
+    /**
+     * Prepare database connection
+     *
+     * This function checks if we have already opened a connection to
+     * the database. If that's not the case, a new connection is opened.
+     *
+     * @access private
+     * @return mixed True or a DB error object.
+     */
+    function _prepare()
+    {
+        if (!DB::isConnection($this->db)) {
+            $res = $this->_connect($this->options['dsn']);
+            if(DB::isError($res) || PEAR::isError($res)){
+                return $res;
+            }
+        }
+        return true;
+    }
+
+    // }}}
     // {{{ query()
 
     /**
@@ -130,11 +153,9 @@ class Auth_Container_DB extends Auth_Container
      */
     function query($query)
     {
-        if (!DB::isConnection($this->db)) {
-            $res = $this->_connect($this->options['dsn']);
-            if(DB::isError($res) || PEAR::isError($res)){
-                return $res;
-            }
+        $err = $this->_prepare();
+        if ($err !== true) {
+            return $res;
         }
         return $this->db->query($query);
     }
@@ -194,6 +215,12 @@ class Auth_Container_DB extends Auth_Container
      */
     function fetchData($username, $password)
     {
+        /* Prepare for a database query */
+        $err = $this->_prepare();
+        if ($err !== true) {
+            return PEAR::raiseError($err->getMessage(), $err->code, PEAR_ERROR_DIE);
+        }
+
         /* Include additional fields if they exist */
         $cols = "";
         if (!empty($this->options['db_fields'])) {
@@ -209,23 +236,19 @@ class Auth_Container_DB extends Auth_Container
                          $this->options['usernamecol'],
                          $username
                          );
-        $res = $this->query($query);
+        $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
-        if (DB::isError($res) || PEAR::isError($res)) {
+        if (DB::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->code, PEAR_ERROR_DIE);
         } else {
-            $entry = $res->fetchRow(DB_FETCHMODE_ASSOC);
-
-            if (is_array($entry)) {
+            if (is_array($res)) {
                 if ($this->verifyPassword(trim($password), 
-                                          trim($entry[$this->options['passwordcol']]),
+                                          trim($res[$this->options['passwordcol']]),
                                           $this->options['cryptType']))
                 {
-                    $res->free();
-
                     return true;
                 } else {
-                    $this->activeUser = $entry[$this->options['usernamecol']];
+                    $this->activeUser = $res[$this->options['usernamecol']];
                     return false;
                 }
             } else {
