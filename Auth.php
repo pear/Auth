@@ -316,9 +316,9 @@ class Auth
      */
     function start()
     {
-        session_start();
-
         $this->assignData();
+
+        session_start();
 
         if (!$this->checkAuth()) {
             $this->login();
