@@ -106,8 +106,8 @@ class Auth_Container_MDB extends Auth_Container
 
         }
 
-        if (MDB::isError($this->db)) {
-            return PEAR::raiseError("", $this->db->code);
+        if (MDB::isError($this->db) || PEAR::isError($this->db)) {
+            return PEAR::raiseError($this->db->getMessage(), $this->db->code);
         } else {
             return true;
         }
@@ -169,7 +169,7 @@ class Auth_Container_MDB extends Auth_Container
         $this->options['usernamecol'] = 'username';
         $this->options['passwordcol'] = 'password';
         $this->options['dsn']         = '';
-        $this->options['db_fields']   = '*';
+        $this->options['db_fields']   = '';
         $this->options['cryptType']   = 'md5';
     }
 
@@ -234,22 +234,28 @@ class Auth_Container_MDB extends Auth_Container
 
         if (MDB::isError($res) || PEAR::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->getCode());
-        } else {
-            if (is_array($res)) {
-                if ($this->verifyPassword(trim($password),
-                                          trim($res[$this->options['passwordcol']]),
-                                          $this->options['cryptType']))
-                {
-                    return true;
-                } else {
-                    $this->activeUser = $res[$this->options['usernamecol']];
-                    return false;
-                }
-            } else {
-                $this->activeUser = '';
-                return false;
-            }
         }
+        if (!is_array($res)) {
+            $this->activeUser = "";
+            return false;
+        }
+        if ($this->verifyPassword(trim($password),
+                                  trim($res[$this->options['passwordcol']]),
+                                  $this->options['cryptType'])) {
+            // Store additional field values in the session
+            foreach ($res as $key => $value) {
+                if ($key == $this->options['passwordcol'] ||
+                    $key == $this->options['usernamecol']) {
+                    continue;
+                }
+                Auth::setAuthData($key, $value);
+            }
+
+            return true;
+        }
+
+        $this->activeUser = $res[$this->options['usernamecol']];
+        return false;
     }
 
     // }}}
@@ -264,8 +270,8 @@ class Auth_Container_MDB extends Auth_Container
 
         $retVal = array();
 
-        $query = sprintf("SELECT %s FROM %s",
-                         $this->options['db_fields'],
+        $query = sprintf('SELECT %s FROM %s',
+                         (empty($this->options['db_fields']) ? '*' : $this->options['db_fields']),
                          $this->options['table']
                          );
 
