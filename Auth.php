@@ -429,7 +429,11 @@ class Auth {
         $session = &Auth::_importGlobalVariable("session");
 
         if (is_null($name)) {
-            return $session['auth']['data'];
+            if(isset($session['auth']['data'])) {
+                return $session['auth']['data'];
+            } else {
+                return null;
+            }
         }
         if (isset($session['auth']['data'][$name])) {
             return $session['auth']['data'][$name];
