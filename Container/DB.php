@@ -46,6 +46,7 @@ class Auth_Container_DB extends Auth_Container
      * @var object
      */
     var $db = null;
+    var $dsn = "";
 
     /**
      * User that is currently selected from the DB.
@@ -68,18 +69,14 @@ class Auth_Container_DB extends Auth_Container
         $this->_setDefaults();
 
         if (is_array($dsn)) {
-
             $this->_parseOptions($dsn);
 
-            if ($this->options['dsn'] != "") {
-                $this->_connect($this->options['dsn']);
-                return true;
-            } else {
+            if (empty($this->options['dsn'])) {
                 return new DB_Error("No connection parameters specified!");
             }
+        } else {
+            $this->options['dsn'] = $dsn;
         }
-
-        $this->_connect($dsn);
     }
 
     // }}}
@@ -115,6 +112,28 @@ class Auth_Container_DB extends Auth_Container
         } else {
             return true;
         }
+    }
+
+    // }}}
+    // {{{ query()
+
+    /**
+     * Prepare query to the database
+     *
+     * This function checks if we have already opened a connection to
+     * the database. If that's not the case, a new connection is opened.
+     * After that the query is passed to the database.
+     *
+     * @access public
+     * @param  string Query string
+     * @return True or DB_Error
+     */
+    function query($query)
+    {
+        if (!DB::isConnection($this->db)) {
+            $this->_connect($this->options['dsn']);
+        }
+        return $this->db->query($query);
     }
 
     // }}}
@@ -170,7 +189,7 @@ class Auth_Container_DB extends Auth_Container
      * @return  mixed  Error object or boolean
      */
     function fetchData($username, $password)
-    {
+    {        
         /* Include additional fields if they exist */
         if ($this->options["db_fields"] != "*") {
             $cols = "," . $this->options["db_fields"];
@@ -185,10 +204,10 @@ class Auth_Container_DB extends Auth_Container
                          . $cols,
                          $this->options['table'],
                          $this->options['usernamecol'],
-                         $this->db->quoteString($username)
+                         $username
                          );
 
-        $res = $this->db->query($query);
+        $res = $this->query($query);
 
         if (DB::isError($res)) {
             return new DB_Error($res->code, PEAR_ERROR_DIE);
@@ -227,7 +246,7 @@ class Auth_Container_DB extends Auth_Container
                          $this->options['table']
                          );
 
-        $res = $this->db->query($query);
+        $res = $this->query($query);
 
         if (DB::isError($res)) {
             return new DB_Error($res->code, PEAR_ERROR_DIE);
@@ -281,7 +300,7 @@ class Auth_Container_DB extends Auth_Container
                          $additional_value
                          );
 
-        $res = $this->db->query($query);
+        $res = $this->query($query);
 
         if (DB::isError($res)) {
            return new DB_Error($res->code, PEAR_ERROR_DIE);
@@ -309,7 +328,7 @@ class Auth_Container_DB extends Auth_Container
                          $username
                          );
 
-        $res = $this->db->query($query);
+        $res = $this->query($query);
 
         if (DB::isError($res)) {
            return new DB_Error($res->code, PEAR_ERROR_DIE);
