@@ -119,6 +119,28 @@ class Auth_Container
         return AUTH_METHOD_NOT_SUPPORTED;
     }
 
+    /**
+     * Returns a user assoc array
+     *
+     * Containers which want should overide this
+     *
+     * @param string The username
+     */
+    function getUser($username)
+    {
+        $users = $this->listUsers();
+        if($users === AUTH_METHOD_NOT_SUPPORTED){
+            return(AUTH_METHOD_NOT_SUPPORTED);
+        }
+        for($i=0;$c = count($users),$i<$c;$i++){
+            if($users[$i]['username'] == $username){
+                return($users[$i]);
+            }
+        }
+        return(false);
+        
+    }
+
     // }}}
     // {{{ addUser()
 

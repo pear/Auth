@@ -46,6 +46,7 @@ the login data:
     <state>stable</state>
     <notes>
 <![CDATA[
+* new Method to auth_container getUser()
 * New Auth_Container_File, using new File_Passwd class. Provided by Michael Wallner <mike@php.net>
 * Login/Logout callbacks now get a reference to auth
 * New Login Failed Callback added (method setFailedLoginCallback)
