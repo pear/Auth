@@ -480,12 +480,14 @@ class Auth
             session_register("auth");
         }
 
-        $session['auth'] = array(
-                                'registered'    => true,
-                                'username'      => $username,
-                                'timestamp'     => time(),
-                                'idle'          => time()
-                           );
+        if (!isset($session['auth']) || !is_array($session['auth'])) {
+            $session['auth'] = array();
+        }
+
+        $session['auth']['registered'] = true;
+        $session['auth']['username']   = $username;
+        $session['auth']['timestamp']  = time();
+        $session['auth']['idle']       = time();
 
         if (!empty($data)) {
             $this->setAuthData($data);
@@ -509,6 +511,7 @@ class Auth
 
             /** Check if authentication session is expired */
             if ($this->expire > 0 &&
+                isset($session['auth']['timestamp']) &&
                 ($session['auth']['timestamp'] + $this->expire) < time()) {
 
                 $this->logout();
@@ -520,6 +523,7 @@ class Auth
 
             /** Check if maximum idle time is reached */
             if ($this->idle > 0 &&
+                isset($session['auth']['idle']) &&
                 ($session['auth']['idle'] + $this->idle) < time()) {
 
                 $this->logout();
@@ -529,7 +533,9 @@ class Auth
                 return false;
             }
 
-            if ($session['auth']['registered'] == true &&
+            if (isset($session['auth']['registered']) &&
+                isset($session['auth']['username']) &&
+                $session['auth']['registered'] == true &&
                 $session['auth']['username'] != "") {
 
                 Auth::updateIdle();
@@ -638,7 +644,7 @@ class Auth
         $this->password = "";
 
         $session = &$this->_importGlobalVariable("session");
-        $session['auth'] = "";
+        $session['auth'] = array();
         if (isset($_SESSION)) {
             unset($session['auth']);
         } else {
@@ -658,8 +664,7 @@ class Auth
     function updateIdle()
     {
         $session = &$this->_importGlobalVariable("session");
-        $GLOBALS['auth'] = &$session['auth'];
-        $GLOBALS['auth']['idle'] = time();
+        $session['auth']['idle'] = time();
     }
 
     // }}}
@@ -674,6 +679,9 @@ class Auth
     function getUsername()
     {
         $session = &$this->_importGlobalVariable("session");
+        if (!isset($session['auth']['username'])) {
+            return "";
+        }
         return $session['auth']['username'];
     }
 
@@ -703,6 +711,9 @@ class Auth
     function sessionValidThru()
     {
         $session = &$this->_importGlobalVariable("session");
+        if (!isset($session['auth']['idle'])) {
+            return 0;
+        }
         return ($session['auth']['idle'] + $this->idle);
     }
 
