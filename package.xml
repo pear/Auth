@@ -49,8 +49,9 @@ the login data:
 <![CDATA[
 * Moved login screen generation code to Auth/Frontend/Html.php 
   In the future the frontend will be configurable.
-* Implemented support for Challenge / Responce password authenthication, currently will work only with DB container and 
-  cryptType = none|md5
+* Implemented support for Challenge / Responce password authenthication
+  have to enable advanced security $auth->setAdvancedSecurity
+  will work only with DB container and cryptType = none|md5
 * Implemented setAllowLogin to control which pages are allowed to perform login, 
   to preservce BC. Previusly the showLogin flag was used to control this - yavo
 * Implmented lazy loading for the storage constructor, constructor is only created when needed
