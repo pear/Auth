@@ -5,7 +5,7 @@
   <name>Auth</name>
   <summary>The PEAR::Auth class provides methods for creating an authentication system using PHP.</summary>
   <maintainer>
-    <initials>MJ</initials>
+    <user>MJ</user>
     <name>Martin Jansen</name>
     <email>mj@php.net</email>
   </maintainer>
