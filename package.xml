@@ -13,7 +13,8 @@ the login data:
 * LDAP servers
 * POP3 servers
 * IMAP servers
-* vpopmail accounts</description>
+* vpopmail accounts
+* RADIUS</description>
   <maintainers>
     <maintainer>
       <user>MJ</user>
@@ -56,6 +57,7 @@ the login data:
        <file name="IMAP.php"/>
        <file name="POP3.php"/>
        <file name="LDAP.php"/>
+       <file name="RADIUS.php"/>       
        <file name="vpopmail.php"/>
       </dir>
     </filelist>
