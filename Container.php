@@ -128,7 +128,7 @@ class Auth_Container
      *
      * @return boolean
      */
-    function addUser($username, $password, $additional)
+    function addUser($username, $password, $additional=null)
     {
         return AUTH_METHOD_NOT_SUPPORTED;
     }
