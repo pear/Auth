@@ -166,6 +166,9 @@ class Auth_Container_MDB extends Auth_Container_DB
             $cols = '';
         }
 
+        if($this->db === null) {
+            $this->_connect($this->options['dsn']);
+        }
         $query = sprintf("SELECT %s FROM %s
                              WHERE %s = %s",
                          $this->options['usernamecol'] . ', '
@@ -178,8 +181,8 @@ class Auth_Container_MDB extends Auth_Container_DB
 
         $res = $this->query($query);
 
-        if (MDB::isError($res)) {
-            return PEAR::raiseError('', $res->code, PEAR_ERROR_DIE);
+        if (MDB::isError($res) || PEAR::isError($res)) {
+            return PEAR::raiseError($res->getMessage(), $res->code, PEAR_ERROR_DIE);
         } else {
             $entry = $this->db->fetchRow($res, MDB_FETCHMODE_ASSOC);
 
