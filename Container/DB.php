@@ -46,7 +46,9 @@ class Auth_Container_DB extends Auth_Container
      * @var string
      * @see fetch_data
      */
-    var $username_col = "username";
+    var $usernameCol = "username";
+
+    // {{{ Constructor
 
     /**
      * Constructor of the container class
@@ -63,8 +65,8 @@ class Auth_Container_DB extends Auth_Container
 
             $this->db = DB::Connect($dsn);
 
-            if (DB::isError($db)) {
-                return new DB_Error($db->code,PEAR_ERROR_DIE);
+            if (DB::isError($this->db)) {               
+                return new DB_Error($this->db->code,PEAR_ERROR_DIE);
             }
 
         }
@@ -80,9 +82,12 @@ class Auth_Container_DB extends Auth_Container
         }
 
         else {
-            return new PEAR_Error("The given dsn (".$dsn.") was not valid in file ".__FILE__." at line ".__LINE__,41,PEAR_ERROR_RETURN,null,null);
+            return new PEAR_Error("The given dsn was not valid in file ".__FILE__." at line ".__LINE__,41,PEAR_ERROR_RETURN,null,null);
         }
     }
+
+    // }}}
+    // {{{ fetchData()
 
     /**
      * Get user information from database
@@ -94,26 +99,38 @@ class Auth_Container_DB extends Auth_Container
      * table.
      *
      * @param   string Username
-     * @return  array  Hash with database information for $username
+     * @param   string Password
+     * @return  mixed  Error object or boolean
      */
-    function fetch_data($username) 
+    function fetchData($username,$password) 
     {
         
-        $query = sprintf("SELECT * FROM %s WHERE %s = '%s'",
+        $query = sprintf("SELECT username FROM %s 
+                             WHERE username = %s 
+                             AND password = '%s'",
                          $this->table,
-                         $this->username_col,
-                         $username
+                         $this->db->quoteString($username),
+                         md5($password)
                          );
         
         $res = $this->db->query($query);
         
         if (DB::isError($res)) {
-            return new DB_Error($dsn->code,PEAR_ERROR_DIE);
+            return new DB_Error($res->code,PEAR_ERROR_DIE);
         } else {
             $entry = $res->FetchRow(DB_FETCHMODE_ASSOC);
-         
-            return $entry;
+
+            if (is_array($entry)) {
+                Auth::setAuth($entry['username']);
+                $res->free();
+
+                return true;
+            } else {
+                return false;
+            }
         }    
     }
+
+    // }}}
 }
 ?>

@@ -28,6 +28,8 @@
 class Auth_Container
 {
 
+    // {{{ Constructor
+
     /**
      * Constructor
      *
@@ -39,6 +41,9 @@ class Auth_Container
     {
     }
 
+    // }}}
+    // {{{ fetchData
+
     /**
      * Fetch data from storage container
      *
@@ -46,8 +51,10 @@ class Auth_Container
      *
      * @access public
      */
-    function fetch_data() 
+    function fetchData() 
     {
     }
+    
+    // }}}
 }
 ?>

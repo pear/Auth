@@ -25,9 +25,27 @@
  * The PEAR::Auth class provides methods for creating an
  * authentication system using PHP.
  *
+ * Usage example:
+ *   
+ *    require_once "Auth/Auth.php";
+ *    
+ *    // We use a MySQL as storage container in this example
+ *    $a = new Auth("DB","mysql://martin:test@localhost/test");
+ *    
+ *    // Detect, if the user is already logged in. If not, draw the
+ *    // login form.
+ *    $a->start();
+ *
+ *    if ($a->getAuth()) {
+ *        echo "Welcome user ".$a->getUsername()."!<br>\n";
+ *        // output the content of your site, that is only visible
+ *        // for users which have been authenticated successfully.
+ *    }
+ *
+ *
  * @author  Martin Jansen <mj@php.net>
  * @package Auth
- * @version 0.1   2001-07-11
+ * @version 0.2   2001-07-21
  */
 class Auth
 {
@@ -38,7 +56,7 @@ class Auth
      * If this variable is set to 0, auth never expires
      *
      * @var  integer
-     * @see  check_auth()
+     * @see  checkAuth()
      */
     var $expire = 0;
 
@@ -46,30 +64,39 @@ class Auth
      * Has the auth session expired?
      *
      * @var   bool
-     * @see   check_auth(), draw_login();
+     * @see   checkAuth(), drawLogin()
      */
     var $expired = false;
+
+    /**
+     * Maximum time of idleness in seconds
+     *
+     * The difference to $expire is, that the idletime gets
+     * refreshed each time, checkAuth() is called. If this
+     * variable is set to 0, idle time is never checked.
+     *
+     * @var integer
+     * @see checkAuth()
+     */
+    var $idle = 5;
+
+    /**
+     * Is the maximum idletime over?
+     *
+     * @var bool
+     * @see checkAuth(), drawLogin();
+     */
+    var $idled = false;
 
     /**
      * Storage object
      *
      * @var object
-     * @see Auth(), validate_login()
+     * @see Auth(), validateLogin()
      */
-    var $storage = null;
+    var $storage = "";
 
-    /**
-     * Hash with information about the user
-     * @var array
-     */
-    var $user_data = array();
-
-    /**
-     * Use md5 encryption to protect the password?
-     * @var bool
-     * @see validate_login()
-     */
-    var $use_md5 = true;
+    // {{{ Constructor
 
     /**
      * Constructor
@@ -83,19 +110,23 @@ class Auth
      */
     function Auth($storage_driver = "DB",$storage_options = "") 
     {
-        $this->storage = $this->factory($storage_driver,$storage_options);
+        $this->storage = $this->_factory($storage_driver,$storage_options);
+
     }
 
+    // }}}
+    // {{{ _factory
     /**
      * Return a storage driver based on $driver and $options
      *
+     * @access private
+     * @static
      * @param  string $driver  Type of storage class to return
      * @param  string $options Optional parameters for the storage class
      * @return object Object   Storage object
      */
-    function factory($driver, $options = "")
-    {        
-
+    function _factory($driver, $options = "")
+    {
         $storage_path = "Auth/Container/".$driver.".php";
         $storage_class = "Auth_Container_".$driver;
 
@@ -104,20 +135,8 @@ class Auth
         return new $storage_class($options);
     }
 
-    /**
-     * Start new auth session
-     */
-    function start() 
-    {
-        session_start();
-
-        $this->assign_data();
-
-        if (!$this->check_auth()) {
-            $this->login();
-        }
-    }
-
+    // }}}
+    // {{{ assignData()
 
     /**
      * Assign data from login form to internal values
@@ -131,7 +150,7 @@ class Auth
      * @global $HTTP_POST_VARS
      * @see    Auth
      */
-    function assign_data() 
+    function assignData() 
     {
         global $HTTP_POST_VARS;
         
@@ -144,37 +163,25 @@ class Auth
         }
     }
 
+    // }}}
+    // {{{ start()
+
     /**
-     * Validate if login data is ok
-     *
-     * This function fetches the login data from the storage
-     * container and compares it to the values of $this->username
-     * and $this->password.
-     * Note: Because of security reasons, we use md5-encryption
-     *       for the passwords by default. If you dont' want to
-     *       use md5, set $this->use_md5 on false.
-     *
-     * @see      login
-     * @return   bool
+     * Start new auth session
      */
-    function validate_login()
+    function start() 
     {
-        $login_data = $this->storage->fetch_data($this->username);
+        session_start();
 
-        $this->user_data = $login_data;
-
-        if ($this->use_md5) {
-            $compare_password = md5($this->password);
-        } else {
-            $compare_password = $this->password;
-        }
-
-        if ($login_data['username'] == $this->username && $login_data['password'] == $compare_password) {
-            return true;
-        } else {
-            return false;
+        $this->assignData();
+        
+        if (!$this->checkAuth()) {
+            $this->login();
         }
     }
+
+    // }}}
+    // {{{ login()
 
     /**
      * Login function
@@ -187,29 +194,20 @@ class Auth
          * we have to validate it.
          */
         if ($this->username != "") {
-            $login_ok = $this->validate_login();
+            $login_ok = $this->storage->fetchData($this->username,$this->password);
         }
 
-        if (!$login_ok) {
-            $this->draw_login();
-        } else {
-            $this->set_auth();
+        /**
+         * If the login failed, output the login screen again
+         */
+        if (!$login_ok || $this->username == "") {
+            $this->drawLogin();
         }
 
     }
 
-    /**
-     * Logout function
-     */
-    function logout() 
-    {
-        $this->username = "";
-        $this->password = "";
-
-        $GLOBALS['HTTP_SESSION_VARS']['registered'] = false;
-        $GLOBALS['HTTP_SESSION_VARS']['username'] = "";
-        $GLOBALS['HTTP_SESSION_VARS']['timestamp'] = "";
-    }
+    // }}}
+    // {{{ setExpire()
 
     /**
      * Set the maximum expire time
@@ -218,7 +216,7 @@ class Auth
      * @param  integer time in seconds
      * @param  bool    add time to current expire time or not 
      */
-    function set_expire($time,$add = false) 
+    function setExpire($time,$add = false) 
     {
         if ($add) {
             $this->expire += $time;
@@ -227,25 +225,43 @@ class Auth
         }
     }
 
+    // }}}
+    // {{{ checkAuth()
+
     /**
      * Checks if there is a session with valid auth information.
      *
      * @return boolean  Whether or not the user is authenticated.
      */
-    function check_auth() 
+    function checkAuth() 
     {
         if (isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
 
+            /** Check if authentication session is expired */
             if ($this->expire > 0 && 
                 ($GLOBALS['HTTP_SESSION_VARS']['auth']['timestamp'] + $this->expire) < time()) {
 
                 $this->logout();
                 $this->expired = true;
+
+                Auth::updateIdle();
+
+                return false;
+            }
+
+            /** Check if maximum idle time is reached */
+            if ($this->idle > 0 &&
+                ($GLOBALS['HTTP_SESSION_VARS']['auth']['idle'] + $this->idle) < time()) {
+
+                $this->logout();
+                $this->idled = true;
                 return false;
             }
 
             if ($GLOBALS['HTTP_SESSION_VARS']['auth']['registered'] == true &&
                 $GLOBALS['HTTP_SESSION_VARS']['auth']['username'] != "") {
+
+                Auth::updateIdle();
 
                 return true;
             }
@@ -254,22 +270,49 @@ class Auth
         return false;
     }
 
+    // }}}
+    // {{{ setAuth()
+
     /**
-     * Register variable in a session telling that the user has logged in successfully
+     * Register variable in a session telling that the user
+     * has logged in successfully
+     *
+     * @param string Username
      */
-    function set_auth() 
+    function setAuth($username) 
     {
         
         if (!isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
             session_register('auth');
         }
 
-        $GLOBALS['auth'] = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
-        $GLOBALS['auth'] = array();
+        $GLOBALS['auth']               = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
+        $GLOBALS['auth']               = array();
         $GLOBALS['auth']['registered'] = true;
-        $GLOBALS['auth']['username'] = $this->username;
-        $GLOBALS['auth']['timestamp'] = time();
+        $GLOBALS['auth']['username']   = $username;
+        $GLOBALS['auth']['timestamp']  = time();
+        $GLOBALS['auth']['idle']       = time();
     }
+
+    // }}}
+    // {{{ getAuth()
+
+    /**
+     * Has the user been authenticated?
+     *
+     * @return bool  True if the user is logged in, otherwise false.
+     */
+    function getAuth() {
+
+        if ($GLOBALS['HTTP_SESSION_VARS']['auth']['registered'] == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // }}}
+    // {{{ drawLogin()
 
     /**
      * Draw the login form
@@ -282,13 +325,15 @@ class Auth
      * @param  string  Username if already entered
      * @param  string  Password if already entered
      */
-    function draw_login($username = "", $password = "") 
+    function drawLogin($username = "", $password = "") 
     {
 
         echo "<center>\n";
         
         if ($this->expired) {
             echo "<i>Your session expired. Please login again!</i>\n";
+        } else if ($this->idled) {
+            echo "<i>You have been idle for too long. Please login again!</i>\n";
         }
 
         echo "<form method=\"post\" action=\"".$GLOBALS['PHP_SELF']."\">\n";
@@ -302,45 +347,71 @@ class Auth
         echo "</tr>\n";
         echo "<tr>\n";
         echo "    <td>Password:</td>\n";
-        echo "    <td><input type=\"password\" name=\"password\" value=\"".$password."\"></td>\n";
+        echo "    <td><input type=\"password\" name=\"password\"></td>\n";
         echo "</tr>\n";
         echo "<tr>\n";
         echo "    <td colspan=\"2\" bgcolor=\"#eeeeee\"><input type=\"submit\"></td>\n";
         echo "</tr>\n";
         echo "</table>\n";
         echo "</form>\n";
-        echo "</center>\n\n";
-        
+        echo "</center>\n\n";        
     }
+
+    // }}}
+    // {{{ logout()
+
+    /**
+     * Logout function
+     *
+     * This function clears any auth tokes in the currently
+     * active session
+     */
+    function logout() 
+    {
+        $this->username = "";
+        $this->password = "";
+
+        session_unregister('auth');
+    }
+
+    // }}}
+    // {{{ updateIdle()
+
+    /**
+     * Update the idletime
+     */
+    function updateIdle() {
+        $GLOBALS['auth'] = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
+        $GLOBALS['auth']['idle'] = time();
+    }
+
+    // }}}
+    // {{{ getUsername()
 
     /**
      * Get the username
      *
      * @return string
      */
-    function get_username()
+    function getUsername()
     {
         return $this->user_data['username'];
     }
+
+    // }}}
+    // {{{ getPassword()
 
     /**
      * Get the password
      *
      * @return string
      */
-    function get_password()
+    function getPassword()
     {
         return $this->user_data['password'];
     }
 
-
+    // }}}
 }
 
-// $a = new Auth("DB","mysql://martin:test@localhost/test");
-
-// $a->start();
-
-// echo "<br><br>\n";
-
-// $a->logout();
 ?>

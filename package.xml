@@ -16,6 +16,24 @@
       This is the initial independent release of the Auth package.
     </Notes>
   </Release>
+
+  <Release>
+    <Version>0.2</Version>
+    <Date>2001-07-22</Date>
+    <Notes>
+      Improved a bunch of things:
+      
+      *  Renamed some internal functions to be more compliant
+         to the coding standards
+      *  Moved some parts of the code to the storage
+         container.  
+      *  Fixed a bug with expire time.
+      *  Added maximum idle time, which is (unlike expire
+         time) refreshed on every request.
+      *  Improved behaviour of Container/DB.php
+    </Notes>
+  </Release>
+
   <FileList>
     <Dir>/</Dir>
     <File>Auth.php</File>
