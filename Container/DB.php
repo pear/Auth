@@ -95,8 +95,8 @@ class Auth_Container_DB extends Auth_Container
             $this->db = DB::Connect($dsn);
         } elseif (get_parent_class($dsn) == "db_common") {
             $this->db = $dsn;
-        } elseif (is_object($dsn) && DB::isError($dsn)) {
-            return PEAR::raiseError("", $dsn->code, PEAR_ERROR_DIE);
+        } elseif (DB::isError($dsn)) {
+            return PEAR::raiseError($dsn->getMessage(), $dsn->getCode(), PEAR_ERROR_DIE);
         } else {
             return PEAR::raiseError("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__,
                                     41,
@@ -107,7 +107,7 @@ class Auth_Container_DB extends Auth_Container
         }
 
         if (DB::isError($this->db) || PEAR::isError($this->db)) {
-            return PEAR::raiseError("", $this->db->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($this->db->getMessage(), $this->db->getCode(), PEAR_ERROR_DIE);
         } else {
             return true;
         }
@@ -218,7 +218,7 @@ class Auth_Container_DB extends Auth_Container
         /* Prepare for a database query */
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($err->getMessage(), $err->getCode(), PEAR_ERROR_DIE);
         }
 
         /* Include additional fields if they exist */
@@ -239,7 +239,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($res->getMessage(), $res->getCode(), PEAR_ERROR_DIE);
         } else {
             if (is_array($res)) {
                 if ($this->verifyPassword(trim($password), 
@@ -265,7 +265,7 @@ class Auth_Container_DB extends Auth_Container
     {
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($err->getMessage(), $err->getCode(), PEAR_ERROR_DIE);
         }
 
         $retVal = array();
@@ -277,7 +277,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->db->getAll($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError("", $res->code, PEAR_ERROR_DIE);
+            return PEAR::raiseError($res->getMessage(), $res->getCode(), PEAR_ERROR_DIE);
         } else {
             foreach ($res as $user) {
                 $retVal[] = $user;
@@ -330,7 +330,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-           return PEAR::raiseError("", $res->code, PEAR_ERROR_DIE);
+           return PEAR::raiseError($res->getMessage(), $res->getCode(), PEAR_ERROR_DIE);
         } else {
           return true;
         }
@@ -358,7 +358,7 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-           return PEAR::raiseError("", $res->code, PEAR_ERROR_DIE);
+           return PEAR::raiseError($res->getMessage(), $res->getCode(), PEAR_ERROR_DIE);
         } else {
           return true;
         }
