@@ -75,6 +75,11 @@ class Auth_Container_File extends Auth_Container
     // }}}
     // {{{ listUsers()
     
+    /**
+     * List all available users
+     * 
+     * @return   array
+     */
     function listUsers()
     {
         $pw_obj = &$this->_load();
@@ -97,6 +102,7 @@ class Auth_Container_File extends Auth_Container
     }
 
     // }}}
+    // {{{ addUser()
 
     /**
      * Add a new user to the storage container
@@ -109,20 +115,25 @@ class Auth_Container_File extends Auth_Container
      */
     function addUser($user, $pass, $additional='')
     {
-        $cvs =  is_array($additional) ? $additional['cvsuser'] : $additional;
+        $cvs = (string) (is_array($additional) && isset($additional['cvsuser'])) ? 
+               $additional['cvsuser'] : $additional;
 
         $pw_obj = &$this->_load();
         if (PEAR::isError($pw_obj)) {
             return false;
         }
-
         
         $res = $pw_obj->addUser($user, $pass, $cvs);
         if(PEAR::isError($res)){
-            return(false);
+            return false;
         }
-        $pw_obj->save();
-        return($res);
+        
+        $res = $pw_obj->save();
+        if (PEAR::isError($res)) {
+            return false;
+        }
+        
+        return true;
     }
 
     // }}}
@@ -131,7 +142,8 @@ class Auth_Container_File extends Auth_Container
     /**
      * Remove user from the storage container
      *
-     * @param string Username
+     * @param   string  Username
+     * @return  boolean
      */
     function removeUser($user)
     {
@@ -143,25 +155,46 @@ class Auth_Container_File extends Auth_Container
         
         $res = $pw_obj->delUser($user);
         if(PEAR::isError($res)){
-            return(false);
+            return false;
         }
-        $pw_obj->save();
-        return(true);
+        
+        $res = $pw_obj->save();
+        if (PEAR::isError($res)) {
+            return false;
+        }
+        
+        return true;
     }
 
     // }}}
     // {{{ _load()
     
+    /**
+     * Load and initialize the File_Passwd object
+     * 
+     * @return  object  File_Passwd_Cvs|PEAR_Error
+     */
     function &_load()
     {
         static $pw_obj;
+        
         if (!isset($pw_obj)) {
             $pw_obj = File_Passwd::factory('Cvs');
+            if (PEAR::isError($pw_obj)) {
+                return $pw_obj;
+            }
+            
             $pw_obj->setFile($this->pwfile);
-            $pw_obj->load();
+            
+            $res = $pw_obj->load();
+            if (PEAR::isError($res)) {
+                return $res;
+            }
         }
+        
         return $pw_obj;
     }
 
+    // }}}
 }
 ?>
