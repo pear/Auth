@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP version 4.0                                                      |
 // +----------------------------------------------------------------------+
@@ -25,6 +25,29 @@
  * The PEAR::Auth class provides methods for creating an
  * authentication system using PHP.
  *
+ * The constructor accepts these parameters:
+ *
+ *   Auth( string $storageDriver, mixed $options, 
+ *         string $loginFunction, bool $showLogin )
+ *
+ *      $storageDriver  : Storage driver for user data 
+ *                        (currently only DB is supported)
+ *
+ *      $options        : Either a valid dsn or an array of this form: 
+ *                        array ( 
+ *                            'table'         => $table_with_userdata,
+ *                            'usernamecol'   => $column_with_username,
+ *                            'passwordcol'   => $column_with_md5_pw
+ *                        )
+ *
+ *      $loginFunction  : The name of a user defined function which draws
+ *                        the login form (see drawLogin() for an example)
+ *                        (optional, ignored if empty)
+ *
+ *      $showLogin      : Define if the login form should be displayed
+ *                        if the user hasn't logged in already.
+ *                        (optional, default: true)
+ *                                  
  * Usage example:
  *
  *    require_once "Auth/Auth.php";
@@ -41,6 +64,70 @@
  *        // output the content of your site, that is only visible
  *        // for users which have been authenticated successfully.
  *    }
+ *
+ *
+ * Advanced example:
+ *
+ *  Set up the Auth class in an auto_prepend file like this:
+ *
+ *    require_once "Auth/Auth.php";
+ *
+ *    // define dsn
+ *    $dsn = "mysql://martin:test@localhost/test";
+ *  
+ *    // set options
+ *    $options = array(
+ *      'table'         => 'myuser',
+ *      'usernamecol'   => 'userlogin',
+ *      'passwordcol'   => 'cryptpassword'
+ *    );
+ *
+ *    // define login form function
+ *    function myloginform( $username )
+ *    {
+ *      // see drawLogin for an example
+ *    }
+ *
+ *    // create auth object
+ *    $myauth = new Auth( $dsn, $options, 'myloginform', true);
+ *
+ *  You can now use the $myauth object on all your pages like 
+ *  in the example above:
+ *
+ *    // start auth session
+ *    $myauth->start();
+ *
+ *    if ($myauth->getAuth()) {
+ *        // user has logged in 
+ *    }
+ *
+ *  If you only want to check, if a user has logged in without
+ *  displaying the login form,  use setShowLogin() before you 
+ *  call $myauth->start() on your page:
+ *
+ *    // disable display of login form
+ *    $myauth->setShowLogin( false );
+ * 
+ *    // start auth session
+ *    $myauth->start();
+ *
+ *    if ($myauth->getAuth()) {
+ *        // user has logged in 
+ *    } else {
+ *        // user has not logged in and NO login 
+ *        // is displayed.
+ *    }
+ *
+ *  To logout a user and redisplay the login form use a construct
+ *  like this:
+ *
+ *    $myauth->start();
+ *
+ *    if ( $action == 'logout' ) {
+ *        $myauth->logout();
+ *        $myauth->start();
+ *    }
+ *
  *
  * Note: PEAR::Auth currently requires register_globals=on in
  *       your PHP configuration.
@@ -111,6 +198,14 @@ class Auth
      */
     var $loginFunction = "";
 
+    /**
+     * Should the login form be displayed?
+     *
+     * @var   bool
+     * @see   setShowlogin()
+     */
+    var $showLogin = true;
+
     // {{{ Constructor
 
     /**
@@ -124,11 +219,16 @@ class Auth
      *                   driver, you have to pass the dsn string here)
      *
      * @param string    Name of the function that creates the login form
+     * @param boolean   Should the login form be displayed if neccessary?
      */
-    function Auth($storageDriver = "DB", $options = "", $loginFunction = "")
+    function Auth($storageDriver = "DB", $options = "", $loginFunction = "", $showLogin = true)
     {
         if ($loginFunction != "" && function_exists($loginFunction)) {
             $this->loginFunction = $loginFunction;
+        }
+
+        if (is_bool($showLogin)) {
+            $this->showLogin = $showLogin;
         }
 
         $this->storage = $this->_factory($storageDriver, $options);
@@ -167,7 +267,7 @@ class Auth
      * If you wish to use another source apart from $HTTP_POST_VARS,
      * you have to derive this function.
      *
-     * @access public
+     * @access private
      * @global $HTTP_POST_VARS
      * @see    Auth
      */
@@ -190,7 +290,7 @@ class Auth
     /**
      * Start new auth session
      *
-     * @access private
+     * @access public
      */
     function start()
     {
@@ -198,7 +298,7 @@ class Auth
 
         $this->assignData();
 
-        if (!$this->checkAuth()) {
+        if (!$this->checkAuth() && $this->showLogin) {
             $this->login();
         }
     }
@@ -241,7 +341,7 @@ class Auth
     /**
      * Set the maximum expire time
      *
-     * @access private
+     * @access public
      * @param  integer time in seconds
      * @param  bool    add time to current expire time or not
      */
@@ -310,9 +410,10 @@ class Auth
      * Register variable in a session telling that the user
      * has logged in successfully
      *
-     * @param string Username
-     * @param array  Additional information that is stored in
-     *               the session.
+     * @access public
+     * @param  string Username
+     * @param  array  Additional information that is stored in
+     *                the session.
      */
     function setAuth($username, $data = array())
     {
@@ -337,6 +438,7 @@ class Auth
     /**
      * Has the user been authenticated?
      *
+     * @access public
      * @return bool  True if the user is logged in, otherwise false.
      */
     function getAuth()
@@ -349,17 +451,31 @@ class Auth
     }
 
     // }}}
+    // {{{ setShowLogin()
+
+    /**
+     * Should the login form be displayed if neccessary?
+     *
+     * @access public
+     * @param  bool    show login form or not
+     */
+    function setShowLogin($showLogin = true)
+    {
+        $this->showLogin = $showLogin;
+    }
+
+    // }}}
     // {{{ drawLogin()
 
     /**
      * Draw the login form
      *
-     * Normally you will use this output in your application,
+     * Normally you will not use this output in your application,
      * because you can pass a different function name to the
      * constructor. For more information on this, please
      * consult the documentation.
      *
-     * @access public
+     * @access private
      * @global $HTTP_SERVER_VARS
      * @param  string  Username if already entered
      */
@@ -410,6 +526,8 @@ class Auth
      *
      * This function clears any auth tokens in the currently
      * active session
+     *
+     * @access public
      */
     function logout()
     {
@@ -425,6 +543,8 @@ class Auth
 
     /**
      * Update the idletime
+     *
+     * @access private
      */
     function updateIdle()
     {
@@ -438,6 +558,7 @@ class Auth
     /**
      * Get the username
      *
+     * @access public
      * @return string
      */
     function getUsername()
@@ -451,6 +572,7 @@ class Auth
     /**
      * Returns the time up to the session is valid
      *
+     * @access public
      * @return integer
      */
     function sessionValidThru()
@@ -465,6 +587,7 @@ class Auth
      * List all users that are currently available in the storage
      * container
      *
+     * @access public
      * @return array
      */
     function listUsers()
@@ -477,9 +600,10 @@ class Auth
     /**
      * Add user to the storage container
      *
-     * @param string Username
-     * @param string Password
-     * @param mixed  Additional parameters
+     * @access public
+     * @param  string Username
+     * @param  string Password
+     * @param  mixed  Additional parameters
      */    
     function addUser($username, $password, $additional = "")
     {
@@ -492,6 +616,7 @@ class Auth
     /**
      * Remove user from the storage container
      *
+     * @access public
      * @param string Username
      */
     function removeUser($username)
