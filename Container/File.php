@@ -158,6 +158,7 @@ class Auth_Container_File extends Auth_Container
         if (!isset($pw_obj)) {
             $pw_obj = File_Passwd::factory('Cvs');
             $pw_obj->setFile($this->pwfile);
+            $pw_obj->load();
         }
         return $pw_obj;
     }
