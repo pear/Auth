@@ -43,16 +43,18 @@ require_once "PEAR.php";
  *              it will be preferred over host and port
  * scope:       one, sub (default), or base
  * basedn:      the base dn of your server
- * userbasedn:  gets prepended to basedn when searching for user
+ * userdn:      gets prepended to basedn when searching for user
  * userattr:    the user attribute to search for (default: uid)
  * useroc:      objectclass of user (for the search filter)
  *              (default: posixAccount)
- * groupbasedn: gets prepended to basedn when searching for group
+ * groupdn:     gets prepended to basedn when searching for group
  * groupattr  : the group attribute to search for (default: cn)
  * groupoc    : objectclass of group (for the search filter)
  *              (default: groupOfUniqueNames)
  * memberattr : the attribute of the group object where the user dn
  *              may be found (default: uniqueMember)
+ * memberisdn:  whether the memberattr is the dn of the user (default)
+ *              or the value of userattr (usually uid)
  * group:       the name of group to search for
  *
  * To use this storage container, you have to use the following syntax:
@@ -71,10 +73,11 @@ require_once "PEAR.php";
  *       'url' => 'ldaps://ldap.netsols.de',
  *       'basedn' => 'o=netsols,c=de',
  *       'scope' => 'one',
- *       'userbasedn' => 'ou=People',
- *       'groupbasedn' => 'ou=Groups',
+ *       'userdn' => 'ou=People',
+ *       'groupdn' => 'ou=Groups',
  *       'groupoc' => 'posixGroup',
- *       'memberattr' => 'groupMember',
+ *       'memberattr' => 'memberUid',
+ *       'memberisdn' => false,
  *       'group' => 'admin'
  *       );
  *
@@ -163,7 +166,13 @@ class Auth_Container_LDAP extends Auth_Container
             $this->conn_id = @ldap_connect($this->options['host'], $this->options['port']);
             
         }
-        
+
+        // try switchig to LDAPv3
+        $ver = 0;
+        if(@ldap_get_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $ver) && $ver >= 2) {
+            @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, 3);
+        }
+
         // bind anonymously for searching
         if ((@ldap_bind($this->conn_id)) == false) {
             return PEAR::raiseError("Auth_Container_LDAP: Could not connect and bind to LDAP server.", 41, PEAR_ERROR_DIE);
@@ -184,13 +193,14 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['port']        = '389';
         $this->options['scope']       = 'sub';
         $this->options['basedn']      = '';
-        $this->options['userbasedn']  = '';
+        $this->options['userdn']      = '';
         $this->options['userattr']    = "uid";
         $this->options['useroc']      = 'posixAccount';
-        $this->options['groupbasedn'] = '';
+        $this->options['groupdn']     = '';
         $this->options['groupattr']   = 'cn';
         $this->options['groupoc']     = 'groupOfUniqueNames';
         $this->options['memberattr']  = 'uniqueMember';
+        $this->options['memberisdn']  = true;
     }
 
     /**
@@ -235,7 +245,7 @@ class Auth_Container_LDAP extends Auth_Container
         $filter = sprintf('(&(objectClass=%s)(%s=%s))', $this->options['useroc'], $this->options['userattr'], $username);
 
         // make search base dn
-        $search_basedn = $this->options['userbasedn'];
+        $search_basedn = $this->options['userdn'];
         if ($search_basedn != '' && substr($search_basedn, -1) != ',') {
             $search_basedn .= ',';
         }
@@ -255,6 +265,7 @@ class Auth_Container_LDAP extends Auth_Container
             // then get the user dn
             $entry_id = ldap_first_entry($this->conn_id, $result_id);
             $user_dn  = ldap_get_dn($this->conn_id, $entry_id);
+            $attrval  = ldap_get_values($this->conn_id, $entry_id, $this->options['userattr']);
 
             ldap_free_result($result_id);
 
@@ -267,7 +278,8 @@ class Auth_Container_LDAP extends Auth_Container
 
                     // check group if appropiate
                     if(isset($this->options['group'])) {
-                        return $this->checkGroup($user_dn);
+                        // decide whether memberattr value is a dn or the unique useer attribute (uid)
+                        return $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $attrval[0]);
                     } else {
                         return true; // user authenticated
                     }
@@ -288,7 +300,7 @@ class Auth_Container_LDAP extends Auth_Container
      * @param  string Distinguished Name of the authenticated User
      * @return boolean
      */
-    function checkGroup($userdn) 
+    function checkGroup($user) 
     {
         // make filter
         $filter = sprintf('(&(%s=%s)(objectClass=%s)(%s=%s))',
@@ -296,11 +308,11 @@ class Auth_Container_LDAP extends Auth_Container
                           $this->options['group'],
                           $this->options['groupoc'],
                           $this->options['memberattr'],
-                          $userdn
+                          $user
                           );
 
         // make search base dn
-        $search_basedn = $this->options['groupbasedn'];
+        $search_basedn = $this->options['groupdn'];
         if($search_basedn != '' && substr($search_basedn, -1) != ',') {
             $search_basedn .= ',';
         }
