@@ -10,7 +10,8 @@ the login data:
 
 * All databases supported by the PEAR database layer
 * Plaintext files
-* LDAP servers</description>
+* LDAP servers
+* vpopmail accounts</description>
   <maintainers>
     <maintainer>
       <user>MJ</user>
@@ -26,50 +27,16 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.1.1</version>
-    <date>2002-10-04</date>
+    <version>1.1.2</version>
+    <date>2002-XX-XX</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
 <![CDATA[
-* This release fixes a bug that caused some files of PEAR::Auth to be
-  installed in wrong places. Everyone who has installed version 1.1.0
-  is urged to update to this version!
-
-Following is a list of changes in version 1.1.0. We are including this
-list here because the changelog entries were not displayed properly in
-the previous release:
-
-* Silenced some warnings when working with "error_reporting(E_ALL);"
-  and fixed two bugs.
-
-* Don't update idletime after the authentification session has expired.
-
-* Allow setting session ID in assignData(). This becomes handy when
-  using Auth_HTTP. (Patch by Marko Karppinen, <karppinen@pobox.com>)
-
-* Added optional setLoginCallback() and setLogoutCallback() methods.
-  (Patch by Marko Karppinen, <karppinen@pobox.com>)
-
-* Added method setIdle() that complements to setExpire().
-  (Patch by Marko Karppinen, <karppinen@pobox.com>)
-
-* Added new methods setAuthData() and getAuthData() that allow to write
-  and read additional data into/from the session pool.
-
-* Improved internal handling of session variables.
-
-* Instead of sticking to md5 as the password encryption method, one
-  can now choose between standard Unix DES-based encryption algorithm,
-  md5 hashing and using plain text passwords. Please note that the
-  last option is a security risk and shouldn't be used unless you
-  *really* now what you are doing.
-  
-* Database storage container: Only open connection to SQL server if it
-  is really necessary. This speeds up the whole process in a lot of
-  situations.
-
-]]>   
+* Added new storage container that uses vpopmail to authenticate
+  users. This feature has been implemented by Stanislav Grozev
+  (<tacho@orbitel.bg>).
+]]>
     </notes>
     <filelist>
       <file role="php" baseinstalldir="Auth" name="Auth.php"/>
@@ -79,6 +46,7 @@ the previous release:
        <file name="DB.php"/>
        <file name="File.php"/>
        <file name="LDAP.php"/>
+       <file name="vpopmail.php"/>
       </dir>
     </filelist>
   </release>
