@@ -3,7 +3,7 @@
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2002 The PHP Group                                |
+// |                                                                      |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.02 of the PHP license,      |
 // | that is bundled with this package in the file LICENSE, and is        |
@@ -132,6 +132,7 @@ class Auth_Container_DB extends Auth_Container
         $this->options['passwordcol'] = "password";
         $this->options['dsn']         = "";
         $this->options['db_fields']   = "*";
+        $this->options['cryptType']   = "md5";
     }
 
     // }}}
@@ -195,7 +196,10 @@ class Auth_Container_DB extends Auth_Container
             $entry = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
             if (is_array($entry)) {
-                if ($entry[$this->options['passwordcol']] == md5($password)) {
+                if ($this->verifyPassword($password, 
+                                          $entry[$this->options['passwordcol']],
+                                          $this->options['cryptType']))
+                {
                     Auth::setAuth($entry[$this->options['usernamecol']]);
                     $res->free();
 
@@ -251,6 +255,12 @@ class Auth_Container_DB extends Auth_Container
      */
     function addUser($username, $password, $additional = "")
     {
+        if (function_exists($this->options['cryptType'])) {
+            $cryptFunction = $this->options['cryptType'];
+        } else {
+            $cryptFunction = "md5";
+        }
+
         $additional_key = "";
         $additional_value = "";
 
@@ -267,7 +277,7 @@ class Auth_Container_DB extends Auth_Container
                          $this->options['passwordcol'],
                          $additional_key,
                          $username,
-                         md5($password),
+                         $cryptFunction($password),
                          $additional_value
                          );
 

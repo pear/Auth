@@ -65,6 +65,39 @@ class Auth_Container
     }
 
     // }}}
+    // {{{ verifyPassword()
+
+    /**
+     * Crypt and verfiy the entered password
+     *
+     * @param  string Entered password
+     * @param  string Password from the data container (usually this password
+     *                is already encrypted.
+     * @param  string Type of algorithm with which the password from
+     *                the container has been crypted. (md5, crypt etc.)
+     *                Defaults to "md5".
+     * @return bool   True, if the passwords match
+     */
+    function verifyPassword($password1, $password2, $cryptType = "md5")
+    {
+        switch ($cryptType) {
+        case "crypt" :
+            return (($password2 == "**" . $password1) ||
+                    (crypt($password1, substr($password2,0,2)) == $password2)
+                    );
+            break;
+
+        case "none" :
+            return ($password1 == $password2);
+            break;
+
+        case "md5" :
+        default :
+                return (md5($password1) == $password2);
+        }
+    }
+
+    // }}}
     // {{{ listUsers()
 
     /**
