@@ -98,6 +98,7 @@ class Auth_Container
         default :
             if (function_exists($cryptType)) {
                 return ($cryptType($password1) == $password2);
+            }
             else if (method_exists($this,$cryptType)) { 
                 return ($this->$cryptType($password1) == $password2);
             } else {

@@ -441,7 +441,7 @@ class Auth {
     function getAuthData($name = null)
     {
         $session = &Auth::_importGlobalVariable("session");
-        if(!isset($session[$this->_sessionName]['data']){
+        if(!isset($session[$this->_sessionName]['data'])){
             return(null);
         }
 
