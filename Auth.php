@@ -78,7 +78,7 @@ class Auth
      * @var integer
      * @see checkAuth()
      */
-    var $idle = 5;
+    var $idle = 0;
 
     /**
      * Is the maximum idletime over?
@@ -287,13 +287,12 @@ class Auth
         }
 
         $GLOBALS['auth']               = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
-        $GLOBALS['auth']               = array();
         $GLOBALS['auth']['registered'] = true;
         $GLOBALS['auth']['username']   = $username;
         $GLOBALS['auth']['timestamp']  = time();
         $GLOBALS['auth']['idle']       = time();
     }
-
+    
     // }}}
     // {{{ getAuth()
 
