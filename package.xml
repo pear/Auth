@@ -66,11 +66,9 @@ the login data:
 * Added method setAdvancedSecurity and set advanced security to off by default, if turned on auth will perform additional
   security checks if ip or user agent has changed across requests
 * Login is now performed only if showLogin is true, do not allow for logins to be performed from any page which calls auth->start
-  spotted by Matt Eaton <pear@divinehawk.com> [16/Jan/2004 - yavo] NOTE reconsider this before relase
+  spotted by Matt Eaton <pear@divinehawk.com> [16/Jan/2004 - yavo] 
 * Fixed bug noted by Jeroen Houben <jeroen@terena.nl>, calling loginFailedCallback
   would not have the proper status set [16/Jan/2004 - yavo]
-* Added check for ip change which user is logged in, this is considered a security
-  violation and the user is logged out [16/Dec/2003 - yavo]
 * Added PEAR container, authenticate the user against the pear web site
   (probably php.net also) [16/Dec/2003 - yavo]
 ]]>
