@@ -102,7 +102,7 @@ class Auth_Container_LDAP extends Auth_Container
      * Connect to the LDAP server using the global options
      *
      * @access private
-     * @return mixed  Object on error, otherwise bool
+     * @return object  Returns a PEAR error object if an error occurs.
      */
     function _connect()
     {
@@ -145,6 +145,16 @@ class Auth_Container_LDAP extends Auth_Container
         }
     }
 
+    /**
+     * Fetch data from LDAP server
+     *
+     * Searches the LDAP server for the given username/password
+     * combination.
+     *
+     * @param  string Username
+     * @param  string Password
+     * @return boolean
+     */
     function fetchData($username, $password)
     {
         // search
