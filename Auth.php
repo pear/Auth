@@ -518,10 +518,8 @@ class Auth {
         if(!isset($session[$this->_sessionName]['data'])){
             $session[$this->_sessionName]['data']       = array();
         }
-        
-        isset($_SERVER['REMOTE_ADDR']) ?
-            $session[$this->_sessionName]['sessionip'] = $_SERVER['REMOTE_ADDR']:
-            $session[$this->_sessionName]['sessionip'] = '';
+
+        $session[$this->_sessionName]['sessionip'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
 
         $session[$this->_sessionName]['registered'] = true;
         $session[$this->_sessionName]['username']   = $username;
@@ -541,7 +539,7 @@ class Auth {
     function checkAuth()
     {
         $session = &$this->_importGlobalVariable('session');
-        if(isset($session[$this->_sessionName]) && isset($_SERVER['REMOTE_ADDR']) && $session[$this->_sessionName]['sessionip'] != $_SERVER['REMOTE_ADDR']){
+        if(isset($session[$this->_sessionName]['sessionip']) && isset($_SERVER['REMOTE_ADDR']) && $session[$this->_sessionName]['sessionip'] != $_SERVER['REMOTE_ADDR']){
             // Check if the ip of the user has changed, if so we assume a man in the middle attach an log him out
             $this->logout();
             $this->expired = true;
