@@ -358,6 +358,25 @@ class Auth
     }
 
     // }}}
+    // {{{ setSessionname()
+
+    /**
+     * Set name of the session to a customized value.
+     *
+     * If you are using multiple instances of PEAR Auth
+     * on the same domain, you can change the name of
+     * session per application via this function.
+     *
+     * @access public
+     * @param  string New name for the session
+     * @return void
+     */
+    function setSessionname($name = "PHPSESSID")
+    {
+        @session_name($name);
+    }
+
+    // }}}
     // {{{ checkAuth()
 
     /**
