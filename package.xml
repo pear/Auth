@@ -47,6 +47,15 @@ the login data:
     <state>beta</state>
     <notes>
 <![CDATA[
+* Changes to LDAP container:
+  - additional attribute fetching to authData via new option attributes
+  - utf8 encoding username for ldapv3 (fixes german umlaut problem)
+  - make scope definable for user and group searching seperately
+  - remove useroc, groupoc and replace them with userfilter, groupfilter which is way more flexible
+  - updated documentation on all new and changed parameters
+  As some of the parameters changed this one is not backwards compatible to earlier versions.
+  Look at the top of the class where all parameters are explained in detail.
+  [08/April/2004 - jw]
 * Added new MDB2 container  [30/March/2004 - quipo]
 * Implements changePassword and CS fixed, patch from Cipriano Groenendal <cipri@cipri.com>
   [29/March/2004 - yavo]
