@@ -30,23 +30,22 @@ require_once "DB.php";
  *
  * @author   Martin Jansen <mj@php.net>
  * @package  Auth
+ * @version  $Revision$
  */
 class Auth_Container_DB extends Auth_Container
 {
         
     /**
-     * Name of the database table
-     * @var string
-     * @see fetch_data
+     * Additional options for the storage container
+     * @var array
      */
-    var $table = "auth";
+    var $options = array();
 
     /**
-     * Name of the column where the username is stored
-     * @var string
-     * @see fetch_data
+     * DB object
+     * @var object
      */
-    var $usernameCol = "username";
+    var $db = null;
 
     // {{{ Constructor
 
@@ -58,22 +57,25 @@ class Auth_Container_DB extends Auth_Container
      * @param  $dsn   string connection data or DB object
      * @return object Returns an error object if something went wrong 
      */
-    function Auth_Container_DB($dsn) 
+    function Auth_Container_DB($dsn)
     {
+        $this->_setDefaults();
 
-        if (is_string($dsn)) {
+        if (is_array($dsn)) {
 
-            $this->db = DB::Connect($dsn);
+            $this->_parseOptions($dsn);
 
-            if (DB::isError($this->db)) {               
-                return new DB_Error($this->db->code,PEAR_ERROR_DIE);
+            if ($this->options['dsn'] != "") {
+                $this->_connect($this->options['dsn']);
+            } else {
+                return new DB_Error("No connection parameters specified!");
             }
-
+        } else if (is_string($dsn)) {
+            $this->_connect($dsn);
         }
 
         elseif (is_object($dsn) && DB::isError($dsn)) {
-            echo "The given param was not valid in file ".__FILE__." at line ".__LINE__."<br>\n";
-            return new DB_Error($dsn->code,PEAR_ERROR_DIE);
+            return new DB_Error($dsn->code, PEAR_ERROR_DIE);
         }
 
         // if parent class is db_common, then it's already a connected identifier
@@ -82,7 +84,67 @@ class Auth_Container_DB extends Auth_Container
         }
 
         else {
-            return new PEAR_Error("The given dsn was not valid in file ".__FILE__." at line ".__LINE__,41,PEAR_ERROR_RETURN,null,null);
+            return new PEAR_Error("The given dsn was not valid in file " . __FILE__ . " at line " . __LINE__, 
+                                  41, 
+                                  PEAR_ERROR_RETURN, 
+                                  null, 
+                                  null
+                                  );
+        }
+    }
+
+    // }}}
+    // {{{ _connect
+
+    /**
+     * Connect to database by using the given DSN string
+     *
+     * @access private
+     * @param  string DSN string
+     * @return mixed  Object on error, otherwise bool
+     */
+    function _connect($dsn)
+    {
+        $this->db = DB::Connect($dsn);
+
+        if (DB::isError($this->db)) {               
+            return new DB_Error($this->db->code, PEAR_ERROR_DIE);
+        } else {
+            return true;
+        }
+    }
+
+    // }}}
+    // {{{ _setDefaults
+
+    /**
+     * Set some default options
+     *
+     * @access private
+     */
+    function _setDefaults()
+    {
+        $this->options['table'] = "auth";
+        $this->options['usernamecol'] = "username";
+        $this->options['passwordcol'] = "password";
+        $this->options['dsn'] = "";
+    }
+
+    // }}}
+    // {{{ _parseOptions
+
+    /**
+     * Parse options passed to the container class
+     *
+     * @access private
+     * @param  array
+     */
+    function _parseOptions($array)
+    {
+        foreach ($array as $key => $value) {
+            if (isset($this->options[$key])) {
+                $this->options[$key] = $value;
+            }
         }
     }
 
@@ -102,26 +164,28 @@ class Auth_Container_DB extends Auth_Container
      * @param   string Password
      * @return  mixed  Error object or boolean
      */
-    function fetchData($username,$password) 
-    {
-        
-        $query = sprintf("SELECT username FROM %s 
-                             WHERE username = '%s'
-                             AND password = '%s'",
-                         $this->table,
+    function fetchData($username, $password) 
+    {       
+        $query = sprintf("SELECT %s FROM %s 
+                             WHERE %s = '%s'
+                             AND %s = '%s'",
+                         $this->options['usernamecol'],
+                         $this->options['table'],
+                         $this->options['usernamecol'],
                          $this->db->quoteString($username),
+                         $this->options['passwordcol'],
                          md5($password)
                          );
-              
+
         $res = $this->db->query($query);
         
         if (DB::isError($res)) {
-            return new DB_Error($res->code,PEAR_ERROR_DIE);
+            return new DB_Error($res->code, PEAR_ERROR_DIE);
         } else {
             $entry = $res->FetchRow(DB_FETCHMODE_ASSOC);
 
             if (is_array($entry)) {
-                Auth::setAuth($entry['username']);
+                Auth::setAuth($entry[$this->options['usernamecol']]);
                 $res->free();
 
                 return true;
