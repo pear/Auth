@@ -216,6 +216,7 @@ class Auth
      *
      * @param string    Name of the function that creates the login form
      * @param boolean   Should the login form be displayed if neccessary?
+     * @return void
      */
     function Auth($storageDriver = "DB", $options = "", $loginFunction = "", $showLogin = true)
     {
@@ -266,6 +267,7 @@ class Auth
      * @access private
      * @global $HTTP_POST_VARS
      * @see    Auth
+     * @return void
      */
     function assignData()
     {
@@ -287,6 +289,7 @@ class Auth
      * Start new auth session
      *
      * @access public
+     * @return void
      */
     function start()
     {
@@ -306,6 +309,7 @@ class Auth
      * Login function
      *
      * @access private
+     * @return void
      */
     function login()
     {
@@ -340,6 +344,7 @@ class Auth
      * @access public
      * @param  integer time in seconds
      * @param  bool    add time to current expire time or not
+     * @return void
      */
     function setExpire($time, $add = false)
     {
@@ -410,10 +415,12 @@ class Auth
      *
      * @access public
      * @param  string Username
-     * @param  array  Additional information that is stored in
-     *                the session.
+     * @param  mixed  Additional information that is stored in
+     *                the session. This parameter can have any
+     *                type (integer, string, array etc).
+     * @return void
      */
-    function setAuth($username, $data = array())
+    function setAuth($username, $data = null)
     {              
         $session = &Auth::_importGlobalVariable("session");
 
@@ -457,6 +464,7 @@ class Auth
      *
      * @access public
      * @param  bool    show login form or not
+     * @return void
      */
     function setShowLogin($showLogin = true)
     {
@@ -477,6 +485,7 @@ class Auth
      * @access private
      * @global $HTTP_SERVER_VARS
      * @param  string  Username if already entered
+     * @return void
      */
     function drawLogin($username = "")
     {
@@ -527,6 +536,7 @@ class Auth
      * active session
      *
      * @access public
+     * @return void
      */
     function logout()
     {
@@ -545,6 +555,7 @@ class Auth
      * Update the idletime
      *
      * @access private
+     * @return void
      */
     function updateIdle()
     {
@@ -607,6 +618,8 @@ class Auth
      * @param  string Username
      * @param  string Password
      * @param  mixed  Additional parameters
+     * @return mixed  True on success, PEAR error object on error
+     *                and AUTH_METHOD_NOT_SUPPORTED otherwise.
      */    
     function addUser($username, $password, $additional = "")
     {
@@ -621,6 +634,8 @@ class Auth
      *
      * @access public
      * @param string Username
+     * @return mixed  True on success, PEAR error object on error
+     *                and AUTH_METHOD_NOT_SUPPORTED otherwise.
      */
     function removeUser($username)
     {
