@@ -341,10 +341,15 @@ class Auth_Container_DB extends Auth_Container
      */
     function addUser($username, $password, $additional = "")
     {
-        if (function_exists($this->options['cryptType'])) {
-            $cryptFunction = $this->options['cryptType'];
+        if(isset($this->options['cryptType']) && $this->options['cryptType'] == 'none'){
+            // Nothing
+        }
+        elseif (function_exists($this->options['cryptType'])) {
+            //$cryptFunction = $this->options['cryptType'];
+            $password = $cryptFunction($password);
         } else {
-            $cryptFunction = 'md5';
+            //$cryptFunction = 'md5';
+            $password = md5($password);
         }
 
         $additional_key   = '';
@@ -363,7 +368,7 @@ class Auth_Container_DB extends Auth_Container
                          $this->options['passwordcol'],
                          $additional_key,
                          $username,
-                         $cryptFunction($password),
+                         $password,
                          $additional_value
                          );
 
