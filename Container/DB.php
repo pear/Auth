@@ -104,7 +104,6 @@ class Auth_Container_DB extends Auth_Container
                                     null,
                                     null
                                     );
-
         }
 
         if (DB::isError($this->db) || PEAR::isError($this->db)) {
@@ -126,7 +125,8 @@ class Auth_Container_DB extends Auth_Container
      *
      * @access public
      * @param  string Query string
-     * @return True or DB_Error
+     * @return mixed  a DB_result object or DB_OK on success, a DB
+     *                or PEAR error on failure
      */
     function query($query)
     {
@@ -146,6 +146,7 @@ class Auth_Container_DB extends Auth_Container
      * Set some default options
      *
      * @access private
+     * @return void
      */
     function _setDefaults()
     {
@@ -192,11 +193,11 @@ class Auth_Container_DB extends Auth_Container
      * @return  mixed  Error object or boolean
      */
     function fetchData($username, $password)
-    {        
+    {
         /* Include additional fields if they exist */
         $cols = "";
-        if (!empty($this->options["db_fields"])) {
-            $cols = "," . $this->options["db_fields"];
+        if (!empty($this->options['db_fields'])) {
+            $cols = "," . $this->options['db_fields'];
         }
 
         $query = sprintf("SELECT %s FROM %s
