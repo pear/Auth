@@ -402,20 +402,7 @@ class Auth
      */
     function getUsername()
     {
-        return $this->user_data['username'];
-    }
-
-    // }}}
-    // {{{ getPassword()
-
-    /**
-     * Get the password
-     *
-     * @return string
-     */
-    function getPassword()
-    {
-        return $this->user_data['password'];
+        return $GLOBALS['HTTP_SESSION_VARS']['auth']['username'];
     }
 
     // }}}
