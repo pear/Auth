@@ -26,35 +26,21 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.1.0</version>
-    <date>2002-09-02</date>
+    <version>1.1.1</version>
+    <date>2002-10-04</date>
     <license>PHP License</license>
     <state>stable</state>
-    <notes>This release contains a lot of fixes and massive
-improvements. See the changelog for the complete list.</notes>
-    <filelist>
-      <file role="php" baseinstalldir="Auth" name="Auth.php"/>
-      <file role="php" baseinstalldir="Auth" name="Container.php"/>
-      <file role="doc" baseinstalldir="Auth" name="README.Auth"/>
-      <dir name="Container" role="php" baseinstalldir="Auth/Container">
-       <file name="DB.php"/>
-       <file name="File.php"/>
-       <file name="LDAP.php"/>
-      </dir>
-    </filelist>
-  </release>
-
-  <changelog>
-    <release>
-      <version>1.1.0</version>
-      <state>stable</state>
-      <date>2002-09-26</date>
-      <notes>
+    <notes>
 <![CDATA[
-* Silenced some warnings when working with
+* This release fixes a bug that caused some files of PEAR::Auth to be
+  installed in wrong places. Everyone who has installed version 1.1.0
+  is urged to update to this version!
 
-    <?php error_reporting(E_ALL); ?>
+Following is a list of changes in version 1.1.0. We are including this
+list here because the changelog entries were not displayed properly in
+the previous release:
 
+* Silenced some warnings when working with "error_reporting(E_ALL);"
   and fixed two bugs.
 
 * Don't update idletime after the authentification session has expired.
@@ -83,8 +69,18 @@ improvements. See the changelog for the complete list.</notes>
   is really necessary. This speeds up the whole process in a lot of
   situations.
 
-]]>
-      </notes>
-    </release>
-   </changelog>
+]]>   
+    </notes>
+    <filelist>
+      <file role="php" baseinstalldir="Auth" name="Auth.php"/>
+      <file role="php" baseinstalldir="Auth" name="Container.php"/>
+      <file role="doc" baseinstalldir="Auth" name="README.Auth"/>
+      <dir name="Container" role="php" baseinstalldir="Auth">
+       <file name="DB.php"/>
+       <file name="File.php"/>
+       <file name="LDAP.php"/>
+      </dir>
+    </filelist>
+  </release>
+
 </package>
