@@ -78,8 +78,8 @@
  *    // set options
  *    $options = array(
  *      'table'         => 'myuser',
- *      'username'   => 'userlogin',
- *      'password'   => 'cryptpassword'
+ *      'usernamecol'   => 'userlogin',
+ *      'passwordcol'   => 'cryptpassword'
  *    );
  *
  *    // define login form function
