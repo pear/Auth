@@ -654,14 +654,14 @@ class Auth {
                 $this->session['registered'] == true &&
                 $this->session['username'] != '') {
                 Auth::updateIdle();
-                // Only Generate the challenge once
-                if($this->authChecks == 1) {
-                    $this->session['challengecookieold'] = $this->session['challengecookie'];
-                    $this->session['challengecookie'] = md5($this->session['challengekey'].microtime());
-                    setcookie('authchallenge', $this->session['challengecookie']);
-                }
 
                 if ($this->advancedsecurity) {
+                    // Only Generate the challenge once
+                    if($this->authChecks == 1) {
+                        $this->session['challengecookieold'] = $this->session['challengecookie'];
+                        $this->session['challengecookie'] = md5($this->session['challengekey'].microtime());
+                        setcookie('authchallenge', $this->session['challengecookie']);
+                    }
                     // Check for ip change
                     if ( isset($this->server['REMOTE_ADDR']) && $this->session['sessionip'] != $this->server['REMOTE_ADDR']) {
                         // Check if the IP of the user has changed, if so we assume a man in the middle attack and log him out
@@ -680,6 +680,8 @@ class Auth {
                     }
     
                     // Check challenge cookie here, if challengecookieold is not set this is the first time and check is skipped
+                    // TODO when user open two pages similtaneuly (open in new window,open in tab) auth breach is caused 
+                    // find out a way around that if possible
                     if ( isset($this->session['challengecookieold']) && $this->session['challengecookieold'] != $this->cookie['authchallenge']) {
                         $this->expired = true;
                         $this->status = AUTH_SECURITY_BREACH;
@@ -717,10 +719,7 @@ class Auth {
      * @return bool  True if the user is logged in, otherwise false.
      */
     function getAuth() {
-        if ( isset($this->session['registered']) ) {
-            return $this->session['registered'];
-        }
-        return false;
+        return $this->checkAuth();
     }
 
     /**
