@@ -344,6 +344,10 @@ class Auth
             $login_ok = $this->storage->fetchData($this->username, $this->password);
         }
 
+        if (!empty($this->username) && $login_ok) {
+            $this->setAuth($this->username);
+        }
+
         /**
          * If the login failed or the user entered no username,
          * output the login screen again.
@@ -413,6 +417,47 @@ class Auth
     }
 
     // }}}
+    // {{{ setAuthData()
+    
+    /**
+     * Register additional information that is to be stored
+     * in the session.
+     *
+     * @access public
+     * @param  mixed  Additional information. This parameter can
+     *                have any type (integer, string, array etc).
+     * @return mixed  Previous value.
+     */
+    function setAuthData($data)
+    {
+        if (isset($session['auth']['data'])) {
+            $olddata = $session['auth']['data'];
+        } else {
+            $olddata = null;
+        }
+        $session['auth']['data'] = $data;
+        return $olddata;
+    }
+    
+    // }}}
+    // {{{ getAuthData()
+    
+    /**
+     * Get additional information that is stored in the session.
+     *
+     * @access public
+     * @return mixed  Additional information.
+     */
+    function getAuthData($data)
+    {
+        if (isset($session['auth']['data'])) {
+            return $session['auth']['data'];
+        } else {
+            return null;
+        }        
+    }
+    
+    // }}}
     // {{{ setAuth()
 
     /**
@@ -421,16 +466,17 @@ class Auth
      *
      * @access public
      * @param  string Username
-     * @param  mixed  Additional information that is stored in
-     *                the session. This parameter can have any
-     *                type (integer, string, array etc).
+     * @param  mixed  [Deprecated] Additional information that
+     *                is stored in the session. This parameter
+     *                can have any type (integer, string, array
+     *                etc).
      * @return void
      */
     function setAuth($username, $data = null)
     {
         $session = &Auth::_importGlobalVariable("session");
 
-        if (!isset($session['auth'])) {
+        if (!isset($session['auth']) && !isset($_SESSION)) {
             session_register("auth");
         }
 
@@ -442,7 +488,7 @@ class Auth
                            );
 
         if (!empty($data)) {
-            $session['auth']['data'] = $data;
+            $this->setAuthData($data);
         }
     }
     
@@ -593,7 +639,11 @@ class Auth
 
         $session = &$this->_importGlobalVariable("session");
         $session['auth'] = "";
-        session_unregister("auth");
+        if (isset($_SESSION)) {
+            unset($session['auth']);
+        } else {
+            session_unregister("auth");
+        }        
     }
 
     // }}}

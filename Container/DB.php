@@ -219,7 +219,6 @@ class Auth_Container_DB extends Auth_Container
                                           $entry[$this->options['passwordcol']],
                                           $this->options['cryptType']))
                 {
-                    Auth::setAuth($entry[$this->options['usernamecol']]);
                     $res->free();
 
                     return true;

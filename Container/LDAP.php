@@ -187,7 +187,6 @@ class Auth_Container_LDAP extends Auth_Container
                 // try binding as this user with the supplied password
                 if (@ldap_bind($this->conn_id, $user_dn, $password)) {
                     // auth successfull
-                    Auth::setAuth($username);
                     return true;
                 }
             }
@@ -201,3 +200,4 @@ class Auth_Container_LDAP extends Auth_Container
 }
 
 ?>
+

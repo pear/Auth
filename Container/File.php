@@ -78,10 +78,6 @@ class Auth_Container_File extends Auth_Container
     {
         $result = $this->pwfile->verifyPassword($username, $password);
         
-        if ($result) {
-            Auth::SetAuth($username);
-        }
-
         return $result;
     }
 
