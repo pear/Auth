@@ -806,6 +806,22 @@ class Auth
                 }
                 break;
 
+            case "cookie" :
+                if (isset($_COOKIE)) {
+                    $var = &$_COOKIE;
+                } else {
+                    $var = &$GLOBALS['HTTP_COOKIE_VARS'];
+                }
+                break;
+
+            case "get" :
+                if (isset($_GET)) {
+                    $var = &$_GET;
+                } else {
+                    $var = &$GLOBALS['HTTP_GET_VARS'];
+                }
+                break;
+
             default:
                 break;
 
