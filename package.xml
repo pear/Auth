@@ -28,7 +28,7 @@ the login data:
   </maintainers>
   <release>
     <version>1.1.2</version>
-    <date>2002-XX-XX</date>
+    <date>2003-XX-XX</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
@@ -36,6 +36,8 @@ the login data:
 * Added new storage container that uses vpopmail to authenticate
   users. This feature has been implemented by Stanislav Grozev
   (<tacho@orbitel.bg>).
+* Added new IMAP storage container written by Jeroen Houben
+  <jeroen@terena.nl>.
 ]]>
     </notes>
     <filelist>
@@ -45,6 +47,7 @@ the login data:
       <dir name="Container" role="php" baseinstalldir="Auth">
        <file name="DB.php"/>
        <file name="File.php"/>
+       <file name="IMAP.php"/>
        <file name="LDAP.php"/>
        <file name="vpopmail.php"/>
       </dir>
