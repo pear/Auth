@@ -201,6 +201,7 @@ class Auth_Container_DB extends Auth_Container
             if(is_array($this->options['db_fields'])){
                 $this->options['db_fields'] = join($this->options['db_fields'], ', ');
             }
+            $this->options['db_fields'] = ', '.$this->options['db_fields'];
         }
     }
 
@@ -233,7 +234,7 @@ class Auth_Container_DB extends Auth_Container
             $sql_from = "*";
         }
         else{
-            $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].", ".$this->options['db_fields'];
+            $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
         }
 
         $query = "SELECT ! FROM ! WHERE ! = ?";
@@ -288,7 +289,7 @@ class Auth_Container_DB extends Auth_Container
             $sql_from = "*";
         }
         else{
-            $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].", ".$this->options['db_fields'];
+            $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
         }
 
         $query = sprintf("SELECT %s FROM %s",
