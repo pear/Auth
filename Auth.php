@@ -204,6 +204,13 @@ class Auth
      */
     var $showLogin = true;
 
+    /**
+     * Current authentication status
+     *
+     * @var string
+     */
+    var $status = "";
+
     // {{{ Constructor
 
     /**
@@ -600,6 +607,20 @@ class Auth
     {
         $session = &$this->_importGlobalVariable("session");
         return $session['auth']['username'];
+    }
+
+    // }}}
+    // {{{ getStatus()
+
+    /**
+     * Get the current status
+     *
+     * @access public
+     * @return string
+     */
+    function getStatus()
+    {
+        return $this->status;
     }
 
     // }}}
