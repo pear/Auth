@@ -91,7 +91,7 @@ class Auth_Container_DB extends Auth_Container
      */
     function _connect($dsn)
     {
-        if (is_string($dsn)) {
+        if (is_string($dsn) || is_array($dsn)) {
             $this->db = DB::Connect($dsn);
         } elseif (get_parent_class($dsn) == "db_common") {
             $this->db = $dsn;
