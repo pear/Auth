@@ -352,12 +352,16 @@ class Auth
      */
     function login()
     {
+        $login_ok = false;
+
         /**
          * When the user has already entered a username,
          * we have to validate it.
          */
         if (!empty($this->username)) {
-            $login_ok = $this->storage->fetchData($this->username, $this->password);
+            if (true === $this->storage->fetchData($this->username, $this->password)) {
+                $login_ok = true;
+            }
         }
 
         if (!empty($this->username) && $login_ok) {
