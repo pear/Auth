@@ -40,24 +40,14 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.2.3</version>
-    <date>2003-09-08</date>
+    <version>1.3.0</version>
+    <date>2004-xx-xx</date>
     <license>PHP License</license>
-    <state>stable</state>
+    <state>beta</state>
     <notes>
 <![CDATA[
-* new Method to auth_container getUser()
-* New Auth_Container_File, using new File_Passwd class. Provided by Michael Wallner <mike@php.net>
-* Login/Logout callbacks now get a reference to auth
-* New Login Failed Callback added (method setFailedLoginCallback)
-* SOAP container patch to keep a reference to the Soap responce by Bruno Pedro <bpedro@co.sapo.pt>
-* Auth is now installed in /pear-dir/Auth.php instead of /pear-dir/Auth/Auth.php, an 
-  empty file /pear-dev/Auth/Auth.php wich includes Auth.php is added for BC
-* The contaner now gets a reference to the auth object ($auth->storage->_auth_obj)
-*Some patches from the pear-dev list bellow
-    -maka3d@yahoo.com.br - Patch to use a method of the container in Auth_Container::verifyPassword
-    -Lorenzo Alberton <l.alberton@quipo.it> - Patch to use variable session variable name, untill now the variable auth was used
-    -Marcos Neves <maka3d@yahoo.com.br> - Avaoid error when calling getAuthData() before the login
+Added check for ip change which user is logged in, this is considered a security violation and the user is logged out [16/Dec/2003 - yavo]
+Added PEAR container, authenticate the use against the pear web site (probably php.net also) [16/Dec/2003 - yavo]
 ]]>
     </notes>
     
@@ -113,13 +103,32 @@ the login data:
   </release>
 
   <changelog>
-      <release>
+        <release>
+        <version>1.2.3</version>
+        <date>2003-09-08</date>
+        <license>PHP License</license>
+        <state>stable</state>
+        <notes><![CDATA[
+* new Method to auth_container getUser()
+* New Auth_Container_File, using new File_Passwd class. Provided by Michael Wallner <mike@php.net>
+* Login/Logout callbacks now get a reference to auth
+* New Login Failed Callback added (method setFailedLoginCallback)
+* SOAP container patch to keep a reference to the Soap responce by Bruno Pedro <bpedro@co.sapo.pt>
+* Auth is now installed in /pear-dir/Auth.php instead of /pear-dir/Auth/Auth.php, an 
+  empty file /pear-dev/Auth/Auth.php wich includes Auth.php is added for BC
+* The contaner now gets a reference to the auth object ($auth->storage->_auth_obj)
+*Some patches from the pear-dev list bellow
+    -maka3d@yahoo.com.br - Patch to use a method of the container in Auth_Container::verifyPassword
+    -Lorenzo Alberton <l.alberton@quipo.it> - Patch to use variable session variable name, untill now the variable auth was used
+    -Marcos Neves <maka3d@yahoo.com.br> - Avaoid error when calling getAuthData() before the login
+]]></notes>
+    </release>
+    <release>
         <version>1.2.2</version>
         <date>2003-07-29</date>
         <license>PHP License</license>
         <state>stable</state>
-        <notes>
-<![CDATA[
+        <notes><![CDATA[
 * Added support for passing contaner as an object
 * Added fix when db_fileds is *
 * Added Test Suite (experimental)
@@ -127,8 +136,7 @@ the login data:
   different than MD5, DES and plain text. (Patch by Tom Anderson)
 * Added new MDB storage container written by Lorenzo Alberton
 * Added new Container for SAMBA password files (SMBPasswd)
-]]>
-        </notes>
+]]></notes>
       </release>
   </changelog>
   
