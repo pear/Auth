@@ -3,7 +3,7 @@
      generated package.xml files -->
 <package>
   <name>Auth</name>
-  <summary>The PEAR::Auth class provides methods for creating an authentication system using PHP.</summary>
+  <summary>The PEAR::Auth package provides methods for creating an authentication system using PHP.</summary>
   <maintainer>
     <user>MJ</user>
     <name>Martin Jansen</name>
@@ -34,10 +34,31 @@
     </notes>
   </release>
 
+  <release>
+    <version>0.3</version>
+    <date>2001-11-04</date>
+    <notes>
+     * It is now possible to pass a third parameter to the
+       constructor to pass user defined function to print
+       the login form.
+
+     * Improved behaviour of the PEAR:DB storage container: One can
+       now pass an array to the container to use more individual
+       table layouts.
+     
+     * Add function sessionValidThru(), that returns the time up to
+       the session is valid.
+     
+     * Beginning with this release, there is a proper documentation
+       available. (See README.Auth for the location of it.)
+    </notes>
+  </release>
+
   <filelist>
     <dir name="/" baseinstalldir="Auth">
         <file role="php">Auth.php</file>
-        <file role="php">Container.php</file>    
+        <file role="php">Container.php</file>
+        <file role="text">README.Auth</file>
         <dir name="Container">
             <file role="php">DB.php</file>
         </dir>
