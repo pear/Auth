@@ -206,19 +206,27 @@ class Auth {
      */
     function Auth($storageDriver, $options = '', $loginFunction = '', $showLogin = true)
     {
-        if (!empty($options['sessionName'])) {
-            $this->_sessionName = $options['sessionName'];
-            unset($options['sessionName']);
-        }
-        
-        if (!empty($options['postUsername'])) {
-            $this->_postUsername = $options['postUsername'];
-            unset($options['postUsername']);
-        }
-        
-        if (!empty($options['postPassword'])) {
-            $this->_postPassword = $options['postPassword'];
-            unset($options['postPassword']);
+        if (is_array($options)) {
+            if (!empty($options['sessionName'])) {
+                $this->_sessionName = $options['sessionName'];
+                unset($options['sessionName']);
+            }
+            
+            if (!empty($options['postUsername'])) {
+                $this->_postUsername = $options['postUsername'];
+                unset($options['postUsername']);
+            }
+            
+            if (!empty($options['postPassword'])) {
+                $this->_postPassword = $options['postPassword'];
+                unset($options['postPassword']);
+            }
+            
+            if (!empty($options['advancedSecurity']) && $options['advancedSecurity'] ) {
+                //advancedsecurity
+                $this->setAdvancedSecurity();
+                unset($options['advancedSecurity']);
+            }
         }
         
         if ($loginFunction != '' && is_callable($loginFunction)) {
@@ -464,7 +472,7 @@ class Auth {
 
     /**
      * Register a callback function to be called on user logout.
-     * The function will receive three parameters, the username and a reference to the auth object.
+     * The function will receive two parameters, the username and a reference to the auth object.
      *
      * @access public
      * @param  string  callback function name
@@ -563,7 +571,12 @@ class Auth {
             $session[$this->_sessionName]['data']       = array();
         }
 
-        $session[$this->_sessionName]['sessionip'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+        if(isset($_SERVER['HTTP_VIA']) && isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+            $session[$this->_sessionName]['sessionip'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $session[$this->_sessionName]['sessionip'] = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+        }
+
         $session[$this->_sessionName]['sessionuseragent'] = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
         $session[$this->_sessionName]['registered'] = true;
@@ -591,7 +604,12 @@ class Auth {
         
         if ($this->advancedsecurity) {
             // Check for ip change
-            if (isset($session[$this->_sessionName]['sessionip']) && isset($_SERVER['REMOTE_ADDR']) && $session[$this->_sessionName]['sessionip'] != $_SERVER['REMOTE_ADDR']) {
+            if(isset($_SERVER['HTTP_VIA']) && isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+                $userip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                $userip =  isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
+            }
+            if (isset($session[$this->_sessionName]['sessionip']) && $session[$this->_sessionName]['sessionip'] != $userip) {
                 // Check if the IP of the user has changed, if so we assume a man in the middle attack and log him out
                 $this->expired = true;
                 $this->status = AUTH_SECURITY_BREACH;
@@ -703,7 +721,7 @@ class Auth {
             } else if (!empty ($this->status) && $this->status == AUTH_WRONG_LOGIN) {
                 echo '<i>Wrong login data!</i>'."\n";
             } else if (!empty ($this->status) && $this->status == AUTH_SECURITY_BREACH) {
-                echo '<i>Security problem. Either your IP or your User-Agent(Browser) has changed!</i>'."\n";
+                echo '<i>Security problem, access to existing session denied.</i>'."\n";
             }
             PEAR::raiseError('You are using the built-in login screen of PEAR::Auth.<br />See the <a href="http://pear.php.net/manual/">manual</a> for details on how to create your own login function.', null);
 
