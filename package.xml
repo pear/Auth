@@ -60,7 +60,6 @@ the login data:
 ]]>
     </notes>
 
-
     <filelist>
       <file role="php" baseinstalldir="" name="Auth.php">
           <replace from="@version@" to="version" type="package-info"/>
@@ -74,6 +73,7 @@ the login data:
       <file role="doc" baseinstalldir="Auth" name="README.Auth"/>
       <dir name="Container" role="php" baseinstalldir="Auth">
        <file name="DB.php"/>
+       <file name="DBLite.php"/>
        <file name="File.php"/>
        <file name="IMAP.php"/>
        <file name="POP3.php"/>
@@ -85,6 +85,9 @@ the login data:
        <file name="SOAP.php"/>
        <file name="vpopmail.php"/>
        <file name="PEAR.php"/>
+      </dir>
+      <dir name="Frontend" role="php" baseinstalldir="Auth">
+        <file name="Html.php"/>
       </dir>
 
       <!-- The Test suite -->

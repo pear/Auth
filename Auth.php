@@ -233,7 +233,7 @@ class Auth {
      * @param boolean   Should the login form be displayed if neccessary?
      * @return void
      */
-    function Auth(&$storageDriver, $options = '', $loginFunction = '', $showLogin = true)
+    function Auth($storageDriver, $options = '', $loginFunction = '', $showLogin = true)
     {
         $this->applyAuthOptions($options);
 
@@ -680,7 +680,7 @@ class Auth {
     function staticCheckAuth($options = null) {
         static $staticAuth;
         if(!isset($staticAuth)) {
-            $staticAuth = new Auth('', $options);
+            $staticAuth = new Auth('null', $options);
         }
         return( $staticAuth->checkAuth() );
     }
