@@ -18,8 +18,8 @@ class Auth_Frontend_Html {
         // TODO javascript might need some improvement for work on other browsers
         if($caller->advancedsecurity && $caller->storage->supportsChallengeResponce() ) {
             // Init the secret cookie
-            //$caller->session['loginchallenege'] = md5(microtime());
-            $caller->session['loginchallenege'] = '1';
+            $caller->session['loginchallenege'] = md5(microtime());
+            //$caller->session['loginchallenege'] = '1';
             #print 'Using Challenge Responce '.$caller->session['loginchallenege'].'<br/>';
             print "\n";
             print '<script language="JavaScript">'."\n";
