@@ -149,6 +149,13 @@ class Auth {
      * @var string
      */
     var $_sessionName = '_authsession';
+    
+    /**
+     * Package Version
+     *
+     * @var string
+     */
+    var $version = "@version@";
 
     // {{{ Constructor
 

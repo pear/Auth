@@ -61,12 +61,11 @@ the login data:
 ]]>
     </notes>
     
-    <dep type="pkg" rel="ge" version="0.9.5">File_Passwd</dep>
-    <dep type="pkg" rel="ge" version="1.3">Net_POP3</dep>
-
     
     <filelist>
-      <file role="php" baseinstalldir="" name="Auth.php"/>
+      <file role="php" baseinstalldir="" name="Auth.php">
+          <replace from="@version@" to="version" type="package-info"/>
+      </file>
       <!-- Added for compatibility with the previous Auth -->
       <dir name="Auth" role="php" baseinstalldir="">
           <file name="Auth.php"/>
@@ -101,6 +100,12 @@ the login data:
           <file name="tests.php"/>
       </dir>
     </filelist>
+    
+    <deps>
+        <dep type="pkg" rel="ge" version="0.9.5" optional="yes">File_Passwd</dep>
+        <dep type="pkg" rel="ge" version="1.3" optional="yes">Net_POP3</dep>
+    </deps>
+
   </release>
 
   <changelog>
