@@ -228,7 +228,6 @@ class Auth_Container_MDB2 extends Auth_Container
         } else {
             $sql_from = $this->options['usernamecol'] . ', '. $this->options['passwordcol'] . $this->options['db_fields'];
         }
-
         $query = sprintf("SELECT %s FROM %s WHERE %s = %s",
                          $sql_from,
                          $this->options['table'],
@@ -236,9 +235,8 @@ class Auth_Container_MDB2 extends Auth_Container
                          $this->db->quote($username, 'text')
                          );
 
-        $res = $this->db->getRow($query, null, null, null, MDB2_FETCHMODE_ASSOC);
-
-        if (MDB::isError($res) || PEAR::isError($res)) {
+        $res = $this->db->queryRow($query, null, MDB2_FETCHMODE_ASSOC);
+        if (MDB2::isError($res) || PEAR::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->getCode());
         }
         if (!is_array($res)) {
