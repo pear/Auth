@@ -19,7 +19,7 @@
 // $Id$
 //
 
-require_once 'Auth/Container/DB.php';
+require_once 'Auth/Container.php';
 require_once 'MDB.php';
 
 /**
@@ -32,7 +32,7 @@ require_once 'MDB.php';
  * @package  Auth
  * @version  $Revision$
  */
-class Auth_Container_MDB extends Auth_Container_DB
+class Auth_Container_MDB extends Auth_Container
 {
 
     /**
@@ -155,6 +155,43 @@ class Auth_Container_MDB extends Auth_Container_DB
     }
 
     // }}}
+    // {{{ _setDefaults()
+
+    /**
+     * Set some default options
+     *
+     * @access private
+     * @return void
+     */
+    function _setDefaults()
+    {
+        $this->options['table']       = 'auth';
+        $this->options['usernamecol'] = 'username';
+        $this->options['passwordcol'] = 'password';
+        $this->options['dsn']         = '';
+        $this->options['db_fields']   = '';
+        $this->options['cryptType']   = 'md5';
+    }
+
+    // }}}
+    // {{{ _parseOptions()
+
+    /**
+     * Parse options passed to the container class
+     *
+     * @access private
+     * @param  array
+     */
+    function _parseOptions($array)
+    {
+        foreach ($array as $key => $value) {
+            if (isset($this->options[$key])) {
+                $this->options[$key] = $value;
+            }
+        }
+    }
+
+    // }}}
     // {{{ fetchData()
 
     /**
@@ -163,7 +200,7 @@ class Auth_Container_MDB extends Auth_Container_DB
      * This function uses the given username to fetch
      * the corresponding login data from the database
      * table. If an account that matches the passed username
-     * and password is found, the function returns true. 
+     * and password is found, the function returns true.
      * Otherwise it returns false.
      *
      * @param   string Username
@@ -171,7 +208,7 @@ class Auth_Container_MDB extends Auth_Container_DB
      * @return  mixed  Error object or boolean
      */
     function fetchData($username, $password)
-    {        
+    {
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
@@ -199,7 +236,7 @@ class Auth_Container_MDB extends Auth_Container_DB
             return PEAR::raiseError($res->getMessage(), $res->getCode(), PEAR_ERROR_DIE);
         } else {
             if (is_array($res)) {
-                if ($this->verifyPassword(trim($password), 
+                if ($this->verifyPassword(trim($password),
                                           trim($res[$this->options['passwordcol']]),
                                           $this->options['cryptType']))
                 {
@@ -224,7 +261,7 @@ class Auth_Container_MDB extends Auth_Container_DB
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode(), PEAR_ERROR_DIE);
         }
-        
+
         $retVal = array();
 
         $query = sprintf("SELECT %s FROM %s",
