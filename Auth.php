@@ -294,7 +294,7 @@ class Auth {
                 unset($options['sessionName']);
             }
             if (!empty($options['allowLogin'])) {
-                $this->_sessionName = $options['allowLogin'];
+                $this->allowLogin = $options['allowLogin'];
                 unset($options['allowLogin']);
             }
             if (!empty($options['postUsername'])) {
