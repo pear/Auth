@@ -424,8 +424,15 @@ class Auth {
             if (is_callable($this->loginFunction)) {
                 call_user_func_array($this->loginFunction, array($this->username, $this->status, &$this) );
             } else {
+                // BC fix Auth used to use drawLogin for this
+                // call is sub classes implement this
+                if(is_callable(array(&$this, 'drawLogin'))) {
+                    return $this->drawLogin($this->username, &$this);
+                }
+
+                // New Login form
                 include_once('Auth/Frontend/Html.php');
-                Auth_Frontend_Html::render($this, $this->username);
+                return Auth_Frontend_Html::render($this, $this->username);
             }
         } else {
             return;
