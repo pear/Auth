@@ -427,7 +427,7 @@ class Auth {
             return $session['auth']['data'];
         }
         if (isset($session['auth']['data'][$name])) {
-            return $session['auth'][$name];
+            return $session['auth']['data'][$name];
         } else {
             return null;
         }        
