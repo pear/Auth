@@ -157,7 +157,7 @@ class Auth {
      * @var string
      */
     var $_sessionName = '_authsession';
-    
+
     /**
      * Package Version
      *
@@ -174,21 +174,21 @@ class Auth {
      * @var boolean
      */     
     var $advancedsecurity = false;
-    
+
     /**
      * Username key in POST array
      *
      * @var string
      */
     var $_postUsername = 'username';
-    
+
     /**
      * Password key in POST array
      *
      * @var string
      */
     var $_postPassword = 'password';
-    
+
     /**
      * Holds a reference to the session auth variable
      * @var array
@@ -285,7 +285,7 @@ class Auth {
             $this->storage_options =& $options;
         }
     }
-    
+
     /**
       * Set the Auth options 
       *
@@ -293,6 +293,7 @@ class Auth {
       * the rest will be left for usage by the container
       * @param array An array of Auth options
       * @return array The options which were not applied
+      * @access private
       */
     function &applyAuthOptions(&$options) {
         if(is_array($options)){
@@ -326,6 +327,7 @@ class Auth {
       * Suspend storage instantiation to make Auth lighter to use 
       * for calls which do not require login
       * @return bool True if the conainer is loaded, false if the container is already loaded
+      * @access private
       */
     function _loadStorage() {
         if(!is_object($this->storage)) {
@@ -653,7 +655,7 @@ class Auth {
     /**
      * Checks if there is a session with valid auth information.
      *
-     * @access private
+     * @access public
      * @return boolean  Whether or not the user is authenticated.
      */
     function checkAuth() {
@@ -730,7 +732,7 @@ class Auth {
     /**
      * Statically checks if there is a session with valid auth information.
      *
-     * @access private
+     * @access public
      * @see checkAuth
      * @return boolean  Whether or not the user is authenticated.
      */
