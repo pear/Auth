@@ -106,13 +106,13 @@ class Auth_Container_DB extends Auth_Container
     {
         
         $query = sprintf("SELECT username FROM %s 
-                             WHERE username = %s 
+                             WHERE username = '%s'
                              AND password = '%s'",
                          $this->table,
                          $this->db->quoteString($username),
                          md5($password)
                          );
-        
+              
         $res = $this->db->query($query);
         
         if (DB::isError($res)) {
