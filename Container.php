@@ -83,7 +83,7 @@ class Auth_Container
         switch ($cryptType) {
         case "crypt" :
             return (($password2 == "**" . $password1) ||
-                    (crypt($password1, substr($password2,0,2)) == $password2)
+                    (crypt($password1, $password2) == $password2)
                     );
             break;
 
