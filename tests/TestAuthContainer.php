@@ -16,6 +16,8 @@ class TestAuthContainer extends PHPUnit_TestCase
         $this->user = 'joe';
         $this->pass = 'doe';
         $this->opt = 'VeryCoolUser';
+        // Nedded since lazy loading of container was introduced
+        $this->container->_auth_obj =& new Auth(&$this);
     }
 
     // Abstract

@@ -1,6 +1,5 @@
 <?php
 
-print "IMAP Test\n";
 include_once('TestAuthContainer.php');
 include_once("Auth/Container/IMAP.php");
 
@@ -8,7 +7,6 @@ include_once("Auth/Container/IMAP.php");
 class IMAPContainer extends TestAuthContainer {
 
     function IMAPContainer($name){
-        print "IMAPContainer::IMAPContainer\n";
         $this->TestAuthContainer($name);
     }
     
