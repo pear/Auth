@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE package SYSTEM "../package.dtd">
 <!-- do not use the "Type" attribute here, that one is only for
      generated package.xml files -->
-<package>
+<package version="1.0">
   <name>Auth</name>
   <summary>The PEAR::Auth package provides methods for creating an authentication system using PHP.</summary>
-  <maintainer>
-    <user>MJ</user>
-    <name>Martin Jansen</name>
-    <email>mj@php.net</email>
-  </maintainer>
+  <maintainers>
+    <maintainer>
+      <user>MJ</user>
+      <name>Martin Jansen</name>
+      <email>mj@php.net</email>
+    </maintainer>
+  </maintainers>
   <release>
     <version>0.1</version>
     <date>2001-07-11</date>
     <notes>
       This is the initial independent release of the Auth package.
     </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="Auth">
+        <file role="php">Auth.php</file>
+        <file role="php">Container.php</file>
+        <file role="doc">README.Auth</file>
+        <dir name="Container">
+	  <file role="php">DB.php</file>
+	  <file role="php">File.php</file>
+	  <file role="php">LDAP.php</file>
+        </dir>
+      </dir>
+    </filelist>
   </release>
 
   <release>
@@ -32,6 +47,18 @@
          time) refreshed on every request.
       *  Improved behaviour of Container/DB.php
     </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="Auth">
+        <file role="php">Auth.php</file>
+        <file role="php">Container.php</file>
+        <file role="doc">README.Auth</file>
+        <dir name="Container">
+	  <file role="php">DB.php</file>
+	  <file role="php">File.php</file>
+	  <file role="php">LDAP.php</file>
+        </dir>
+      </dir>
+    </filelist>
   </release>
 
   <release>
@@ -52,6 +79,18 @@
      * Beginning with this release, there is a proper documentation
        available. (See README.Auth for the location of it.)
     </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="Auth">
+        <file role="php">Auth.php</file>
+        <file role="php">Container.php</file>
+        <file role="doc">README.Auth</file>
+        <dir name="Container">
+	  <file role="php">DB.php</file>
+	  <file role="php">File.php</file>
+	  <file role="php">LDAP.php</file>
+        </dir>
+      </dir>
+    </filelist>
   </release>
 
   <release>
@@ -75,6 +114,18 @@
 
      * idle- and expire time.    
     </notes>
+    <filelist>
+      <dir name="/" baseinstalldir="Auth">
+        <file role="php">Auth.php</file>
+        <file role="php">Container.php</file>
+        <file role="doc">README.Auth</file>
+        <dir name="Container">
+	  <file role="php">DB.php</file>
+	  <file role="php">File.php</file>
+	  <file role="php">LDAP.php</file>
+        </dir>
+      </dir>
+    </filelist>
   </release>
 
   <release>
@@ -87,18 +138,17 @@
      a value different than default ("PHPSESSID"). This is useful, if
      one uses two different auth systems on the same domain.
     </notes>
-  </release>
-
-  <filelist>
-    <dir name="/" baseinstalldir="Auth">
+    <filelist>
+      <dir name="/" baseinstalldir="Auth">
         <file role="php">Auth.php</file>
         <file role="php">Container.php</file>
-        <file role="text">README.Auth</file>
+        <file role="doc">README.Auth</file>
         <dir name="Container">
-            <file role="php">DB.php</file>
-            <file role="php">File.php</file>
-            <file role="php">LDAP.php</file>
+	  <file role="php">DB.php</file>
+	  <file role="php">File.php</file>
+	  <file role="php">LDAP.php</file>
         </dir>
-    </dir>
-  </filelist>
+      </dir>
+    </filelist>
+  </release>
 </package>
