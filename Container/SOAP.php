@@ -29,9 +29,14 @@ require_once 'SOAP/Client.php';
  * This class takes one parameter (options), where
  * you specify the following fields: endpoint, namespace,
  * method, encoding, usernamefield and passwordfield.
- * You can use specific features of your SOAP service
+ *
+ * You can use specify features of your SOAP service
  * by providing its parameters in an associative manner by
  * using the '_features' array through the options parameter.
+ *
+ * The 'matchpassword' option should be set to false if your
+ * webservice doesn't return (username,password) pairs, but
+ * instead returns error when the login is invalid.
  *
  * Example usage:
  *
@@ -46,6 +51,7 @@ require_once 'SOAP/Client.php';
  *             'encoding' => 'UTF-8',
  *             'usernamefield' => 'login',
  *             'passwordfield' => 'password',
+ *             'matchpasswords' => false,
  *             '_features' => array (
  *                             'example_feature' => 'example_value',
  *                             'another_example'  => ''
@@ -70,9 +76,7 @@ class Auth_Container_SOAP extends Auth_Container
      * @var array
      * @access private
      */
-    var $_requiredOptions = array('endpoint', 'namespace', 'method',
-                                  'encoding', 'usernamefield',
-                                  'passwordfield');
+    var $_requiredOptions = array('endpoint', 'namespace', 'method', 'encoding', 'usernamefield', 'passwordfield');
 
     /**
      * Options for the class
@@ -97,6 +101,9 @@ class Auth_Container_SOAP extends Auth_Container
     function Auth_Container_SOAP($options)
     {
         $this->_options = $options;
+        if (!isset($this->_options['matchpasswords'])) {
+            $this->_options['matchpasswords'] = true;
+        }
         if (!empty($this->_options['_features'])) {
             $this->_features = $this->_options['_features'];
             unset($this->_options['_features']);
@@ -132,13 +139,21 @@ class Auth_Container_SOAP extends Auth_Container
             $SOAPParams[] = new SOAP_Value($fieldName, 'string', $fieldValue);
         }
         // make SOAP call
-        $soapResponse = $soapClient->call($this->_options['method'], $SOAPParams, array('namespace' => $this->_options['namespace']));
+        $soapResponse = $soapClient->call(
+                                          $this->_options['method'],
+                                          $SOAPParams,
+                                          array('namespace' => $this->_options['namespace'])
+                                         );
         if (!PEAR::isError($soapResponse)) {
-            // check if passwords match
-            if ($password == $soapResponse->{$this->_options['passwordfield']}) {
-                return true;
+            if ($this->_options['matchpasswords']) {
+                // check if passwords match
+                if ($password == $soapResponse->{$this->_options['passwordfield']}) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                return true;
             }
         } else {
             return false;
