@@ -21,7 +21,7 @@
 
 
 require_once "Auth/Container.php";
-require_once "Auth_RADIUS/RADIUS.php";
+require_once "Auth/RADIUS.php";
 
 /*
  * Storage driver for authenticating users against RADIUS servers.
