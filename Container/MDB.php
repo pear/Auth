@@ -167,13 +167,13 @@ class Auth_Container_MDB extends Auth_Container_DB
         }
 
         $query = sprintf("SELECT %s FROM %s
-                             WHERE %s = '%s'",
+                             WHERE %s = %s",
                          $this->options['usernamecol'] . ', '
                          . $this->options['passwordcol']
                          . $cols,
                          $this->options['table'],
                          $this->options['usernamecol'],
-                         $username
+                         $this->db->getTextValue($username)
                          );
 
         $res = $this->query($query);
@@ -252,17 +252,17 @@ class Auth_Container_MDB extends Auth_Container_DB
         if (is_array($additional)) {
             foreach ($additional as $key => $value) {
                 $additional_key .= ', ' . $key;
-                $additional_value .= ", '" . $value . "'";
+                $additional_value .= ", " . $this->db->getTextValue($value);
             }
         }
 
-        $query = sprintf("INSERT INTO %s (%s, %s%s) VALUES ('%s', '%s'%s)",
+        $query = sprintf("INSERT INTO %s (%s, %s%s) VALUES (%s, %s%s)",
                          $this->options['table'],
                          $this->options['usernamecol'],
                          $this->options['passwordcol'],
                          $additional_key,
-                         $username,
-                         $cryptFunction($password),
+                         $this->db->getTextValue($username),
+                         $this->db->getTextValue($cryptFunction($password)),
                          $additional_value
                          );
 
@@ -288,10 +288,10 @@ class Auth_Container_MDB extends Auth_Container_DB
      */
     function removeUser($username)
     {
-        $query = sprintf("DELETE FROM %s WHERE %s = '%s'",
+        $query = sprintf("DELETE FROM %s WHERE %s = %s",
                          $this->options['table'],
                          $this->options['usernamecol'],
-                         $username
+                         $this->db->getTextValue($username)
                          );
 
         $res = $this->query($query);
