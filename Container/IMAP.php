@@ -42,7 +42,7 @@ require_once "PEAR.php";
  * $myAuth = new Auth('IMAP', $params);
  * ....
  * 
- *
+/**
  *
  * @author   Jeroen Houben <jeroen@terena.nl>
  * @package  Auth
@@ -64,6 +64,9 @@ class Auth_Container_IMAP extends Auth_Container
      */
     function Auth_Container_IMAP($params)
     {
+        if (!extension_loaded('imap')) {
+            return PEAR::raiseError("Cannot use IMAP authentication, IMAP extension not loaded!", 41, PEAR_ERROR_DIE);
+        }
         $this->_setDefaults();
         
         // set parameters (if any)
@@ -95,7 +98,7 @@ class Auth_Container_IMAP extends Auth_Container
     function _checkServer($timeout=20) {
         $fp = @fsockopen ($this->options['host'], $this->options['port'], $errno, $errstr, $timeout);
         if ($fp) {
-            fclose($fp);
+            @fclose($fp);
         } else {
             return PEAR::raiseError("Error connecting to IMAP server ".$this->options['host'].":".$this->options['port'], 41, PEAR_ERROR_DIE);
         }
@@ -126,7 +129,7 @@ class Auth_Container_IMAP extends Auth_Container
         $conn = @imap_open ('{'.$this->options['host'].':'.$this->options['port'].'}', $username, $password, OP_HALFOPEN);
         if ($conn) {
             $this->activeUser = $username;
-            imap_close($conn);
+            @imap_close($conn);
             return true;
         } else {
             $this->activeUser = '';
