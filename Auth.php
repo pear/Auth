@@ -405,7 +405,7 @@ class Auth
     /**
      * Logout function
      *
-     * This function clears any auth tokes in the currently
+     * This function clears any auth tokens in the currently
      * active session
      */
     function logout()
@@ -413,7 +413,8 @@ class Auth
         $this->username = "";
         $this->password = "";
 
-        session_unregister('auth');
+        $GLOBALS['HTTP_SESSION_VARS']['auth'] = "";
+        session_unregister("auth");
     }
 
     // }}}
