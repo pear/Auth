@@ -256,7 +256,13 @@ class Auth_Container_MDB extends Auth_Container
                     $key == $this->options['usernamecol']) {
                     continue;
                 }
-                Auth::setAuthData($key, $value);
+                // Use reference to the auth object if exists
+                // This is because the auth session variable can change so a static call to setAuthData does not make sence
+                if(is_object($this->_auth_obj)){
+                    $this->_auth_obj->setAuthData($key, $value);
+                } else {
+                    Auth::setAuthData($key, $value);
+                }
             }
 
             return true;
