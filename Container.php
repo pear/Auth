@@ -19,6 +19,8 @@
 // $Id$
 //
 
+define("AUTH_METHOD_NOT_SUPPORTED", -4);
+
 /**
  * Storage class for fetching login data
  *
@@ -54,7 +56,48 @@ class Auth_Container
     function fetchData() 
     {
     }
-    
     // }}}
+    // {{{ listUsers()
+
+    /**
+     * List all users that are available from the storage container
+     */
+    function listUsers()
+    {
+        return AUTH_METHOD_NOT_SUPPORTED;
+    }
+
+    // }}}
+    // {{{ addUser()
+
+    /**
+     * Add a new user to the storage container
+     *
+     * @param string Username
+     * @param string Password
+     * @param array  Additional information
+     *
+     * @return boolean
+     */
+    function addUser($username, $password, $additional)
+    {
+        return AUTH_METHOD_NOT_SUPPORTED;
+    }
+
+    // }}}
+    // {{{ removeUser()
+
+    /**
+     * Remove user from the storage container
+     *
+     * @param string Username
+     */
+    function removeUser($username)
+    {
+        return AUTH_METHOD_NOT_SUPPORTED;
+    }
+
+    // }}}
+
 }
 ?>
