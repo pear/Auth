@@ -344,7 +344,7 @@ class Auth_Container_DB extends Auth_Container
         if(isset($this->options['cryptType']) && $this->options['cryptType'] == 'none'){
             // Nothing
         }
-        elseif (function_exists($this->options['cryptType'])) {
+        elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
             //$cryptFunction = $this->options['cryptType'];
             $password = $cryptFunction($password);
         } else {
