@@ -211,6 +211,20 @@ class Auth
      */
     var $status = "";
 
+    /**
+     * Username
+     *
+     * @var string
+     */
+    var $username = "";
+
+    /**
+     * Password
+     *
+     * @var string
+     */
+    var $password = "";
+
     // {{{ Constructor
 
     /**
