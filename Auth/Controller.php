@@ -26,7 +26,7 @@ class Auth_Controller {
         
         @session_start();
         if($_GET['return'] && !strstr($_GET['return'], $this->_loginPage)) {
-            print "Return: {$_GET['return']} <br/>";
+            #print "Return: {$_GET['return']} <br/>";
             $this->auth->setAuthData('returnUrl', $_GET['return']);
         }
         
