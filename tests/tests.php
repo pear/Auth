@@ -7,6 +7,7 @@ include('DBContainer.php');
 include('MDBContainer.php');
 include('POP3Container.php');
 include('POP3aContainer.php');
+include('IMAPContainer.php');
 include_once('PHPUnit.php');
 
 
@@ -28,17 +29,16 @@ set_time_limit(0);
 $suite = new PHPUnit_TestSuite();
 
 // File Container
-$suite->addTest(new PHPUnit_TestSuite('FileContaner'));
-// DB Container
-$suite->addTest(new PHPUnit_TestSuite('DBContainer'));
-#$suite->addTest(new DBContainer('testListUsers'));
-// MDB Container
-$suite->addTest(new PHPUnit_TestSuite('MDBContainer'));
-// POP3 Container
-$suite->addTest(new PHPUnit_TestSuite('POP3Container'));
-// POP3a Container classing passing the constructor options as a string
-#$suite->addTest(new PHPUnit_TestSuite('POP3aContainer'));
+$suite->addTest(new PHPUnit_TestSuite('IMAPContaner'));
 
+$suite->addTest(new PHPUnit_TestSuite('FileContaner'));
+
+// DB Container
+//$suite->addTest(new PHPUnit_TestSuite('DBContainer'));
+// MDB Container
+//$suite->addTest(new PHPUnit_TestSuite('MDBContainer'));
+// POP3 Container
+//$suite->addTest(new PHPUnit_TestSuite('POP3Container'));
 
 
 $result = PHPUnit::run($suite);
