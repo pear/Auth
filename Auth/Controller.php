@@ -53,11 +53,8 @@ class Auth_Controller {
         $this->auth =& $auth_obj;
         $this->_loginPage = $login;
         $this->_defaultPage = $default;
-        
-        
-        
         @session_start();
-        if($_GET['return'] && !strstr($_GET['return'], $this->_loginPage)) {
+        if (!empty($_GET['return']) && $_GET['return'] && !strstr($_GET['return'], $this->_loginPage)) {
             #print "Return: {$_GET['return']} <br/>";
             $this->auth->setAuthData('returnUrl', $_GET['return']);
         }
