@@ -122,7 +122,6 @@ class Auth
      *                   driver, you have to pass the dsn string here)
      *
      * @param string    Name of the function that creates the login form
-     * @param bool      Is authentication necessary or not
      */
     function Auth($storageDriver = "DB", $options = "", $loginFunction = "")
     {
