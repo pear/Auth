@@ -246,6 +246,15 @@ class Auth_Container_DB extends Auth_Container
                                           trim($res[$this->options['passwordcol']]),
                                           $this->options['cryptType']))
                 {
+                    // Store additional field values in the session
+                    foreach ($res as $key => $value) {
+                        if ($key == $this->options['passwordcol'] ||
+                            $key == $this->options['usernamecol']) {
+                            continue;
+                        }
+                        Auth::setAuthData($key, $value);
+                    }
+
                     return true;
                 } else {
                     $this->activeUser = $res[$this->options['usernamecol']];
