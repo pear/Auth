@@ -153,7 +153,7 @@ class Auth_Container_DB extends Auth_Container
         $this->options['usernamecol'] = "username";
         $this->options['passwordcol'] = "password";
         $this->options['dsn']         = "";
-        $this->options['db_fields']   = "*";
+        $this->options['db_fields']   = "";
         $this->options['cryptType']   = "md5";
     }
 
@@ -194,10 +194,9 @@ class Auth_Container_DB extends Auth_Container
     function fetchData($username, $password)
     {        
         /* Include additional fields if they exist */
-        if ($this->options["db_fields"] != "*") {
+        $cols = "";
+        if (!empty($this->options["db_fields"])) {
             $cols = "," . $this->options["db_fields"];
-        } else {
-            $cols = "";
         }
 
         $query = sprintf("SELECT %s FROM %s
@@ -209,7 +208,6 @@ class Auth_Container_DB extends Auth_Container
                          $this->options['usernamecol'],
                          $username
                          );
-
         $res = $this->query($query);
 
         if (DB::isError($res) || PEAR::isError($res)) {
