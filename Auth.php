@@ -497,6 +497,8 @@ class Auth
      */
     function setAuthData($data)
     {
+        $session = &Auth::_importGlobalVariable("session");
+
         if (isset($session['auth']['data'])) {
             $olddata = $session['auth']['data'];
         } else {
@@ -517,6 +519,8 @@ class Auth
      */
     function getAuthData($data)
     {
+        $session = &Auth::_importGlobalVariable("session");
+
         if (isset($session['auth']['data'])) {
             return $session['auth']['data'];
         } else {
