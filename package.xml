@@ -16,6 +16,7 @@ the login data:
 * IMAP servers
 * vpopmail accounts
 * RADIUS
+* SAMBA password files
 * SOAP
 </description>
   <maintainers>
@@ -42,6 +43,7 @@ the login data:
 * Added generic support for arbitrary password crypting functions
   different than MD5, DES and plain text. (Patch by Tom Anderson)
 * Added new MDB storage container written by Lorenzo Alberton
+* Added new Container for SAMBA password files (SMBPasswd)
 ]]>
     </notes>
     <filelist>
@@ -56,6 +58,7 @@ the login data:
        <file name="LDAP.php"/>
        <file name="MDB.php"/>
        <file name="RADIUS.php"/>
+       <file name="SMBPasswd.php"/>
        <file name="SOAP.php"/>
        <file name="vpopmail.php"/>
       </dir>
