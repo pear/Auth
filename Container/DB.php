@@ -218,8 +218,8 @@ class Auth_Container_DB extends Auth_Container
             $entry = $res->fetchRow(DB_FETCHMODE_ASSOC);
 
             if (is_array($entry)) {
-                if ($this->verifyPassword($password, 
-                                          $entry[$this->options['passwordcol']],
+                if ($this->verifyPassword(trim($password), 
+                                          trim($entry[$this->options['passwordcol']]),
                                           $this->options['cryptType']))
                 {
                     $res->free();
