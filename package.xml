@@ -63,6 +63,7 @@ the login data:
 * Removed all calls to $session[$this->_sessionName], made local reference session point to that instead
 * Changed call_user_func to call_user_func_array for the callbacks, to avoid using @ for passing variables by reference
 * Code Cleanup, removed most vi comments
+* Fixed Bug #3101: Wrong variable names in Auth/Container/File.php (mike)
 ]]>
     </notes>
 

@@ -185,7 +185,7 @@ class Auth_Container_File extends Auth_Container
             return false;
         }
         
-        $res = $pw_obj->changePasswd($user, $pass);
+        $res = $pw_obj->changePasswd($username, $password);
         if (PEAR::isError($res)) {
             return false;
         }
