@@ -240,6 +240,8 @@ class Auth {
         // this is used by the DB container to use method setAuthData not staticaly.
         $this->storage->_auth_obj =& $this;
         
+        // Start the session suppress error if already started
+        @session_start();
     }
 
     // }}}
@@ -306,9 +308,6 @@ class Auth {
     function start()
     {
         $this->assignData();
-
-        @session_start();
-
         if (!$this->checkAuth() && $this->showLogin) {
             $this->login();
         }
@@ -604,11 +603,10 @@ class Auth {
             // Check for useragent change
             if (isset($session[$this->_sessionName]['sessionuseragent']) && isset($_SERVER['HTTP_USER_AGENT']) && $session[$this->_sessionName]['sessionuseragent'] != $_SERVER['HTTP_USER_AGENT']) {
                 // Check if the User-Agent of the user has changed, if so we assume a man in the middle attack and log him out
-
                 $this->expired = true;
                 $this->status = AUTH_SECURITY_BREACH;
-                return false;
                 $this->logout();
+                return false;
             }
             
         }
@@ -628,8 +626,6 @@ class Auth {
             if ($this->idle > 0 &&
                 isset($session[$this->_sessionName]['idle']) &&
                 ($session[$this->_sessionName]['idle'] + $this->idle) < time()) {
-
-
                 $this->idled = true;
                 $this->status = AUTH_IDLED;
                 $this->logout();
@@ -640,9 +636,7 @@ class Auth {
                 isset($session[$this->_sessionName]['username']) &&
                 $session[$this->_sessionName]['registered'] == true &&
                 $session[$this->_sessionName]['username'] != '') {
-
                 Auth::updateIdle();
-
                 return true;
             }
         }
@@ -662,7 +656,6 @@ class Auth {
     function getAuth()
     {
         $session = &$this->_importGlobalVariable('session');
-
         if (!empty($session) &&
             (isset($session[$this->_sessionName]['registered']) &&
              $session[$this->_sessionName]['registered'] === true))
@@ -695,9 +688,7 @@ class Auth {
             #call_user_func_array($this->loginFailedCallback, array($this->username, &$this));
         } else {
             $server = &$this->_importGlobalVariable('server');
-
             echo '<center>'."\n";
-
             if (!empty($this->status) && $this->status == AUTH_EXPIRED) {
                 echo '<i>Your session has expired. Please login again!</i>'."\n";
             } else if (!empty($this->status) && $this->status == AUTH_IDLED) {
