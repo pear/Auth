@@ -76,9 +76,9 @@ class Auth_Container_DB extends Auth_Container
                 return true;
             } else {
                 return new DB_Error("No connection parameters specified!");
-            }        
+            }
         }
-        
+
         $this->_connect($dsn);
     }
 
@@ -170,9 +170,16 @@ class Auth_Container_DB extends Auth_Container
      */
     function fetchData($username, $password)
     {
+        /* Include additional fields if they exist */
+        if ($this->options["db_fields"] != "*") {
+            $cols = "," . $this->options["db_fields"];
+        }
+
         $query = sprintf("SELECT %s FROM %s
                              WHERE %s = '%s'",
-                         $this->options['usernamecol'] . ", " . $this->options['passwordcol'],
+                         $this->options['usernamecol'] . ", "
+                         . $this->options['passwordcol']
+                         . $cols,
                          $this->options['table'],
                          $this->options['usernamecol'],
                          $this->db->quoteString($username)
@@ -201,7 +208,7 @@ class Auth_Container_DB extends Auth_Container
             }
         }
     }
-   
+
     // }}}
     // {{{ listUsers()
 
@@ -229,24 +236,37 @@ class Auth_Container_DB extends Auth_Container
 
     // }}}
     // {{{ addUser()
-    
+
     /**
      * Add user to the storage container
      *
      * @access public
      * @param  string Username
      * @param  string Password
+     * @param  mixed  Additional information that are stored in the DB
      *
      * @return mixed True on success, otherwise error object
      */
-    function addUser($username, $password)
+    function addUser($username, $password, $additional = "")
     {
-        $query = sprintf("INSERT INTO %s (%s, %s) VALUES ('%s', '%s')",
+        $additional_key = "";
+        $additional_value = "";
+
+        if (is_array($additional)) {
+            foreach ($additional as $key => $value) {
+                $additional_key .= ", " . $key;
+                $additional_value .= ", '" . $value . "'";
+            }
+        }
+
+        $query = sprintf("INSERT INTO %s (%s, %s%s) VALUES ('%s', '%s'%s)",
                          $this->options['table'],
                          $this->options['usernamecol'],
                          $this->options['passwordcol'],
+                         $additional_key,
                          $username,
-                         md5($password)
+                         md5($password),
+                         $additional_value
                          );
 
         $res = $this->db->query($query);
@@ -260,7 +280,7 @@ class Auth_Container_DB extends Auth_Container
 
     // }}}
     // {{{ removeUser()
-    
+
     /**
      * Remove user from the storage container
      *
