@@ -273,7 +273,7 @@ class Auth
      */
     function assignData()
     {
-        $post = &$this->_importGlobalVariable('post');
+        $post = &$this->_importGlobalVariable("post");
 
         if ($post['username'] != "") {
             $this->username = $post['username'];
@@ -424,7 +424,7 @@ class Auth
         if (isset($_SESSION)) {
 
             if (!isset($_SESSION['auth'])) {
-                session_register('auth');
+                session_register("auth");
             }
 
             $_SESSION['auth'] = array(
@@ -440,7 +440,7 @@ class Auth
         } else {
 
             if (!isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
-                session_register('auth');
+                session_register("auth");
             }
 
             $GLOBALS['auth']               = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
@@ -455,23 +455,6 @@ class Auth
         }
     }
     
-     function _setAuth($username, $data = array())
-     {
-         if (!isset($GLOBALS['HTTP_SESSION_VARS']['auth'])) {
-             session_register('auth');
-         }
-
-         $GLOBALS['auth']               = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
-         $GLOBALS['auth']['registered'] = true;
-         $GLOBALS['auth']['username']   = $username;
-         $GLOBALS['auth']['timestamp']  = time();
-         $GLOBALS['auth']['idle']       = time();
-
-         if (count($data) > 0) {
-             $GLOBALS['auth']['data']   = $data;
-         }
-     }
-
     // }}}
     // {{{ getAuth()
 
@@ -483,7 +466,7 @@ class Auth
      */
     function getAuth()
     {
-        $session = &$this->_importGlobalVariable('session');
+        $session = &$this->_importGlobalVariable("session");
         
         return (true == $session['auth']['registered']) ? true : false;
     }
@@ -672,6 +655,7 @@ class Auth
     /**
      * Import variables from special namespaces.
      *
+     * @access private
      * @param string Type of variable (server, session, post)
      * @return array
      */
