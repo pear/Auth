@@ -82,7 +82,7 @@ class Auth_Container_File extends Auth_Container
             return array();
         }
 
-        $users  = $pw_obj->listUsers();
+        $users  = $pw_obj->listUser();
         if (!is_array($users)) {
             return array();
         }
@@ -116,7 +116,13 @@ class Auth_Container_File extends Auth_Container
             return false;
         }
 
-        return !PEAR::isError($pw_obj->addUser($user, $pass, $cvs));
+        
+        $res = $pw_obj->addUser($user, $pass, $cvs);
+        if(PEAR::isError($res)){
+            return(false);
+        }
+        $pw_obj->save();
+        return($res);
     }
 
     // }}}
@@ -134,7 +140,13 @@ class Auth_Container_File extends Auth_Container
             return false;
         }
         
-        return !PEAR::isError($pw_obj->delUser($user));
+        
+        $res = $pw_obj->delUser($user);
+        if(PEAR::isError($res)){
+            return(false);
+        }
+        $pw_obj->save();
+        return(true);
     }
 
     // }}}
@@ -144,7 +156,8 @@ class Auth_Container_File extends Auth_Container
     {
         static $pw_obj;
         if (!isset($pw_obj)) {
-            $pw_obj = File_Passwd::factory('Cvs', $this->pwfile);
+            $pw_obj = File_Passwd::factory('Cvs');
+            $pw_obj->setFile($this->pwfile);
         }
         return $pw_obj;
     }
