@@ -161,7 +161,12 @@ class Auth {
             $this->showLogin = $showLogin;
         }
 
-        $this->storage = $this->_factory($storageDriver, $options);
+        if (is_object($storageDriver)) {
+            $this->storage =& $storageDriver;
+        }
+        else{
+            $this->storage = $this->_factory($storageDriver, $options);
+        }
     }
 
     // }}}
@@ -456,7 +461,9 @@ class Auth {
             $session['auth'] = array();
         }
 
-        $session['auth']['data']       = array();
+        if(!isset($session['auth']['data'])){
+            $session['auth']['data']       = array();
+        }
         $session['auth']['registered'] = true;
         $session['auth']['username']   = $username;
         $session['auth']['timestamp']  = time();
