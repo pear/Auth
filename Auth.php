@@ -275,11 +275,11 @@ class Auth
     {
         $post = &$this->_importGlobalVariable("post");
 
-        if ($post['username'] != "") {
+        if (isset($post['username']) && $post['username'] != "") {
             $this->username = $post['username'];
         }
 
-        if ($post['password'] != "") {
+        if (isset($post['password']) && $post['password'] != "") {
             $this->password = $post['password'];
         }
     }
