@@ -19,6 +19,7 @@
 // $Id$
 //
 
+
 /**
  * PEAR::Auth
  *
@@ -220,7 +221,7 @@ class Auth
         }
 
         /**
-         * If the login failed or the user entered not username,
+         * If the login failed or the user entered no username,
          * output the login screen again.
          */
         if ($this->username != "" && !$login_ok) {
@@ -332,7 +333,8 @@ class Auth
      *
      * @return bool  True if the user is logged in, otherwise false.
      */
-    function getAuth() {
+    function getAuth()
+    {
 
         if ($GLOBALS['HTTP_SESSION_VARS']['auth']['registered'] == true) {
             return true;
@@ -418,7 +420,8 @@ class Auth
     /**
      * Update the idletime
      */
-    function updateIdle() {
+    function updateIdle()
+    {
         $GLOBALS['auth'] = &$GLOBALS['HTTP_SESSION_VARS']['auth'];
         $GLOBALS['auth']['idle'] = time();
     }
@@ -447,6 +450,47 @@ class Auth
     function sessionValidThru()
     {
         return ($GLOBALS['HTTP_SESSION_VARS']['auth']['idle'] + $this->idle);
+    }
+
+    // }}}
+    // {{{ listUsers()
+
+    /**
+     * List all users that are currently available in the storage
+     * container
+     *
+     * @return array
+     */
+    function listUsers()
+    {
+        return $this->storage->listUsers();
+    }
+
+    // {{{ addUser()
+
+    /**
+     * Add user to the storage container
+     *
+     * @param string Username
+     * @param string Password
+     * @param mixed  Additional parameters
+     */    
+    function addUser($username, $password, $additional = "")
+    {
+        return $this->storage->addUser($username, $password, $additional);
+    }
+
+    // }}}
+    // {{{ removeUser()
+
+    /**
+     * Remove user from the storage container
+     *
+     * @param string Username
+     */
+    function removeUser($username)
+    {
+        return $this->storage->removeUser($username);
     }
 
     // }}}

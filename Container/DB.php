@@ -128,6 +128,7 @@ class Auth_Container_DB extends Auth_Container
         $this->options['usernamecol'] = "username";
         $this->options['passwordcol'] = "password";
         $this->options['dsn']         = "";
+        $this->options['db_fields']   = "*";
     }
 
     // }}}
@@ -192,6 +193,90 @@ class Auth_Container_DB extends Auth_Container
             } else {
                 return false;
             }
+        }
+    }
+
+    // }}}
+    // {{{ listUsers()
+
+    function listUsers()
+    {
+        $retVal = array();
+
+        $query = sprintf("SELECT %s FROM %s",
+                         $this->options['db_fields'],
+                         $this->options['table']
+                         );
+
+        $res = $this->db->query($query);
+
+        if (DB::isError($res)) {
+            return new DB_Error($res->code, PEAR_ERROR_DIE);
+        } else {
+            while ($row = $res->fetchRow(DB_FETCHMODE_ASSOC)) {
+                $retVal[] = $row;
+            }
+        }
+
+        return $retVal;
+    }
+
+    // }}}
+    // {{{ addUser()
+    
+    /**
+     * Add user to the storage container
+     *
+     * @access public
+     * @param  string Username
+     * @param  string Password
+     *
+     * @return mixed True on success, otherwise error object
+     */
+    function addUser($username, $password)
+    {
+        $query = sprintf("INSERT INTO %s (%s, %s) VALUES ('%s', '%s')",
+                         $this->options['table'],
+                         $this->options['usernamecol'],
+                         $this->options['passwordcol'],
+                         $username,
+                         md5($password)
+                         );
+
+        $res = $this->db->query($query);
+
+        if (DB::isError($res)) {
+           return new DB_Error($res->code, PEAR_ERROR_DIE);
+        } else {
+          return true;
+        }
+    }
+
+    // }}}
+    // {{{ removeUser()
+    
+    /**
+     * Remove user from the storage container
+     *
+     * @access public
+     * @param  string Username
+     *
+     * @return mixed True on success, otherwise error object
+     */
+    function removeUser($username)
+    {
+        $query = sprintf("DELETE FROM %s WHERE %s = '%s'",
+                         $this->options['table'],
+                         $this->options['usernamecol'],
+                         $username
+                         );
+
+        $res = $this->db->query($query);
+
+        if (DB::isError($res)) {
+           return new DB_Error($res->code, PEAR_ERROR_DIE);
+        } else {
+          return true;
         }
     }
 
