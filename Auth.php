@@ -173,7 +173,7 @@ class Auth {
             unset($options['sessionName']);
         }
 
-        if ($loginFunction != "" && function_exists($loginFunction)) {
+        if ($loginFunction != "" && is_callable($loginFunction)) {
             $this->loginFunction = $loginFunction;
         }
 
@@ -284,7 +284,7 @@ class Auth {
             if (true === $this->storage->fetchData($this->username, $this->password)) {
                 $login_ok = true;
             } else {
-                if (!empty($this->loginFailedCallback)) {
+                if (is_callable($this->loginFailedCallback)) {
                     call_user_func($this->loginFailedCallback,$this->username, $this);
                 }
             }
@@ -292,7 +292,7 @@ class Auth {
 
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
-            if (!empty($this->loginCallback)) {
+            if (is_callable($this->loginCallback)) {
                 call_user_func($this->loginCallback,$this->username, $this);
             }
         }
@@ -608,7 +608,7 @@ class Auth {
      */
     function drawLogin($username = "")
     {
-        if ($this->loginFunction != "") {
+        if (is_callable($this->loginFunction)) {
             call_user_func($this->loginFunction, $username, $this->status, $this);
         } else {
             $server = &$this->_importGlobalVariable("server");
@@ -664,7 +664,7 @@ class Auth {
     {
         $session = &$this->_importGlobalVariable("session");
 
-        if (!empty($this->logoutCallback)) {
+        if (is_callable($this->logoutCallback)) {
             call_user_func($this->logoutCallback, $session[$this->_sessionName]['username'], $this);
         }
 
