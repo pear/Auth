@@ -585,7 +585,6 @@ class Auth
         $session = &$this->_importGlobalVariable("session");
 
         if (isset($session['auth'])) {
-
             /** Check if authentication session is expired */
             if ($this->expire > 0 &&
                 isset($session['auth']['timestamp']) &&
@@ -718,14 +717,15 @@ class Auth
      */
     function logout()
     {
+        $session = &$this->_importGlobalVariable("session");
+ 
         if (!empty($this->logoutCallback)) {
-            call_user_func($this->logoutCallback,$this->username);
+            call_user_func($this->logoutCallback, $session['auth']['username']);
         }
         
         $this->username = "";
         $this->password = "";
 
-        $session = &$this->_importGlobalVariable("session");
         $session['auth'] = array();
         if (isset($_SESSION)) {
             unset($session['auth']);
