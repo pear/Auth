@@ -427,7 +427,7 @@ class Auth {
                 // BC fix Auth used to use drawLogin for this
                 // call is sub classes implement this
                 if(is_callable(array(&$this, 'drawLogin'))) {
-                    return $this->drawLogin($this->username, &$this);
+                    return $this->drawLogin($this->username, $this);
                 }
 
                 // New Login form
