@@ -433,7 +433,7 @@ class Auth
     /**
      * Set name of the session to a customized value.
      *
-     * If you are using multiple instances of PEAR Auth
+     * If you are using multiple instances of PEAR::Auth
      * on the same domain, you can change the name of
      * session per application via this function.
      *
