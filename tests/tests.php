@@ -5,6 +5,7 @@ include('TestAuthContainer.php');
 include('FileContainer.php');
 include('DBContainer.php');
 include('MDBContainer.php');
+include('MDB2Container.php');
 include('POP3Container.php');
 include('POP3aContainer.php');
 include('IMAPContainer.php');
@@ -37,6 +38,8 @@ $suite->addTest(new PHPUnit_TestSuite('FileContaner'));
 //$suite->addTest(new PHPUnit_TestSuite('DBContainer'));
 // MDB Container
 //$suite->addTest(new PHPUnit_TestSuite('MDBContainer'));
+// MDB2 Container
+//$suite->addTest(new PHPUnit_TestSuite('MDB2Container'));
 // POP3 Container
 //$suite->addTest(new PHPUnit_TestSuite('POP3Container'));
 
