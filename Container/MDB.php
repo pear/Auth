@@ -324,12 +324,16 @@ class Auth_Container_MDB extends Auth_Container
      */
     function addUser($username, $password, $additional = "")
     {
-        if (function_exists($this->options['cryptType'])) {
+    
+        if(isset($this->options['cryptType']) && $this->options['cryptType'] == 'none'){
+            $cryptFunction = 'strval';
+        }
+        elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
             $cryptFunction = $this->options['cryptType'];
         } else {
             $cryptFunction = 'md5';
         }
-
+        
         $additional_key   = '';
         $additional_value = '';
 
