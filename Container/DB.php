@@ -213,7 +213,8 @@ class Auth_Container_DB extends Auth_Container
      *                  challenge response password authenthication
      * @return  mixed  Error object or boolean
      */
-    function fetchData($username, $password, $isChallengeResponce=false) {
+    function fetchData($username, $password, $isChallengeResponce=false)
+    {
         //print "Container_DB::fetchData($username, $password, $isChallengeResponce) <br/>\n";
         // Prepare for a database query
         $err = $this->_prepare();
@@ -447,17 +448,16 @@ class Auth_Container_DB extends Auth_Container
       * @return bool 
       * @access public
       */    
-    function supportsChallengeResponce() {
-        if( in_array($this->options['cryptType'], array('md5', 'none', '') ) {
-            return(true);
-        }
-        return(false);
+    function supportsChallengeResponce()
+    {
+        return in_array($this->options['cryptType'], array('md5', 'none', ''));
     }
     
     /**
       * Returns the selected crypt type for this container
       */
-    function getCryptType() {
+    function getCryptType()
+    {
         return($this->options['cryptType']);
     }
     
