@@ -314,12 +314,13 @@ class Auth
         $post = &$this->_importGlobalVariable("post");
 
         if (isset($post['username']) && $post['username'] != "") {
-            $this->username = $post['username'];
+            $this->username = (get_magic_quotes_gpc() == 1 ? stripslashes($post['username']) : $post['username']);
         }
 
         if (isset($post['password']) && $post['password'] != "") {
-            $this->password = $post['password'];
+            $this->password = (get_magic_quotes_gpc() == 1 ? stripslashes($post['password']) : $post['password'] );
         }
+
     }
 
     // }}}
