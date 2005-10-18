@@ -210,12 +210,12 @@ class Auth_Container_DB extends Auth_Container
      * @param   string Password
      * @param   boolean If true password is secured using a md5 hash
      *                  the frontend and auth are responsible for making sure the container supports
-     *                  challenge response password authenthication
+     *                  challenge response password authentication
      * @return  mixed  Error object or boolean
      */
-    function fetchData($username, $password, $isChallengeResponce=false)
+    function fetchData($username, $password, $isChallengeResponse=false)
     {
-        //print "Container_DB::fetchData($username, $password, $isChallengeResponce) <br/>\n";
+        //print "Container_DB::fetchData($username, $password, $isChallengeResponse) <br/>\n";
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
@@ -229,12 +229,12 @@ class Auth_Container_DB extends Auth_Container
         else{
             $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
         }
-        /**
-         Old Style, removed to go around the oci8 
-         problem 
+        /*
+         Old Style, removed to go around the oci8
+         problem
          See bug 206
          http://pear.php.net/bugs/bug.php?id=206
-         
+
         $query = "SELECT ! FROM ! WHERE ! = ?";
         $query_params = array(
                          $sql_from,
@@ -243,11 +243,11 @@ class Auth_Container_DB extends Auth_Container
                          $username
                          );
         */
-        
+
         $query = "SELECT ".$sql_from.
                 " FROM ".$this->options['table'].
                 " WHERE ".$this->options['usernamecol']." = '".$this->db->quoteString($username)."'";
-        
+
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
         #print "SQL: $query <br/>\n";
         #print_r($res);
@@ -259,12 +259,12 @@ class Auth_Container_DB extends Auth_Container
             $this->activeUser = '';
             return false;
         }
-        
+
         // Perform trimming here before the hashihg
         $password = trim($password, "\r\n");
         $res[$this->options['passwordcol']] = trim($res[$this->options['passwordcol']], "\r\n");
-        // If using Challenge Responce md5 the pass with the secret
-        if ($isChallengeResponce) {
+        // If using Challenge Response md5 the pass with the secret
+        if ($isChallengeResponse) {
             $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']].$this->_auth_obj->session['loginchallenege']);
             // UGLY cannot avoid without modifying verifyPassword
             if ($this->options['cryptType'] == 'md5') {
@@ -292,11 +292,11 @@ class Auth_Container_DB extends Auth_Container
     }
 
     /**
-      * Returns a list of users from the container
-      *
-      * @return mixed
-      * @access public
-      */
+     * Returns a list of users from the container
+     *
+     * @return mixed
+     * @access public
+     */
     function listUsers()
     {
         $err = $this->_prepare();
@@ -349,7 +349,7 @@ class Auth_Container_DB extends Auth_Container
         } else {
             $cryptFunction = 'md5';
         }
-        
+
         $password = $cryptFunction($password);
 
         $additional_key   = '';
@@ -421,7 +421,7 @@ class Auth_Container_DB extends Auth_Container
         } else {
             $cryptFunction = 'md5';
         }
-        
+
         $password = $cryptFunction($password);
 
         $query = sprintf("UPDATE %s SET %s = '%s' WHERE %s = '%s'",
@@ -442,17 +442,17 @@ class Auth_Container_DB extends Auth_Container
     }
 
     /**
-      * Determine if this container supports 
-      * password authenthication with challenge responce
-      *
-      * @return bool 
-      * @access public
-      */    
-    function supportsChallengeResponce()
+     * Determine if this container supports
+     * password authentication with challenge response
+     *
+     * @return bool
+     * @access public
+     */
+    function supportsChallengeResponse()
     {
         return in_array($this->options['cryptType'], array('md5', 'none', ''));
     }
-    
+
     /**
       * Returns the selected crypt type for this container
       */
@@ -460,6 +460,6 @@ class Auth_Container_DB extends Auth_Container
     {
         return($this->options['cryptType']);
     }
-    
+
 }
 ?>
