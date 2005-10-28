@@ -32,7 +32,7 @@ $suite = new PHPUnit_TestSuite();
 
 // File Container
 #$suite->addTest(new PHPUnit_TestSuite('IMAPContainer'));
-$suite->addTest(new PHPUnit_TestSuite('FileContaner'));
+$suite->addTest(new PHPUnit_TestSuite('FileContainer'));
 $suite->addTest(new PHPUnit_TestSuite('DBContainer'));
 $suite->addTest(new PHPUnit_TestSuite('DBLiteContainer'));
 // MDB Container
