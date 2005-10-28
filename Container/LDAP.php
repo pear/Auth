@@ -160,8 +160,6 @@ require_once "PEAR.php";
  * @version  $Revision$
  */
 
-define('AUTH_LDAP_ATTR_LDAP_STYLE', __LINE__);
-define('AUTH_LDAP_ATTR_AUTH_STYLE', __LINE__);
 class Auth_Container_LDAP extends Auth_Container
 {
     /**
@@ -326,8 +324,8 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['userattr']    = "uid";
         $this->options['userfilter']  = '(objectClass=posixAccount)';
         $this->options['attributes']  = array(''); // no attributes
-        $this->options['attributesformat']  = AUTH_LDAP_ATTR_LDAP_STYLE; // return attribute array as LDAP Return it
-        //$this->options['attributesformat']  = AUTH_LDAP_ATTR_AUTH_STYLE; // return atribute array like othe auth drivers
+        $this->options['attributesformat']  = 'AUTH_LDAP_ATTR_LDAP_STYLE'; // return attribute array as LDAP Return it
+        //$this->options['attributesformat']  = 'AUTH_LDAP_ATTR_AUTH_STYLE'; // return atribute array like othe auth drivers
         $this->options['group']       = '';
         $this->options['groupdn']     = '';
         $this->options['groupscope']  = 'sub';
@@ -442,17 +440,17 @@ class Auth_Container_LDAP extends Auth_Container
                     // $this->options['attributesformat'] = AUTH_LDAP_ATTR_AUTH_STYLE
                     // change the return format. each attribute are directly added to authData List
 
-                    if ($this->options['attributesformat'] == AUTH_LDAP_ATTR_AUTH_STYLE) {
+                    if ($this->options['attributesformat'] == 'AUTH_LDAP_ATTR_AUTH_STYLE') {
                         $this->_debug('Saving attributes to Auth data in AUTH style', __LINE__);
                         unset ($attributes['count']);
                         foreach ($attributes as $attributeName => $attributeValue ) {
+                            if (is_int($attributeName)) continue;
                             if (is_array($attributeValue) && isset($attributeValue['count'])) {
                                 unset ($attributeValue['count']);
                             }
+                            if (count($attributeValue)<=1) $attributeValue = $attributeValue[0];
                             $this->_auth_obj->setAuthData($attributeName, $attributeValue);
                         }
-                        $this->_auth_obj->setAuthData('attributes', $attributes);
-
                     }
                     else
                     {
