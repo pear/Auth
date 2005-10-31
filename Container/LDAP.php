@@ -36,51 +36,59 @@ require_once "PEAR.php";
  *
  * Parameters:
  *
- * host:             localhost (default), ldap.netsols.de or 127.0.0.1
- * port:             389 (default) or 636 or whereever your server runs
- * url:              ldap://localhost:389/
- *                   useful for ldaps://, works only with openldap2 ?
- *                   it will be preferred over host and port
- * version:          LDAP version to use, ususally 2 (default) or 3,
- *                   must be an integer!
- * binddn:           If set, searching for user will be done after binding
- *                   as this user, if not set the bind will be anonymous.
- *                   This is reported to make the container work with MS
- *                   Active Directory, but should work with any server that
- *                   is configured this way.
- *                   This has to be a complete dn for now (basedn and
- *                   userdn will not be appended).
- * bindpw:           The password to use for binding with binddn
- * basedn:           the base dn of your server
- * userdn:           gets prepended to basedn when searching for user
- * userscope:        Scope for user searching: one, sub (default), or base
- * userattr:         the user attribute to search for (default: uid)
- * userfilter:       filter that will be added to the search filter
- *                   this way: (&(userattr=username)(userfilter))
- *                   default: (objectClass=posixAccount)
- * attributes:       array of additional attributes to fetch from entry.
- *                   these will added to auth data and can be retrieved via
- *                   Auth::getAuthData(). An empty array will fetch all attributes,
- *                   array('') will fetch no attributes at all (default)
- * attributesformat: LDAP have a particular array format where each aray begin
- *                   with an element count given  the  quantity of following element.
- *                   this was the default format returned in setAuthData('attributes', $attributes)
- *                   The prupose return more uniformized with othter drivers, setting
- *                   $this->options['attributesformat'] = AUTH_LDAP_ATTR_AUTH_STYLE
- *                   change the return format. each attribute are directly added to authData List
- * groupdn:          gets prepended to basedn when searching for group
- * groupattr:        the group attribute to search for (default: cn)
- * groupfilter:      filter that will be added to the search filter when
- *                   searching for a group:
- *                   (&(groupattr=group)(memberattr=username)(groupfilter))
- *                   default: (objectClass=groupOfUniqueNames)
- * memberattr :      the attribute of the group object where the user dn
- *                   may be found (default: uniqueMember)
- * memberisdn:       whether the memberattr is the dn of the user (default)
- *                   or the value of userattr (usually uid)
- * group:            the name of group to search for
- * groupscope:       Scope for group searching: one, sub (default), or base
- * debug:            Enable/Disable debugging output (default: false)
+ * host:        localhost (default), ldap.netsols.de or 127.0.0.1
+ * port:        389 (default) or 636 or whereever your server runs
+ * url:         ldap://localhost:389/
+ *              useful for ldaps://, works only with openldap2 ?
+ *              it will be preferred over host and port
+ * version:     LDAP version to use, ususally 2 (default) or 3,
+ *              must be an integer!
+ * binddn:      If set, searching for user will be done after binding
+ *              as this user, if not set the bind will be anonymous.
+ *              This is reported to make the container work with MS
+ *              Active Directory, but should work with any server that
+ *              is configured this way.
+ *              This has to be a complete dn for now (basedn and
+ *              userdn will not be appended).
+ * bindpw:      The password to use for binding with binddn
+ * basedn:      the base dn of your server
+ * userdn:      gets prepended to basedn when searching for user
+ * userscope:   Scope for user searching: one, sub (default), or base
+ * userattr:    the user attribute to search for (default: uid)
+ * userfilter:  filter that will be added to the search filter
+ *              this way: (&(userattr=username)(userfilter))
+ *              default: (objectClass=posixAccount)
+ * attributes:  array of additional attributes to fetch from entry.
+ *              these will added to auth data and can be retrieved via
+ *              Auth::getAuthData(). An empty array will fetch all attributes,
+ *              array('') will fetch no attributes at all (default)
+ * attrformat:  The returned format of the additional data defined in the
+ *              'attributes' option. Two formats are available.
+ *              AUTH_LDAP_ATTR_LDAP_STYLE returns data formatted in a
+ *              multidimensional array where each array starts with a
+ *              'count' element providing the number of attributes in the
+ *              entry, or the number of values for attributes. When set
+ *              to this format, the only way to retrieve data from the
+ *              Auth object is by calling getAuthData('attributes').
+ *              AUTH_LDAP_ATTR_AUTH_STYLE returns data formatted in a
+ *              structure more compliant with other Auth Containers,
+ *              where each attribute element can be directly called by
+ *              getAuthData() method from Auth.
+ *              For compatibily with previous LDAP container versions,
+ *              the default format is AUTH_LDAP_ATTR_LDAP_STYLE.
+ * groupdn:     gets prepended to basedn when searching for group
+ * groupattr:   the group attribute to search for (default: cn)
+ * groupfilter: filter that will be added to the search filter when
+ *              searching for a group:
+ *              (&(groupattr=group)(memberattr=username)(groupfilter))
+ *              default: (objectClass=groupOfUniqueNames)
+ * memberattr : the attribute of the group object where the user dn
+ *              may be found (default: uniqueMember)
+ * memberisdn:  whether the memberattr is the dn of the user (default)
+ *              or the value of userattr (usually uid)
+ * group:       the name of group to search for
+ * groupscope:  Scope for group searching: one, sub (default), or base
+ * debug:       Enable/Disable debugging output (default: false)
  *
  * To use this storage container, you have to use the following syntax:
  *
@@ -321,11 +329,11 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['basedn']      = '';
         $this->options['userdn']      = '';
         $this->options['userscope']   = 'sub';
-        $this->options['userattr']    = "uid";
+        $this->options['userattr']    = 'uid';
         $this->options['userfilter']  = '(objectClass=posixAccount)';
         $this->options['attributes']  = array(''); // no attributes
-        $this->options['attributesformat']  = 'AUTH_LDAP_ATTR_LDAP_STYLE'; // return attribute array as LDAP Return it
-        //$this->options['attributesformat']  = 'AUTH_LDAP_ATTR_AUTH_STYLE'; // return atribute array like othe auth drivers
+        $this->options['attrformat']  = 'AUTH_LDAP_ATTR_LDAP_STYLE'; // return attribute array as LDAP Return it
+        //$this->options['attrformat']  = 'AUTH_LDAP_ATTR_AUTH_STYLE'; // return atribute array like other auth drivers
         $this->options['group']       = '';
         $this->options['groupdn']     = '';
         $this->options['groupscope']  = 'sub';
@@ -433,14 +441,20 @@ class Auth_Container_LDAP extends Auth_Container
                 if (is_array($attributes) && isset($attributes['count']) &&
                      $attributes['count'] > 0) {
 
-                    // LDAP have a particular array format where each aray begin
-                    // with an element count given  the  quantity of following element.
-                    // this was the default format returned in setAuthData('attributes', $attributes)
-                    // The prupose return more uniformized with othter drivers, setting
-                    // $this->options['attributesformat'] = AUTH_LDAP_ATTR_AUTH_STYLE
-                    // change the return format. each attribute are directly added to authData List
+                    // ldap_get_attributes() returns a specific multi dimensional array
+                    // format containing all the attributes and where each array starts
+                    // with a 'count' element providing the number of attributes in the
+                    // entry, or the number of values for attribute. For compatibility
+                    // reasons, it remains the default format returned by LDAP container
+                    // setAuthData().
+                    // The code below optionally returns attributes in another format,
+                    // more compliant with other Auth containers, where each attribute
+                    // element are directly set in the 'authData' list. This option is
+                    // enabled by setting 'attrformat' to
+                    // 'AUTH_LDAP_ATTR_AUTH_STYLE' in the 'options' array.
+                    // eg. $this->options['attrformat'] = 'AUTH_LDAP_ATTR_AUTH_STYLE'
 
-                    if ($this->options['attributesformat'] == 'AUTH_LDAP_ATTR_AUTH_STYLE') {
+                    if ($this->options['attrformat'] == 'AUTH_LDAP_ATTR_AUTH_STYLE') {
                         $this->_debug('Saving attributes to Auth data in AUTH style', __LINE__);
                         unset ($attributes['count']);
                         foreach ($attributes as $attributeName => $attributeValue ) {
