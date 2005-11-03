@@ -64,18 +64,18 @@ require_once "PEAR.php";
  *              array('') will fetch no attributes at all (default)
  * attrformat:  The returned format of the additional data defined in the
  *              'attributes' option. Two formats are available.
- *              AUTH_LDAP_ATTR_LDAP_STYLE returns data formatted in a
+ *              LDAP returns data formatted in a
  *              multidimensional array where each array starts with a
  *              'count' element providing the number of attributes in the
  *              entry, or the number of values for attributes. When set
  *              to this format, the only way to retrieve data from the
  *              Auth object is by calling getAuthData('attributes').
- *              AUTH_LDAP_ATTR_AUTH_STYLE returns data formatted in a
+ *              AUTH returns data formatted in a
  *              structure more compliant with other Auth Containers,
  *              where each attribute element can be directly called by
  *              getAuthData() method from Auth.
  *              For compatibily with previous LDAP container versions,
- *              the default format is AUTH_LDAP_ATTR_LDAP_STYLE.
+ *              the default format is LDAP.
  * groupdn:     gets prepended to basedn when searching for group
  * groupattr:   the group attribute to search for (default: cn)
  * groupfilter: filter that will be added to the search filter when
@@ -332,8 +332,8 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['userattr']    = 'uid';
         $this->options['userfilter']  = '(objectClass=posixAccount)';
         $this->options['attributes']  = array(''); // no attributes
-        $this->options['attrformat']  = 'AUTH_LDAP_ATTR_LDAP_STYLE'; // return attribute array as LDAP Return it
-        //$this->options['attrformat']  = 'AUTH_LDAP_ATTR_AUTH_STYLE'; // return atribute array like other auth drivers
+        $this->options['attrformat']  = 'LDAP'; // returns attribute array as PHP LDAP functions return it
+     // $this->options['attrformat']  = 'AUTH'; // returns attribute like other Auth containers
         $this->options['group']       = '';
         $this->options['groupdn']     = '';
         $this->options['groupscope']  = 'sub';
@@ -451,11 +451,11 @@ class Auth_Container_LDAP extends Auth_Container
                     // more compliant with other Auth containers, where each attribute
                     // element are directly set in the 'authData' list. This option is
                     // enabled by setting 'attrformat' to
-                    // 'AUTH_LDAP_ATTR_AUTH_STYLE' in the 'options' array.
-                    // eg. $this->options['attrformat'] = 'AUTH_LDAP_ATTR_AUTH_STYLE'
+                    // 'AUTH' in the 'options' array.
+                    // eg. $this->options['attrformat'] = 'AUTH'
 
-                    if ($this->options['attrformat'] == 'AUTH_LDAP_ATTR_AUTH_STYLE') {
-                        $this->_debug('Saving attributes to Auth data in AUTH style', __LINE__);
+                    if ( strtoupper($this->options['attrformat']) == 'AUTH' ) {
+                        $this->_debug('Saving attributes to Auth data in AUTH format', __LINE__);
                         unset ($attributes['count']);
                         foreach ($attributes as $attributeName => $attributeValue ) {
                             if (is_int($attributeName)) continue;
