@@ -50,6 +50,8 @@ the login data:
 * Fixed Bug #3101: Wrong variable names in Auth/Container/File.php (mike)
 * renamed supportsChallengeResponce() to supportsChallengeResponse()
   in the DB container (quipo)
+* Fixed Bug #4347: recognition of DB and MDB objects passed as dsn
+* Fixed Bug #6324: updated MDB2 container
 ]]>
     </notes>
 
@@ -109,7 +111,7 @@ the login data:
         <dep type="pkg" rel="ge" version="1.3" optional="yes">Net_POP3</dep>
         <dep type="pkg" rel="has" optional="yes">DB</dep>
         <dep type="pkg" rel="has" optional="yes">MDB</dep>
-        <dep type="pkg" rel="has" optional="yes">MDB2</dep>
+        <dep type="pkg" rel="ge" version="2.0.0RC1" optional="yes">MDB2</dep>
         <dep type="pkg" rel="has" optional="yes">Auth_RADIUS</dep>
         <dep type="pkg" rel="ge" version="1.0.0" optional="yes">Crypt_CHAP</dep>
         <dep type="pkg" rel="has" optional="yes">File_SMBPasswd</dep>
