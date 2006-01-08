@@ -4,7 +4,7 @@
 include_once 'Auth.php';
 
 /**
- * This class provides anonymous authenthication
+ * This class provides anonymous authentication
  * if username and password were not supplied
  *
  */
