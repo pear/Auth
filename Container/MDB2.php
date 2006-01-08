@@ -92,7 +92,7 @@ class Auth_Container_MDB2 extends Auth_Container
     {
         if (is_string($dsn) || is_array($dsn)) {
             $this->db =& MDB2::connect($dsn, $this->options['db_options']);
-        } elseif (is_a($dsn, 'MDB2_Driver_Common')) {
+        } elseif (is_subclass_of($dsn, 'MDB2_Driver_Common')) {
             $this->db = $dsn;
         } elseif (is_object($dsn) && MDB2::isError($dsn)) {
             return PEAR::raiseError($dsn->getMessage(), $dsn->code);
@@ -126,7 +126,7 @@ class Auth_Container_MDB2 extends Auth_Container
      */
     function _prepare()
     {
-        if (is_a($this->db, 'MDB2_Driver_Common')) {
+        if (is_subclass_of($this->db, 'MDB2_Driver_Common')) {
             return true;
         }
         return $this->_connect($this->options['dsn']);
@@ -153,7 +153,7 @@ class Auth_Container_MDB2 extends Auth_Container
         if ($err !== true) {
             return $err;
         }
-        return $this->db->query($query);
+        return $this->db->exec($query);
     }
 
     // }}}
