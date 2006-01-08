@@ -96,7 +96,7 @@ class Auth_Container_DBLite extends Auth_Container
     {
         if (is_string($dsn) || is_array($dsn)) {
             $this->db =& DB::connect($dsn, $this->options['db_options']);
-        } elseif (get_parent_class($dsn) == "db_common") {
+        } elseif (is_subclass_of($dsn, "db_common")) {
             $this->db =& $dsn;
         } else {
             return PEAR::raiseError("Invalid dsn or db object given");

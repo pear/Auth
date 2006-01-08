@@ -92,7 +92,7 @@ class Auth_Container_MDB extends Auth_Container
     {
         if (is_string($dsn) || is_array($dsn)) {
             $this->db =& MDB::connect($dsn, $this->options['db_options']);
-        } elseif (is_a($dsn, 'mdb_common')) {
+        } elseif (is_subclass_of($dsn, 'mdb_common')) {
             $this->db = $dsn;
         } elseif (is_object($dsn) && MDB::isError($dsn)) {
             return PEAR::raiseError($dsn->getMessage(), $dsn->code);
@@ -126,7 +126,7 @@ class Auth_Container_MDB extends Auth_Container
      */
     function _prepare()
     {
-        if (is_a($this->db, 'mdb_common')) {
+        if (is_subclass_of($this->db, 'mdb_common')) {
             return true;
         }
         return $this->_connect($this->options['dsn']);
