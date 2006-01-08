@@ -52,6 +52,14 @@ the login data:
   in the DB container (quipo)
 * Fixed Bug #4347: recognition of DB and MDB objects passed as dsn
 * Fixed Bug #6324: updated MDB2 container
+* Fixed Bug #5174: "Only variable references should be returned by reference"
+  bug in _factory()
+* Fixed Bug #2446: english language typos.
+  This results in a BC break for any custom containers that have implemented
+  supportsChallengeResponce(). Also all containers already
+  supportsChallengeResponse() instead of supportsChallengeResponce() and
+  therefore the call in Auth_Frontend_Html always called the default
+  implementation and not the container implementation.
 ]]>
     </notes>
 
