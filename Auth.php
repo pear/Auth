@@ -350,7 +350,8 @@ class Auth {
     function &_factory($driver, $options = '') {
         $storage_class = 'Auth_Container_' . $driver;
         require_once('Auth/Container/' . $driver . '.php');
-        return new $storage_class($options);
+        $obj =& new $storage_class($options);
+        return $obj;
     }
 
     /**
@@ -397,7 +398,7 @@ class Auth {
     function login() {
         $login_ok = false;
         $this->_loadStorage();
-        // Check if using challenge responce
+        // Check if using challenge response
         (isset($this->post['authsecret']) && $this->post['authsecret'] == 1) ? $usingChap = true : $usingChap = false;
 
         /**
@@ -441,7 +442,7 @@ class Auth {
             } else {
                 // BC fix Auth used to use drawLogin for this
                 // call is sub classes implement this
-                if(is_callable(array($this, 'drawLogin'))) {
+                if (is_callable(array($this, 'drawLogin'))) {
                     return $this->drawLogin($this->username, $this);
                 }
 
