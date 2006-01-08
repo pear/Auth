@@ -52,7 +52,7 @@ class Auth_Container
      *
      * @access public
      */
-    function fetchData($username, $password, $isChallengeResponce=false) {
+    function fetchData($username, $password, $isChallengeResponse=false) {
     }
 
     // }}}
@@ -95,10 +95,10 @@ class Auth_Container
     }
     
     /**
-      * Returns true if the container supports Challenge Responce 
-      * password authenthication
+      * Returns true if the container supports Challenge Response 
+      * password authentication
       */
-    function supportsChallengeResponce() {
+    function supportsChallengeResponse() {
         return(false);
     }
     

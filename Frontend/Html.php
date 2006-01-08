@@ -14,13 +14,13 @@ class Auth_Frontend_Html {
       */
     function render(&$caller, $username = '') {
         $loginOnClick = 'return true;';
-        // Try To Use Challene responce
+        // Try To Use Challene response
         // TODO javascript might need some improvement for work on other browsers
-        if($caller->advancedsecurity && $caller->storage->supportsChallengeResponce() ) {
+        if($caller->advancedsecurity && $caller->storage->supportsChallengeResponse() ) {
             // Init the secret cookie
             $caller->session['loginchallenege'] = md5(microtime());
             //$caller->session['loginchallenege'] = '1';
-            #print 'Using Challenge Responce '.$caller->session['loginchallenege'].'<br/>';
+            #print 'Using Challenge Response '.$caller->session['loginchallenege'].'<br/>';
             print "\n";
             print '<script language="JavaScript">'."\n";
             // This is ugly, better sugestions send them to me
