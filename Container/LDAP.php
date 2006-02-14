@@ -385,7 +385,8 @@ class Auth_Container_LDAP extends Auth_Container
      * Fetch data from LDAP server
      *
      * Searches the LDAP server for the given username/password
-     * combination.
+     * combination.  Escapes all LDAP meta characters in username
+     * before performing the query.
      *
      * @param  string Username
      * @param  string Password
@@ -404,7 +405,7 @@ class Auth_Container_LDAP extends Auth_Container
         // make search filter
         $filter = sprintf('(&(%s=%s)%s)',
                           $this->options['userattr'],
-                          $username,
+                          $this->_quoteFilterString($username),
                           $this->options['userfilter']);
         // make search base dn
         $search_basedn = $this->options['userdn'];
@@ -507,7 +508,8 @@ class Auth_Container_LDAP extends Auth_Container
      * Validate group membership
      *
      * Searches the LDAP server for group membership of the
-     * authenticated user
+     * authenticated user.  Quotes all LDAP filter meta characters in
+     * the user name before querying the LDAP server.
      *
      * @param  string Distinguished Name of the authenticated User
      * @return boolean
@@ -519,7 +521,7 @@ class Auth_Container_LDAP extends Auth_Container
                           $this->options['groupattr'],
                           $this->options['group'],
                           $this->options['memberattr'],
-                          $user,
+                          $this->_quoteFilterString($user),
                           $this->options['groupfilter']);
 
         // make search base dn
@@ -565,6 +567,19 @@ class Auth_Container_LDAP extends Auth_Container
             }
             print("$line: $msg <br />");
         }
+    }
+
+    /**
+     * Escapes LDAP filter special characters as defined in RFC 2254.
+     *
+     * @access private
+     * @param string Filter String
+     */
+    function _quoteFilterString($filter_str)
+    {
+        $metas        = array(  '\\',  '*',  '(',  ')',   "\x00");
+        $quoted_metas = array('\\\\', '\*', '\(', '\)', "\\\x00");
+        return str_replace($metas, $quoted, $filter_str);
     }
 }
 

@@ -367,8 +367,8 @@ class Auth_Container_DB extends Auth_Container
                          $this->options['usernamecol'],
                          $this->options['passwordcol'],
                          $additional_key,
-                         $username,
-                         $password,
+                         $this->db->quoteString($username),
+                         $this->db->quoteString($password),
                          $additional_value
                          );
 
@@ -394,7 +394,7 @@ class Auth_Container_DB extends Auth_Container
         $query = sprintf("DELETE FROM %s WHERE %s = '%s'",
                          $this->options['table'],
                          $this->options['usernamecol'],
-                         $username
+                         $this->db->quoteString($username)
                          );
 
         $res = $this->query($query);
@@ -427,9 +427,9 @@ class Auth_Container_DB extends Auth_Container
         $query = sprintf("UPDATE %s SET %s = '%s' WHERE %s = '%s'",
                          $this->options['table'],
                          $this->options['passwordcol'],
-                         $password,
+                         $this->db->quoteString($password),
                          $this->options['usernamecol'],
-                         $username
+                         $this->db->quoteString($username)
                          );
 
         $res = $this->query($query);
