@@ -579,7 +579,7 @@ class Auth_Container_LDAP extends Auth_Container
     {
         $metas        = array(  '\\',  '*',  '(',  ')',   "\x00");
         $quoted_metas = array('\\\\', '\*', '\(', '\)', "\\\x00");
-        return str_replace($metas, $quoted, $filter_str);
+        return str_replace($metas, $quoted_metas, $filter_str);
     }
 }
 
