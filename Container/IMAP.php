@@ -26,13 +26,13 @@ require_once "PEAR.php";
  * Storage driver for fetching login data from an IMAP server
  *
  * This class is based on LDAP containers, but it very simple.
- * By default it connects to localhost:143 
- * The constructor will first check if the host:port combination is 
+ * By default it connects to localhost:143
+ * The constructor will first check if the host:port combination is
  * actually reachable. This behaviour can be disabled.
  * It then tries to create an IMAP stream (without opening a mailbox)
  * If you wish to pass extended options to the connections, you may
  * do so by specifying protocol options.
- * 
+ *
  * To use this storage containers, you have to use the
  * following syntax:
  *
@@ -44,8 +44,8 @@ require_once "PEAR.php";
  * );
  * $myAuth = new Auth('IMAP', $params);
  * ....
- * 
- * By default we connect without any protocol options set. However, some 
+ *
+ * By default we connect without any protocol options set. However, some
  * servers require you to connect with the notls or norsh options set.
  * To do this you need to add the following value to the params array:
  * 'baseDSN'   => '/imap/notls/norsh'
@@ -89,7 +89,7 @@ class Auth_Container_IMAP extends Auth_Container
                                     41, PEAR_ERROR_DIE);
         }
         $this->_setDefaults();
-        
+
         // set parameters (if any)
         if (is_array($params)) {
             $this->_parseOptions($params);
