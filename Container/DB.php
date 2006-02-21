@@ -342,6 +342,11 @@ class Auth_Container_DB extends Auth_Container
      */
     function addUser($username, $password, $additional = "")
     {
+        $err = $this->_prepare();
+        if ($err !== true) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
+
         if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
         } elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
