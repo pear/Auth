@@ -62,7 +62,9 @@ the login data:
  * Fixed Bug #6791: Made all calls to call_user_func() call_user_func_array and
    made calls consistant per change done in 1.3.0r3.
  * Fixed Bug #6803: depreciated DB function. Now requires DB >= 1.6.0
- * Fixed Bug #6808: can't add user with DB container.
+ * Fixed Bug #6808: Whenever Auth_Container_DB attempts to change the database 
+   make sure the connection/DB object exists and is correct before attempting to
+	 use the DB quoting features.
 ]]>
     </notes>
 
