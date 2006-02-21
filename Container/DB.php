@@ -396,6 +396,11 @@ class Auth_Container_DB extends Auth_Container
      */
     function removeUser($username)
     {
+        $err = $this->_prepare();
+        if ($err !== true) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
+
         $query = sprintf("DELETE FROM %s WHERE %s = '%s'",
                          $this->options['table'],
                          $this->options['usernamecol'],
@@ -419,6 +424,11 @@ class Auth_Container_DB extends Auth_Container
      */
     function changePassword($username, $password)
     {
+        $err = $this->_prepare();
+        if ($err !== true) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
+
         if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
         } elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
