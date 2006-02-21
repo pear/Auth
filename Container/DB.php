@@ -246,7 +246,7 @@ class Auth_Container_DB extends Auth_Container
 
         $query = "SELECT ".$sql_from.
                 " FROM ".$this->options['table'].
-                " WHERE ".$this->options['usernamecol']." = '".$this->db->quoteSmart($username)."'";
+                " WHERE ".$this->options['usernamecol']." = ".$this->db->quoteSmart($username);
 
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
         #print "SQL: $query <br/>\n";
@@ -367,7 +367,7 @@ class Auth_Container_DB extends Auth_Container
             }
         }
 
-        $query = sprintf("INSERT INTO %s (%s, %s%s) VALUES ('%s', '%s'%s)",
+        $query = sprintf("INSERT INTO %s (%s, %s%s) VALUES (%s, %s%s)",
                          $this->options['table'],
                          $this->options['usernamecol'],
                          $this->options['passwordcol'],
@@ -401,7 +401,7 @@ class Auth_Container_DB extends Auth_Container
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
-        $query = sprintf("DELETE FROM %s WHERE %s = '%s'",
+        $query = sprintf("DELETE FROM %s WHERE %s = %s",
                          $this->options['table'],
                          $this->options['usernamecol'],
                          $this->db->quoteSmart($username)
@@ -439,7 +439,7 @@ class Auth_Container_DB extends Auth_Container
 
         $password = $cryptFunction($password);
 
-        $query = sprintf("UPDATE %s SET %s = '%s' WHERE %s = '%s'",
+        $query = sprintf("UPDATE %s SET %s = %s WHERE %s = %s",
                          $this->options['table'],
                          $this->options['passwordcol'],
                          $this->db->quoteSmart($password),
