@@ -246,7 +246,7 @@ class Auth_Container_DB extends Auth_Container
 
         $query = "SELECT ".$sql_from.
                 " FROM ".$this->options['table'].
-                " WHERE ".$this->options['usernamecol']." = '".$this->db->quoteString($username)."'";
+                " WHERE ".$this->options['usernamecol']." = '".$this->db->quoteSmart($username)."'";
 
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
         #print "SQL: $query <br/>\n";
@@ -367,8 +367,8 @@ class Auth_Container_DB extends Auth_Container
                          $this->options['usernamecol'],
                          $this->options['passwordcol'],
                          $additional_key,
-                         $this->db->quoteString($username),
-                         $this->db->quoteString($password),
+                         $this->db->quoteSmart($username),
+                         $this->db->quoteSmart($password),
                          $additional_value
                          );
 
@@ -394,7 +394,7 @@ class Auth_Container_DB extends Auth_Container
         $query = sprintf("DELETE FROM %s WHERE %s = '%s'",
                          $this->options['table'],
                          $this->options['usernamecol'],
-                         $this->db->quoteString($username)
+                         $this->db->quoteSmart($username)
                          );
 
         $res = $this->query($query);
@@ -427,9 +427,9 @@ class Auth_Container_DB extends Auth_Container
         $query = sprintf("UPDATE %s SET %s = '%s' WHERE %s = '%s'",
                          $this->options['table'],
                          $this->options['passwordcol'],
-                         $this->db->quoteString($password),
+                         $this->db->quoteSmart($password),
                          $this->options['usernamecol'],
-                         $this->db->quoteString($username)
+                         $this->db->quoteSmart($username)
                          );
 
         $res = $this->query($query);
