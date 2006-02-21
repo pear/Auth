@@ -53,6 +53,8 @@ the login data:
     <state>beta</state>
     <notes>
 <![CDATA[
+ * Fixed Bug #4918: Added support to specify which authentication method to 
+   prefer when authenticating against a POP3 backend.
  * Fixed Bug #6644: Added support for LDAP_OPT_REFERRALS. Setting to false can 
    improve compatibility with Active Directory.
  * Fixed Bug #6791: Made all calls to call_user_func() call_user_func_array and

@@ -47,6 +47,18 @@ class Auth_Container_POP3 extends Auth_Container
      */
     var $port='110';
 
+    /**
+     * POP3 Authentication method
+     *
+     * Prefered POP3 authentication method. Acceptable values:
+     *      Boolean TRUE    - Use Net_POP3's autodetection
+     *      String 'DIGEST-MD5','CRAM-MD5','LOGIN','PLAIN','APOP','USER'
+     *                      - Attempt this authentication style first
+     *                        then fallback to autodetection.
+     * @var mixed 
+     */
+    var $method=true;
+
     // {{{ Constructor
 
     /**
@@ -64,6 +76,9 @@ class Auth_Container_POP3 extends Auth_Container
                 }
                 if (isset($server['port'])) {
                     $this->port = $server['port'];
+                }
+                if (isset($server['method'])) {
+                    $this->method = $server['method'];
                 }
             } else {
                 if (strstr($server, ':')) {
@@ -90,7 +105,7 @@ class Auth_Container_POP3 extends Auth_Container
     function fetchData($username, $password)
     {
         $pop3 =& new Net_POP3();
-        $res = $pop3->connect($this->server, $this->port);
+        $res = $pop3->connect($this->server, $this->port, $this->method);
         if (!$res) {
             return $res;
         }
