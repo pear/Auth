@@ -43,6 +43,9 @@ require_once "PEAR.php";
  *              it will be preferred over host and port
  * version:     LDAP version to use, ususally 2 (default) or 3,
  *              must be an integer!
+ * referrals:   If set, determines whether the LDAP library automatically
+ *              follows referrals returned by LDAP servers or not. Possible
+ *              values are true (default) or false.
  * binddn:      If set, searching for user will be done after binding
  *              as this user, if not set the bind will be anonymous.
  *              This is reported to make the container work with MS
@@ -122,6 +125,7 @@ require_once "PEAR.php";
  *       'host' => 'ldap.netsols.de',
  *       'port' => 389,
  *       'version' => 3,
+ *       'referrals' => false,
  *       'basedn' => 'dc=netsols,dc=de',
  *       'binddn' => 'cn=Jan Wagner,cn=Users,dc=netsols,dc=de',
  *       'bindpw' => 'password',
@@ -232,6 +236,12 @@ class Auth_Container_LDAP extends Auth_Container
             @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $this->options['version']);
         }
 
+        // switch LDAP referrals
+        if (is_bool($this->options['referrals'])) {
+          $this->_debug("Switching to LDAP referrals {$this->options['referrals']}", __LINE__);
+          @ldap_set_option($this->conn_id, LDAP_OPT_REFERRALS, $this->options['referrals']);
+        }
+
         // bind with credentials or anonymously
         if ($this->options['binddn'] && $this->options['bindpw']) {
             $this->_debug('Binding with credentials', __LINE__);
@@ -240,6 +250,7 @@ class Auth_Container_LDAP extends Auth_Container
             $this->_debug('Binding anonymously', __LINE__);
             $bind_params = array($this->conn_id);
         }
+
         // bind for searching
         if ((@call_user_func_array('ldap_bind', $bind_params)) == false) {
             $this->_debug();
@@ -324,6 +335,7 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['host']        = 'localhost';
         $this->options['port']        = '389';
         $this->options['version']     = 2;
+        $this->options['referrals']   = true;
         $this->options['binddn']      = '';
         $this->options['bindpw']      = '';
         $this->options['basedn']      = '';
