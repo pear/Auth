@@ -415,7 +415,7 @@ class Auth {
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (is_callable($this->loginCallback)) {
-                call_user_func($this->loginCallback, $this->username, $this);
+                call_user_func_array($this->loginCallback, array($this->username, $this));
                 #$method = $this->loginCallback;
                 #$this->$method($this->username, $this);
             }
@@ -428,7 +428,7 @@ class Auth {
         if (!empty($this->username) && !$login_ok) {
             $this->status = AUTH_WRONG_LOGIN;
             if (is_callable($this->loginFailedCallback)) {
-                call_user_func_array($this->loginFailedCallback, $this->username, $this);
+                call_user_func_array($this->loginFailedCallback, array($this->username, $this));
                 #$method = $this->loginFailedCallback;
                 #$this->$method($this->username, $this->status, $this);
             }
@@ -436,7 +436,7 @@ class Auth {
 
         if ((empty($this->username) || !$login_ok) && $this->showLogin) {
             if (is_callable($this->loginFunction)) {
-                call_user_func($this->loginFunction, $this->username, $this->status, $this);
+                call_user_func_array($this->loginFunction, array($this->username, $this->status, $this));
                 #$method = $this->loginFunction;
                 #$this->$method($this->username, $this->status, $this);
             } else {
@@ -767,7 +767,7 @@ class Auth {
      */
     function logout() {
         if (is_callable($this->logoutCallback)) {
-            call_user_func($this->logoutCallback, $this->session['username'], $this );
+            call_user_func_array($this->logoutCallback, array($this->session['username'], $this));
             #$method = $this->logoutCallback;
             #$this->$method($this->session['username'], $this);
         }
