@@ -226,7 +226,7 @@ class Auth_Container_LDAP extends Auth_Container
         }
 
         if (($this->conn_id = @call_user_func_array('ldap_connect', $conn_params)) === false) {
-            return PEAR::raiseError('Auth_Container_LDAP: Could not connect to server.', 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError('Auth_Container_LDAP: Could not connect to server.', 41);
         }
         $this->_debug('Successfully connected to server', __LINE__);
 
@@ -255,7 +255,7 @@ class Auth_Container_LDAP extends Auth_Container
         if ((@call_user_func_array('ldap_bind', $bind_params)) == false) {
             $this->_debug();
             $this->_disconnect();
-            return PEAR::raiseError("Auth_Container_LDAP: Could not bind to LDAP server.", 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError("Auth_Container_LDAP: Could not bind to LDAP server.", 41);
         }
         $this->_debug('Binding was successful', __LINE__);
     }
