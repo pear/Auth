@@ -341,6 +341,12 @@ class Auth_Container_MDB2 extends Auth_Container
     function addUser($username, $password, $additional = "")
     {
 
+        // Prepare for a database query
+        $err = $this->_prepare();
+        if ($err !== true) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
+
         if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
         } elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
@@ -392,6 +398,12 @@ class Auth_Container_MDB2 extends Auth_Container
      */
     function removeUser($username)
     {
+        // Prepare for a database query
+        $err = $this->_prepare();
+        if ($err !== true) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
+
         $query = sprintf("DELETE FROM %s WHERE %s = %s",
                          $this->options['table'],
                          $this->options['usernamecol'],
@@ -417,6 +429,12 @@ class Auth_Container_MDB2 extends Auth_Container
      */
     function changePassword($username, $password)
     {
+        // Prepare for a database query
+        $err = $this->_prepare();
+        if ($err !== true) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
+
         if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
         } elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
