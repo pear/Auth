@@ -11,7 +11,7 @@ CREATE TABLE temp (
 */
 
 $options = array(
-    'dsn'         => 'mysql://root:@localhost/test',
+    'dsn'         => 'mysql://root:@localhost/authtest',
     'table'       => 'temp',
     'usernamecol' => 'username',
     'passwordcol' => 'password',
@@ -21,5 +21,5 @@ $options = array(
 
 $extra_options['username'] = 'test_user';
 $extra_options['passwd'] = 'test_user';
-echo '<pre>';
+
 ?>

@@ -5,7 +5,7 @@ $options = array(
     'port'=>'110'
 );
 
-$extra_options['username'] = 'yavo@example.com';
-$extra_options['passwd'] = 'test';
+$extra_options['username'] = 'test_user';
+$extra_options['passwd'] = 'test_user';
 
 ?>

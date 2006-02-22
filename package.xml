@@ -57,6 +57,7 @@ This is hopefully the final release candidate before 1.3.0. Please test.
 
  * MDB & MDB2 Backends: Start DB object before using quoting features in all
    functions.
+ * Updated test cases. Passes all tests for DB, MDB and MDB2.
  * Fixed Bug #6851: Double quotes caused by incorrect use of DB::quoteSmart()
    and developer being asleep at his computer.
 ]]>

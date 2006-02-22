@@ -34,13 +34,13 @@ $suite = new PHPUnit_TestSuite();
 #$suite->addTest(new PHPUnit_TestSuite('IMAPContainer'));
 $suite->addTest(new PHPUnit_TestSuite('FileContainer'));
 $suite->addTest(new PHPUnit_TestSuite('DBContainer'));
-$suite->addTest(new PHPUnit_TestSuite('DBLiteContainer'));
+//$suite->addTest(new PHPUnit_TestSuite('DBLiteContainer'));
 // MDB Container
-//$suite->addTest(new PHPUnit_TestSuite('MDBContainer'));
+$suite->addTest(new PHPUnit_TestSuite('MDBContainer'));
 // MDB2 Container
-//$suite->addTest(new PHPUnit_TestSuite('MDB2Container'));
+$suite->addTest(new PHPUnit_TestSuite('MDB2Container'));
 // POP3 Container
-//$suite->addTest(new PHPUnit_TestSuite('POP3Container'));
+$suite->addTest(new PHPUnit_TestSuite('POP3Container'));
 
 $result = PHPUnit::run($suite);
 echo $result->toString();

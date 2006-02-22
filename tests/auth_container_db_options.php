@@ -9,10 +9,11 @@
         $this->options['cryptType']   = "md5";
 */
 $options = array(
-    'dsn'=>'mysql://yavo:lexusOne@odin.netsmart.local/authtest',
-    'table'=>'users',
-    'usernamecol'=>'userlogin',
-    'passwordcol'=>'userpassword',
+    'dsn'=>'mysql://root:@localhost/authtest',
+    'table'=>'temp',
+    'usernamecol'=>'username',
+    'passwordcol'=>'password',
+		'cryptType'=>'md5',
     'db_fields'=>'*'
 );
 
