@@ -1,16 +1,16 @@
 <?php
 
-include_once('Auth.php');
-include('TestAuthContainer.php');
-include('FileContainer.php');
-include('DBContainer.php');
-include('DBLiteContainer.php');
-include('MDBContainer.php');
-include('MDB2Container.php');
-include('POP3Container.php');
-include('POP3aContainer.php');
-include('IMAPContainer.php');
-include_once('PHPUnit.php');
+include_once 'Auth.php';
+include_once 'TestAuthContainer.php';
+include_once 'FileContainer.php';
+include_once 'DBContainer.php';
+include_once 'DBLiteContainer.php';
+include_once 'MDBContainer.php';
+include_once 'MDB2Container.php';
+include_once 'POP3Container.php';
+include_once 'POP3aContainer.php';
+include_once 'IMAPContainer.php';
+include_once 'PHPUnit.php';
 
 
 function error($err){

@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -23,10 +23,13 @@
  * Storage class for fetching login data
  *
  * @author   Martin Jansen <mj@php.net>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  */
 class Auth_Container
 {
+
+    // {{{ properties
 
     /**
      * User that is currently selected from the storage container.
@@ -35,6 +38,10 @@ class Auth_Container
      */
     var $activeUser = "";
 
+    // }}}
+
+    // {{{ Auth_Container() [constructor]
+
     /**
      * Constructor
      *
@@ -42,8 +49,12 @@ class Auth_Container
      *
      * @access public
      */
-    function Auth_Container() {
+    function Auth_Container()
+    {
     }
+
+    // }}}
+    // {{{ fetchData()
 
     /**
      * Fetch data from storage container
@@ -52,7 +63,8 @@ class Auth_Container
      *
      * @access public
      */
-    function fetchData($username, $password, $isChallengeResponse=false) {
+    function fetchData($username, $password, $isChallengeResponse=false)
+    {
     }
 
     // }}}
@@ -93,30 +105,45 @@ class Auth_Container
                 break;
         }
     }
+
+    // }}}
+    // {{{ supportsChallengeResponse()
     
     /**
       * Returns true if the container supports Challenge Response 
       * password authentication
       */
-    function supportsChallengeResponse() {
+    function supportsChallengeResponse()
+    {
         return(false);
     }
+
+    // }}}
+    // {{{ getCryptType()
     
     /**
       * Returns the crypt current crypt type of the container
       *
       * @return string
       */
-    function getCryptType() {
+    function getCryptType()
+    {
         return('');
     }
+
+    // }}}
+    // {{{ listUsers()
 
     /**
      * List all users that are available from the storage container
      */
-    function listUsers() {
+    function listUsers()
+    {
         return AUTH_METHOD_NOT_SUPPORTED;
     }
+
+    // }}}
+    // {{{ getUser()
 
     /**
      * Returns a user assoc array
@@ -125,7 +152,8 @@ class Auth_Container
      *
      * @param string The username
      */
-    function getUser($username) {
+    function getUser($username)
+    {
         $users = $this->listUsers();
         if ($users === AUTH_METHOD_NOT_SUPPORTED) {
             return AUTH_METHOD_NOT_SUPPORTED;
@@ -138,6 +166,9 @@ class Auth_Container
         return false;
     }
 
+    // }}}
+    // {{{ addUser()
+
     /**
      * Add a new user to the storage container
      *
@@ -147,18 +178,26 @@ class Auth_Container
      *
      * @return boolean
      */
-    function addUser($username, $password, $additional=null) {
+    function addUser($username, $password, $additional=null)
+    {
         return AUTH_METHOD_NOT_SUPPORTED;
     }
+
+    // }}}
+    // {{{ removeUser()
 
     /**
      * Remove user from the storage container
      *
      * @param string Username
      */
-    function removeUser($username) {
+    function removeUser($username)
+    {
         return AUTH_METHOD_NOT_SUPPORTED;
     }
+
+    // }}}
+    // {{{ changePassword()
 
     /**
      * Change password for user in the storage container
@@ -166,9 +205,13 @@ class Auth_Container
      * @param string Username
      * @param string The new password
      */
-    function changePassword($username, $password) {
+    function changePassword($username, $password)
+    {
         return AUTH_METHOD_NOT_SUPPORTED;
     }
 
+    // }}}
+
 }
+
 ?>

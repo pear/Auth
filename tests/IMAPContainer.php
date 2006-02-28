@@ -1,7 +1,7 @@
 <?php
 
-include_once('TestAuthContainer.php');
-include_once("Auth/Container/IMAP.php");
+include_once 'TestAuthContainer.php';
+include_once 'Auth/Container/IMAP.php';
 
 
 class IMAPContainer extends TestAuthContainer {
@@ -14,7 +14,7 @@ class IMAPContainer extends TestAuthContainer {
         print "IMAPContainer::getContainer\n";
         static $container;
         if(!isset($container)){
-            include('./auth_container_imap_options.php');
+            include './auth_container_imap_options.php';
             $container = new Auth_Container_IMAP($options);
         }
         return($container);
@@ -22,7 +22,7 @@ class IMAPContainer extends TestAuthContainer {
     
     function &getExtraOptions() {
         print "IMAPContainer::getExtraOptions\n";
-        include('./auth_container_imap_options.php');
+        include './auth_container_imap_options.php';
         return($extra_options);
     }
 }

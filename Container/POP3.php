@@ -21,10 +21,9 @@
 // $Id$
 //
 
-
-require_once('Auth/Container.php');
-require_once('PEAR.php');
-require_once('Net/POP3.php');
+require_once 'Auth/Container.php';
+require_once 'PEAR.php';
+require_once 'Net/POP3.php';
 
 /**
  * Storage driver for Authentication on a POP3 server.
@@ -35,6 +34,9 @@ require_once('Net/POP3.php');
  */
 class Auth_Container_POP3 extends Auth_Container
 {
+
+    // {{{ properties
+
     /**
      * POP3 Server
      * @var string
@@ -59,7 +61,9 @@ class Auth_Container_POP3 extends Auth_Container
      */
     var $method=true;
 
-    // {{{ Constructor
+    // }}}
+
+    // {{{ Auth_Container_POP3() [constructor]
 
     /**
      * Constructor of the container class
@@ -115,5 +119,6 @@ class Auth_Container_POP3 extends Auth_Container
     }
 
     // }}}
+
 }
 ?>

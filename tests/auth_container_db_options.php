@@ -13,7 +13,7 @@ $options = array(
     'table'=>'temp',
     'usernamecol'=>'username',
     'passwordcol'=>'password',
-		'cryptType'=>'md5',
+    'cryptType'=>'md5',
     'db_fields'=>'*'
 );
 

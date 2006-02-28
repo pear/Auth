@@ -1,44 +1,76 @@
 <?php
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
+// +----------------------------------------------------------------------+
+// | PHP Version 4                                                        |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 1997-2003 The PHP Group                                |
+// +----------------------------------------------------------------------+
+// | This source file is subject to version 2.02 of the PHP license,      |
+// | that is bundled with this package in the file LICENSE, and is        |
+// | available at through the world-wide-web at                           |
+// | http://www.php.net/license/2_02.txt.                                 |
+// | If you did not receive a copy of the PHP license and are unable to   |
+// | obtain it through the world-wide-web, please send a note to          |
+// | license@php.net so we can mail you a copy immediately.               |
+// +----------------------------------------------------------------------+
+// | Authors: Martin Jansen <mj@php.net>                                  |
+// +----------------------------------------------------------------------+
+//
+// $Id$
+//
+
 
 /**
-  * Standard Html Login form
-  * 
-  */
+ * Standard Html Login form
+ * 
+ * @author   Yavor Shahpasov <yavo@netsmart.com.cy>
+ * @author   Adam Ashley <aashley@php.net>
+ * @package  Auth
+ * @version  $Revision$
+ */
 class Auth_Frontend_Html {
+    
+    // {{{ render()
 
     /**
-      * Displays the login form
-      *
-      * @param object The calling auth instance
-      * @return void
-      */
+     * Displays the login form
+     *
+     * @param object The calling auth instance
+     * @param string The previously used username
+     * @return void
+     */
     function render(&$caller, $username = '') {
         $loginOnClick = 'return true;';
+        
         // Try To Use Challene response
         // TODO javascript might need some improvement for work on other browsers
         if($caller->advancedsecurity && $caller->storage->supportsChallengeResponse() ) {
+
             // Init the secret cookie
             $caller->session['loginchallenege'] = md5(microtime());
-            //$caller->session['loginchallenege'] = '1';
-            #print 'Using Challenge Response '.$caller->session['loginchallenege'].'<br/>';
+
             print "\n";
             print '<script language="JavaScript">'."\n";
+
             // This is ugly, better sugestions send them to me
-            include(dirname(__FILE__).'/md5.js');
+            include 'Auth/Frontend/md5.js';
+
             print "\n";
             print ' function securePassword() { '."\n";
             print '   var pass = document.getElementById(\''.$caller->getPostPasswordField().'\');'."\n";
             print '   var secret = document.getElementById(\'authsecret\')'."\n";
-            #print '   alert(pass);alert(secret); '."\n";
+            //print '   alert(pass);alert(secret); '."\n";
+
             // If using md5 for password storage md5 the password before 
             // we hash it with the secret
-            #print '   alert(pass.value);';
+            // print '   alert(pass.value);';
             if ($caller->storage->getCryptType() == 'md5' ) {
                 print '   pass.value = hex_md5(pass.value); '."\n";
                 #print '   alert(pass.value);';
             }
+
             print '   pass.value = hex_md5(pass.value+\''.$caller->session['loginchallenege'].'\'); '."\n";
-            #print '   alert(pass.value);';
+            // print '   alert(pass.value);';
             print '   secret.value = 1;'."\n";
             print '   var doLogin = document.getElementById(\'doLogin\')'."\n";
             print '   doLogin.disabled = true;'."\n";
@@ -46,9 +78,11 @@ class Auth_Frontend_Html {
             print ' } '."\n";
             print '</script>'."\n";;
             print "\n";
+
             $loginOnClick = ' return securePassword(); ';
         }
-        echo '<center>'."\n";
+
+        print '<center>'."\n";
 
         $status = '';
         if (!empty($caller->status) && $caller->status == AUTH_EXPIRED) {
@@ -61,29 +95,39 @@ class Auth_Frontend_Html {
             $status = '<i>Security problem detected. </i>'."\n";
         }
         
-        echo '<form method="post" action="'.$caller->server['PHP_SELF'].'" onSubmit="'.$loginOnClick.'">'."\n";
-        echo '<table border="0" cellpadding="2" cellspacing="0" summary="login form" align="center" >'."\n";
-        echo '<tr>'."\n";
-        echo '    <td colspan="2" bgcolor="#eeeeee"><strong>Login </strong>'.$status.'</td>'."\n";
-        echo '</tr>'."\n";
-        echo '<tr>'."\n";
-        echo '    <td>Username:</td>'."\n";
-        echo '    <td><input type="text" id="'.$caller->getPostUsernameField().'" name="'.$caller->getPostUsernameField().'" value="' . $username . '" /></td>'."\n";
-        echo '</tr>'."\n";
-        echo '<tr>'."\n";
-        echo '    <td>Password:</td>'."\n";
-        echo '    <td><input type="password" id="'.$caller->getPostPasswordField().'" name="'.$caller->getPostPasswordField().'" /></td>'."\n";
-        echo '</tr>'."\n";
-        echo '<tr>'."\n";
+        print '<form method="post" action="'.$caller->server['PHP_SELF'].'" '
+            .'onSubmit="'.$loginOnClick.'">'."\n";
+        print '<table border="0" cellpadding="2" cellspacing="0" '
+            .'summary="login form" align="center" >'."\n";
+        print '<tr>'."\n";
+        print '    <td colspan="2" bgcolor="#eeeeee"><strong>Login </strong>'
+            .$status.'</td>'."\n";
+        print '</tr>'."\n";
+        print '<tr>'."\n";
+        print '    <td>Username:</td>'."\n";
+        print '    <td><input type="text" id="'.$caller->getPostUsernameField()
+            .'" name="'.$caller->getPostUsernameField().'" value="' . $username 
+            .'" /></td>'."\n";
+        print '</tr>'."\n";
+        print '<tr>'."\n";
+        print '    <td>Password:</td>'."\n";
+        print '    <td><input type="password" id="'.$caller->getPostPasswordField()
+            .'" name="'.$caller->getPostPasswordField().'" /></td>'."\n";
+        print '</tr>'."\n";
+        print '<tr>'."\n";
         
         //onClick=" '.$loginOnClick.' "
-        echo '    <td colspan="2" bgcolor="#eeeeee"><input value="Login" id="doLogin" name="doLogin" type="submit" /></td>'."\n";
-        echo '</tr>'."\n";
-        echo '</table>'."\n";
+        print '    <td colspan="2" bgcolor="#eeeeee"><input value="Login" '
+            .'id="doLogin" name="doLogin" type="submit" /></td>'."\n";
+        print '</tr>'."\n";
+        print '</table>'."\n";
+
         // Might be a good idea to make the variable name variable 
-        echo '<input type="hidden" id="authsecret" name="authsecret" value="" />';
-        echo '</form>'."\n";
+        print '<input type="hidden" id="authsecret" name="authsecret" value="" />';
+        print '</form>'."\n";
     }
+
+    // }}}
     
 }
 

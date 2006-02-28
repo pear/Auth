@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -65,18 +65,28 @@ require_once 'SOAP/Client.php';
  * ?>
  *
  * @author   Bruno Pedro <bpedro@co.sapo.pt>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  * @version  $Revision$
  */
 class Auth_Container_SOAP extends Auth_Container
 {
 
+    // {{{ properties
+
     /**
      * Required options for the class
      * @var array
      * @access private
      */
-    var $_requiredOptions = array('endpoint', 'namespace', 'method', 'encoding', 'usernamefield', 'passwordfield');
+    var $_requiredOptions = array(
+            'endpoint',
+            'namespace',
+            'method',
+            'encoding',
+            'usernamefield',
+            'passwordfield',
+            );
 
     /**
      * Options for the class
@@ -106,6 +116,10 @@ class Auth_Container_SOAP extends Auth_Container
      */
      var $soapClient = null;
 
+    // }}}
+
+    // {{{ Auth_Container_SOAP() [constructor]
+
     /**
      * Constructor of the container class
      *
@@ -123,6 +137,9 @@ class Auth_Container_SOAP extends Auth_Container
             unset($this->_options['_features']);
         }
     }
+
+    // }}}
+    // {{{ fetchData()
 
     /**
      * Fetch data from SOAP service
@@ -144,28 +161,34 @@ class Auth_Container_SOAP extends Auth_Container
             $this->soapClient = new SOAP_Client($this->_options['endpoint']);
             $this->soapClient->setEncoding($this->_options['encoding']);
         }
+
         // set the trace option if requested
         if (isset($this->_options['trace'])) {
             $this->soapClient->__options['trace'] = true;
         }
+
         // set the timeout option if requested
         if (isset($this->_options['timeout'])) {
             $this->soapClient->__options['timeout'] = $this->_options['timeout'];
         }
+
         // assign username and password fields
         $usernameField = new SOAP_Value($this->_options['usernamefield'],'string', $username);
         $passwordField = new SOAP_Value($this->_options['passwordfield'],'string', $password);
         $SOAPParams = array($usernameField, $passwordField);
+
         // assign optional features
         foreach ($this->_features as $fieldName => $fieldValue) {
             $SOAPParams[] = new SOAP_Value($fieldName, 'string', $fieldValue);
         }
+
         // make SOAP call
         $this->soapResponse = $this->soapClient->call(
-                                  $this->_options['method'],
-                                  $SOAPParams,
-                                  array('namespace' => $this->_options['namespace'])
-                                               );
+                $this->_options['method'],
+                $SOAPParams,
+                array('namespace' => $this->_options['namespace'])
+                );
+
         if (!PEAR::isError($this->soapResponse)) {
             if ($this->_options['matchpasswords']) {
                 // check if passwords match
@@ -181,5 +204,8 @@ class Auth_Container_SOAP extends Auth_Container
             return false;
         }
     }
+
+    // }}}
+
 }
 ?>

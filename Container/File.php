@@ -37,6 +37,9 @@ require_once "PEAR.php";
  */
 class Auth_Container_File extends Auth_Container
 {
+
+    // {{{ properties
+
     /**
      * Path to passwd file
      * 
@@ -44,7 +47,9 @@ class Auth_Container_File extends Auth_Container
      */
     var $pwfile = '';
 
-    // {{{ Constructor
+    // }}}
+
+    // {{{ Auth_Container_File() [constructor]
 
     /**
      * Constructor of the container class
@@ -155,7 +160,6 @@ class Auth_Container_File extends Auth_Container
             return false;
         }
         
-        
         $res = $pw_obj->delUser($user);
         if (PEAR::isError($res)) {
             return false;
@@ -228,5 +232,6 @@ class Auth_Container_File extends Auth_Container
     }
 
     // }}}
+
 }
 ?>

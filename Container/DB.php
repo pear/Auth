@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -29,11 +29,14 @@ require_once 'DB.php';
  * by the PEAR DB abstraction layer to fetch login data.
  *
  * @author   Martin Jansen <mj@php.net>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  * @version  $Revision$
  */
 class Auth_Container_DB extends Auth_Container
 {
+
+    // {{{ properties
 
     /**
      * Additional options for the storage container
@@ -54,12 +57,15 @@ class Auth_Container_DB extends Auth_Container
      */
     var $activeUser = '';
 
-    // {{{ Constructor
+    // }}}
+
+    // {{{ Auth_Container_DB [constructor]
 
     /**
      * Constructor of the container class
      *
-     * Initate connection to the database via PEAR::DB
+     * Save the initial options passed to the container. Initiation of the DB
+     * connection is no longer performed here and is only done when needed.
      *
      * @param  string Connection data or DB object
      * @return object Returns an error object if something went wrong
@@ -157,6 +163,9 @@ class Auth_Container_DB extends Auth_Container
         return $this->db->query($query);
     }
 
+    // }}}
+    // {{{ _setDefaults()
+
     /**
      * Set some default options
      *
@@ -173,6 +182,9 @@ class Auth_Container_DB extends Auth_Container
         $this->options['cryptType']   = 'md5';
         $this->options['db_options']  = array();
     }
+
+    // }}}
+    // {{{ _parseOptions()
 
     /**
      * Parse options passed to the container class
@@ -197,6 +209,9 @@ class Auth_Container_DB extends Auth_Container
         }
     }
 
+    // }}}
+    // {{{ fetchData()
+
     /**
      * Get user information from database
      *
@@ -215,7 +230,6 @@ class Auth_Container_DB extends Auth_Container
      */
     function fetchData($username, $password, $isChallengeResponse=false)
     {
-        //print "Container_DB::fetchData($username, $password, $isChallengeResponse) <br/>\n";
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
@@ -225,8 +239,7 @@ class Auth_Container_DB extends Auth_Container
         // Find if db_fields contains a *, if so assume all columns are selected
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = "*";
-        }
-        else{
+        } else {
             $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
         }
         /*
@@ -249,12 +262,11 @@ class Auth_Container_DB extends Auth_Container
                 " WHERE ".$this->options['usernamecol']." = ".$this->db->quoteSmart($username);
 
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
-        #print "SQL: $query <br/>\n";
-        #print_r($res);
 
         if (DB::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->getCode());
         }
+
         if (!is_array($res)) {
             $this->activeUser = '';
             return false;
@@ -263,15 +275,20 @@ class Auth_Container_DB extends Auth_Container
         // Perform trimming here before the hashihg
         $password = trim($password, "\r\n");
         $res[$this->options['passwordcol']] = trim($res[$this->options['passwordcol']], "\r\n");
+
         // If using Challenge Response md5 the pass with the secret
         if ($isChallengeResponse) {
-            $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']].$this->_auth_obj->session['loginchallenege']);
+            $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']]
+                    .$this->_auth_obj->session['loginchallenege']);
+            
             // UGLY cannot avoid without modifying verifyPassword
             if ($this->options['cryptType'] == 'md5') {
                 $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']]);
             }
+            
             //print " Hashed Password [{$res[$this->options['passwordcol']]}]<br/>\n";
         }
+
         if ($this->verifyPassword($password,
                                   $res[$this->options['passwordcol']],
                                   $this->options['cryptType'])) {
@@ -282,7 +299,8 @@ class Auth_Container_DB extends Auth_Container
                     continue;
                 }
                 // Use reference to the auth object if exists
-                // This is because the auth session variable can change so a static call to setAuthData does not make sence
+                // This is because the auth session variable can change so a 
+                // static call to setAuthData does not make sence
                 $this->_auth_obj->setAuthData($key, $value);
             }
             return true;
@@ -290,6 +308,9 @@ class Auth_Container_DB extends Auth_Container
         $this->activeUser = $res[$this->options['usernamecol']];
         return false;
     }
+
+    // }}}
+    // {{{ listUsers()
 
     /**
      * Returns a list of users from the container
@@ -330,6 +351,9 @@ class Auth_Container_DB extends Auth_Container
         return $retVal;
     }
 
+    // }}}
+    // {{{ addUser()
+
     /**
      * Add user to the storage container
      *
@@ -347,9 +371,11 @@ class Auth_Container_DB extends Auth_Container
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
-        if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
+        if (   isset($this->options['cryptType']) 
+            && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
-        } elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
+        } elseif (   isset($this->options['cryptType']) 
+                  && function_exists($this->options['cryptType'])) {
             $cryptFunction = $this->options['cryptType'];
         } else {
             $cryptFunction = 'md5';
@@ -363,7 +389,7 @@ class Auth_Container_DB extends Auth_Container
         if (is_array($additional)) {
             foreach ($additional as $key => $value) {
                 $additional_key .= ', ' . $key;
-                $additional_value .= ", '" . $value . "'";
+                $additional_value .= ", " . $this->db->quoteSmart($value);
             }
         }
 
@@ -385,6 +411,9 @@ class Auth_Container_DB extends Auth_Container
             return true;
         }
     }
+
+    // }}}
+    // {{{ removeUser()
 
     /**
      * Remove user from the storage container
@@ -416,6 +445,9 @@ class Auth_Container_DB extends Auth_Container
         }
     }
 
+    // }}}
+    // {{{ changePassword()
+
     /**
      * Change password for user in the storage container
      *
@@ -429,9 +461,11 @@ class Auth_Container_DB extends Auth_Container
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
-        if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
+        if (   isset($this->options['cryptType']) 
+            && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
-        } elseif (isset($this->options['cryptType']) && function_exists($this->options['cryptType'])) {
+        } elseif (   isset($this->options['cryptType']) 
+                  && function_exists($this->options['cryptType'])) {
             $cryptFunction = $this->options['cryptType'];
         } else {
             $cryptFunction = 'md5';
@@ -456,6 +490,9 @@ class Auth_Container_DB extends Auth_Container
         }
     }
 
+    // }}}
+    // {{{ supportsChallengeResponse()
+
     /**
      * Determine if this container supports
      * password authentication with challenge response
@@ -468,6 +505,9 @@ class Auth_Container_DB extends Auth_Container
         return in_array($this->options['cryptType'], array('md5', 'none', ''));
     }
 
+    // }}}
+    // {{{ getCryptType()
+
     /**
       * Returns the selected crypt type for this container
       */
@@ -475,6 +515,8 @@ class Auth_Container_DB extends Auth_Container
     {
         return($this->options['cryptType']);
     }
+
+    // }}}
 
 }
 ?>

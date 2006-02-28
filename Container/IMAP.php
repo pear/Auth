@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -61,32 +61,45 @@ require_once "PEAR.php";
  *
  */
 
-/*
+/**
+ * Storage driver for fetching login data from a IMAP server
  *
- * @author   Jeroen Houben <jeroen@terena.nl>, Cipriano Groenendal <cipri@campai.nl>
+ * This storage driver authenticates uses against IMAP server.
+ *
+ * @author   Jeroen Houben <jeroen@terena.nl>
+ * @author   Cipriano Groenendal <cipri@campai.nl>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  * @version  $Revision$
  */
 class Auth_Container_IMAP extends Auth_Container
 {
+
+    // {{{ properties
+
     /**
      * Options for the class
      * @var array
      */
     var $options = array();
 
+    // }}}
+
+    // {{{ Auth_Container_IMAP() [constructor]
+
     /**
      * Constructor of the container class
      *
-     * @param  $params, associative hash with host,port,basedn and userattr key
-     * @param  $params, associative array with host, port, baseDSN, checkServer key.
+     * @param  $params  associative array with host, port, baseDSN, checkServer
+     *                  and userattr key
      * @return object Returns an error object if something went wrong
+     * @todo Use PEAR Net_IMAP if IMAP extension not loaded
      */
     function Auth_Container_IMAP($params)
     {
         if (!extension_loaded('imap')) {
-            return PEAR::raiseError("Cannot use IMAP authentication, IMAP extension not loaded!",
-                                    41, PEAR_ERROR_DIE);
+            return PEAR::raiseError('Cannot use IMAP authentication, '
+                    .'IMAP extension not loaded!', 41);
         }
         $this->_setDefaults();
 
@@ -94,11 +107,15 @@ class Auth_Container_IMAP extends Auth_Container
         if (is_array($params)) {
             $this->_parseOptions($params);
         }
+
         if ($this->options['checkServer']) {
             $this->_checkServer($this->options['timeout']);
         }
         return true;
     }
+
+    // }}}
+    // {{{ _setDefaults()
 
     /**
      * Set some default options
@@ -114,6 +131,8 @@ class Auth_Container_IMAP extends Auth_Container
         $this->options['timeout'] = 20;
     }
 
+    // }}}
+    // {{{ _checkServer()
 
     /**
      * Check if the given server and port are reachable
@@ -129,9 +148,12 @@ class Auth_Container_IMAP extends Auth_Container
             $message = "Error connecting to IMAP server "
                 . $this->options['host']
                 . ":" . $this->options['port'];
-            return PEAR::raiseError($message, 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError($message, 41);
         }
     }
+
+    // }}}
+    // {{{ _parseOptions()
 
     /**
      * Parse options passed to the container class
@@ -145,6 +167,9 @@ class Auth_Container_IMAP extends Auth_Container
             $this->options[$key] = $value;
         }
     }
+
+    // }}}
+    // {{{ fetchData()
 
     /**
      * Try to open a IMAP stream using $username / $password
@@ -166,5 +191,8 @@ class Auth_Container_IMAP extends Auth_Container
             return false;
         }
     }
+
+    // }}}
+
 }
 ?>

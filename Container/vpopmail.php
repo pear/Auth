@@ -25,6 +25,7 @@ require_once "Auth/Container.php";
  * Storage driver for fetching login data from vpopmail
  *
  * @author   Stanislav Grozev <tacho@orbitel.bg>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  * @version  $Revision$
  */
@@ -62,5 +63,6 @@ class Auth_Container_vpopmail extends Auth_Container {
     }
 
     // }}}
+
 }
 ?>

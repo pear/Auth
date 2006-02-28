@@ -37,18 +37,24 @@ require_once "PEAR.php";
  * }
  *
  * @author   Michael Bretterklieber <michael@bretterklieber.com>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  * @version  $Revision$
  */
 class Auth_Container_SMBPasswd extends Auth_Container
 {
+
+    // {{{ properties
+
     /**
      * File_SMBPasswd object
      * @var object
      */
     var $pwfile;
 
-    // {{{ Constructor
+    // }}}
+
+    // {{{ Auth_Container_SMBPasswd() [constructor]
 
     /**
      * Constructor of the container class

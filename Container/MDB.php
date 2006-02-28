@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -29,11 +29,14 @@ require_once 'MDB.php';
  * by the PEAR MDB abstraction layer to fetch login data.
  *
  * @author   Lorenzo Alberton <l.alberton@quipo.it>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  * @version  $Revision$
  */
 class Auth_Container_MDB extends Auth_Container
 {
+
+    // {{{ properties
 
     /**
      * Additional options for the storage container
@@ -54,7 +57,9 @@ class Auth_Container_MDB extends Auth_Container
      */
     var $activeUser = '';
 
-    // {{{ Constructor
+    // }}}
+
+    // {{{ Auth_Container_MDB() [constructor]
 
     /**
      * Constructor of the container class
@@ -256,6 +261,7 @@ class Auth_Container_MDB extends Auth_Container
         // Perform trimming here before the hashing
         $password = trim($password, "\r\n");
         $res[$this->options['passwordcol']] = trim($res[$this->options['passwordcol']], "\r\n");
+        
         // If using Challenge Response md5 the pass with the secret
         if ($isChallengeResponse) {
             $res[$this->options['passwordcol']] =
@@ -265,6 +271,7 @@ class Auth_Container_MDB extends Auth_Container
                 $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']]);
             }
         }
+        
         if ($this->verifyPassword($password,
                                   $res[$this->options['passwordcol']],
                                   $this->options['cryptType'])) {
@@ -275,7 +282,8 @@ class Auth_Container_MDB extends Auth_Container
                     continue;
                 }
                 // Use reference to the auth object if exists
-                // This is because the auth session variable can change so a static call to setAuthData does not make sense
+                // This is because the auth session variable can change so a static
+                // call to setAuthData does not make sense
                 $this->_auth_obj->setAuthData($key, $value);
             }
             return true;

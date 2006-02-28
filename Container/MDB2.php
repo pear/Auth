@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -29,11 +29,14 @@ require_once 'MDB2.php';
  * by the PEAR MDB2 abstraction layer to fetch login data.
  *
  * @author   Lorenzo Alberton <l.alberton@quipo.it>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  * @version  $Revision$
  */
 class Auth_Container_MDB2 extends Auth_Container
 {
+
+    // {{{ properties
 
     /**
      * Additional options for the storage container
@@ -54,7 +57,9 @@ class Auth_Container_MDB2 extends Auth_Container
      */
     var $activeUser = '';
 
-    // {{{ Constructor
+    // }}}
+
+    // {{{ Auth_Container_MDB2() [constructor]
 
     /**
      * Constructor of the container class

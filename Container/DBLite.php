@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -30,11 +30,14 @@ require_once 'DB.php';
  * by the PEAR DB abstraction layer to fetch login data.
  *
  * @author   Martin Jansen <mj@php.net>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  * @version  $Revision$
  */
 class Auth_Container_DBLite extends Auth_Container
 {
+
+    // {{{ properties
 
     /**
      * Additional options for the storage container
@@ -55,7 +58,9 @@ class Auth_Container_DBLite extends Auth_Container
      */
     var $activeUser = '';
 
-    // {{{ Constructor
+    // }}}
+
+    // {{{ Auth_Container_DBLite() [constructor]
 
     /**
      * Constructor of the container class
@@ -85,6 +90,9 @@ class Auth_Container_DBLite extends Auth_Container
         }
     }
 
+    // }}}
+    // {{{ _connect()
+
     /**
      * Connect to database by using the given DSN string
      *
@@ -109,6 +117,9 @@ class Auth_Container_DBLite extends Auth_Container
         }
     }
 
+    // }}}
+    // {{{ _prepare()
+
     /**
      * Prepare database connection
      *
@@ -118,7 +129,8 @@ class Auth_Container_DBLite extends Auth_Container
      * @access private
      * @return mixed True or a DB error object.
      */
-    function _prepare() {
+    function _prepare()
+    {
         if (!DB::isConnection($this->db)) {
             $res = $this->_connect($this->options['dsn']);
             if (DB::isError($res) || PEAR::isError($res)) {
@@ -128,13 +140,17 @@ class Auth_Container_DBLite extends Auth_Container
         return true;
     }
 
+    // }}}
+    // {{{ _parseOptions()
+
     /**
      * Parse options passed to the container class
      *
      * @access private
      * @param  array
      */
-    function _parseOptions($array) {
+    function _parseOptions($array)
+    {
         foreach ($array as $key => $value) {
             if (isset($this->options[$key])) {
                 $this->options[$key] = $value;
@@ -149,6 +165,9 @@ class Auth_Container_DBLite extends Auth_Container
             $this->options['db_fields'] = ', '.$this->options['db_fields'];
         }
     }
+
+    // }}}
+    // {{{ fetchData()
 
     /**
      * Get user information from database
@@ -174,14 +193,13 @@ class Auth_Container_DBLite extends Auth_Container
         // Find if db_fields contains a *, if so assume all col are selected
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = "*";
-        }
-        else{
+        } else {
             $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
         }
         
         $query = "SELECT ".$sql_from.
                 " FROM ".$this->options['table'].
-                " WHERE ".$this->options['usernamecol']." = '".$this->db->quoteString($username)."'";
+                " WHERE ".$this->options['usernamecol']." = ".$this->db->quoteSmart($username);
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
@@ -214,5 +232,8 @@ class Auth_Container_DBLite extends Auth_Container
         $this->activeUser = $res[$this->options['usernamecol']];
         return false;
     }
+
+    // }}}
+
 }
 ?>

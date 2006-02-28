@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -26,11 +26,14 @@ require_once "Auth/RADIUS.php";
  * Storage driver for authenticating users against RADIUS servers.
  *
  * @author  Michael Bretterklieber <michael@bretterklieber.com>
+ * @author  Adam Ashley <aashley@php.net>
  * @access  public
  * @version $Revision$
  */
 class Auth_Container_RADIUS extends Auth_Container
 {
+
+    // {{{ properties
 
     /**
      * Contains a RADIUS object
@@ -43,6 +46,10 @@ class Auth_Container_RADIUS extends Auth_Container
      * @var string
      */
     var $authtype;    
+
+    // }}}
+
+    // {{{ Auth_Container_RADIUS() [constructor]
 
     /**
      * Constructor of the container class.
@@ -65,8 +72,8 @@ class Auth_Container_RADIUS extends Auth_Container
         }
         $classname = 'Auth_RADIUS_' . $this->authtype;
         if (!class_exists($classname)) {
-            PEAR::raiseError("Unknown Authtype, please use on of: PAP, CHAP_MD5, MSCHAPv1, MSCHAPv2!",
-                                    41, PEAR_ERROR_DIE);
+            PEAR::raiseError("Unknown Authtype, please use on of: "
+                    ."PAP, CHAP_MD5, MSCHAPv1, MSCHAPv2!", 41, PEAR_ERROR_DIE);
         }
         
         $this->radius = new $classname;
@@ -91,6 +98,9 @@ class Auth_Container_RADIUS extends Auth_Container
             PEAR::raiseError($this->radius->getError(), 41, PEAR_ERROR_DIE);
         }
     }
+
+    // }}}
+    // {{{ fetchData()
 
     /**
      * Authenticate
@@ -150,5 +160,8 @@ class Auth_Container_RADIUS extends Auth_Container
 
         return $result;
     }
+
+    // }}}
+
 }
 ?>

@@ -1,61 +1,109 @@
 <?php
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
+// +----------------------------------------------------------------------+
+// | PHP Version 4                                                        |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 1997-2003 The PHP Group                                |
+// +----------------------------------------------------------------------+
+// | This source file is subject to version 2.02 of the PHP license,      |
+// | that is bundled with this package in the file LICENSE, and is        |
+// | available at through the world-wide-web at                           |
+// | http://www.php.net/license/2_02.txt.                                 |
+// | If you did not receive a copy of the PHP license and are unable to   |
+// | obtain it through the world-wide-web, please send a note to          |
+// | license@php.net so we can mail you a copy immediately.               |
+// +----------------------------------------------------------------------+
+// | Authors: Martin Jansen <mj@php.net>                                  |
+// +----------------------------------------------------------------------+
+//
+// $Id$
+//
 
 /**
-  * Controlls access to a group of php access 
-  * and redirects to a predefined login page as 
-  * needed
-  *
-  * In all pages
-  * <code>
-  * include_once('Auth.php');
-  * include_once('Auth/Controller.php');
-  * $_auth = new Auth('File', 'passwd');
-  * $authController = new Auth_Controller($_auth, 'login.php', 'index.php');
-  * $authController->start();
-  * </code>
-  *
-  * In login.php
-  * <code>
-  * include_once('Auth.php');
-  * include_once('Auth/Controller.php');
-  * $_auth = new Auth('File', 'passwd');
-  * $authController = new Auth_Controller($_auth, 'login.php', 'index.php');
-  * $authController->start();
-  * if( $authController->isAuthorised() ){
-  *   $authController->redirectBack();
-  * }  
-  * </code>
-  *
-  */
-class Auth_Controller {
+ * Controlls access to a group of php access 
+ * and redirects to a predefined login page as 
+ * needed
+ *
+ * In all pages
+ * <code>
+ * include_once('Auth.php');
+ * include_once('Auth/Controller.php');
+ * $_auth = new Auth('File', 'passwd');
+ * $authController = new Auth_Controller($_auth, 'login.php', 'index.php');
+ * $authController->start();
+ * </code>
+ *
+ * In login.php
+ * <code>
+ * include_once('Auth.php');
+ * include_once('Auth/Controller.php');
+ * $_auth = new Auth('File', 'passwd');
+ * $authController = new Auth_Controller($_auth, 'login.php', 'index.php');
+ * $authController->start();
+ * if( $authController->isAuthorised() ){
+ *   $authController->redirectBack();
+ * }  
+ * </code>
+ *
+ * @author   Yavor Shahpasov <yavo@netsmart.com.cy>
+ * @author   Adam Ashley <aashley@php.net>
+ * @package  Auth
+ * @version  $Revision$
+ */
+class Auth_Controller
+{
 
-    /** var Auth An auth instance */
+    // {{{ properties
+
+    /** 
+     * The Auth instance this controller is managing
+     *
+     * @var object Auth
+     */
     var $auth = null;
-    /** var string The login url */
-    var $login = null;
-    /** var string The default index page, used when login redirects and the caller page in not set or is the login page it's self */
-    var $default = null;
-    /** var bool If this is set to true auther a succesfull login the Auth_Controller::redirectBack() is invoked automatically */
-    var $autoRedirectBack = false;
     
     /**
-      * Constructor
-      *
-      * @param Auth An auth instance
-      * @param string The login page
-      * @param string The default page to go to if return page is not set
-      * @param array Some rules about which urls need to be sent to the login page
-      *
-      * @todo Add a list of urls which need redirection
-      */
-    function Auth_Controller(&$auth_obj, $login='login.php', $default='index.php', $accessList=array()) {
-        #print $auth_obj;
+     * The login URL
+     * @var string
+     * */
+    var $login = null;
+    
+    /**
+     * The default index page to use when the caller page is not set
+     *
+     * @var string 
+     */
+    var $default = null;
+    
+    /** 
+     * If this is set to true after a succesfull login the 
+     * Auth_Controller::redirectBack() is invoked automatically 
+     *
+     * @var boolean
+     */
+    var $autoRedirectBack = false;
+
+    // }}}
+
+    // {{{ Auth_Controller() [constructor]
+    
+    /**
+     * Constructor
+     *
+     * @param Auth An auth instance
+     * @param string The login page
+     * @param string The default page to go to if return page is not set
+     * @param array Some rules about which urls need to be sent to the login page
+     * @return void
+     * @todo Add a list of urls which need redirection
+     */
+    function Auth_Controller(&$auth_obj, $login='login.php', $default='index.php', $accessList=array())
+    {
         $this->auth =& $auth_obj;
         $this->_loginPage = $login;
         $this->_defaultPage = $default;
         @session_start();
         if (!empty($_GET['return']) && $_GET['return'] && !strstr($_GET['return'], $this->_loginPage)) {
-            #print "Return: {$_GET['return']} <br/>";
             $this->auth->setAuthData('returnUrl', $_GET['return']);
         }
 
@@ -63,22 +111,32 @@ class Auth_Controller {
             $this->auth->status = $_GET['authstatus'];
         }
     }
+
+    // }}}
+    // {{{ setAutoRedirectBack()
     
     /** 
-      * Enables auto redirection when login is done
-      * 
-      * @param bool Sets the autoRedirectBack flag to this
-      * @see Auth_Controller::autoRedirectBack
-      *
-      */
-    function setAutoRedirectBack($flag = true){
+     * Enables auto redirection when login is done
+     * 
+     * @param bool Sets the autoRedirectBack flag to this
+     * @see Auth_Controller::autoRedirectBack
+     * @return void
+     */
+    function setAutoRedirectBack($flag = true)
+    {
         $this->autoRedirectBack = $flag;
     }
+
+    // }}}
+    // {{{ redirectBack()
     
     /**
-      * Redirects Back to the calling page
-      */
-    function redirectBack() {
+     * Redirects Back to the calling page
+     *
+     * @return void
+     */
+    function redirectBack()
+    {
         // If redirectback go there
         // else go to the default page
         
@@ -101,14 +159,19 @@ class Auth_Controller {
         header('Location:'.$returnUrl);
         print("You could not be redirected to <a href=\"$returnUrl\">$returnUrl</a>");
     }
+
+    // }}}
+    // {{{ redirectLogin()
     
     /**
-      * Redirects to the login Page
-      * if not authorised
+      * Redirects to the login Page if not authorised
       * 
       * put return page on the query or in auth
+      *
+      * @return void
       */
-    function redirectLogin() {
+    function redirectLogin()
+    {
         // Go to the login Page
         
         // For Auth, put some check to avoid infinite redirects, this should at least exclude
@@ -119,17 +182,21 @@ class Auth_Controller {
             $url .= '?';
         }
 
-        #print "ServerPhp:".$_SERVER['PHP_SELF'];
         if(!strstr($_SERVER['PHP_SELF'], $this->_loginPage)) {
             $url .= 'return='.urlencode($_SERVER['PHP_SELF']);
         }
+
         // Track the auth status
         if($this->auth->status != '') {
             $url .= '&authstatus='.$this->auth->status;
         }
+
         header('Location:'.$url);
         print("You could not be redirected to <a href=\"$url\">$url</a>");
     }
+
+    // }}}
+    // {{{ start()
     
     /**
       * Starts the Auth Procedure
@@ -137,9 +204,11 @@ class Auth_Controller {
       * If the page requires login the user is redirected to the login page
       * otherwise the Auth::start is called to initialize Auth
       *
+      * @return void
       * @todo Implement an access list which specifies which urls/pages need login and which do not
       */
-    function start() {
+    function start()
+    {
         // Check the accessList here
         // ACL should be a list of urls with allow/deny
         // If allow set allowLogin to false
@@ -158,47 +227,68 @@ class Auth_Controller {
         
         
     }
+
+    // }}}
+    // {{{ isAuthorised()
   
     /**
       * Checks is the user is logged on
       * @see Auth::checkAuth()
       */
-    function isAuthorised() {
+    function isAuthorised()
+    {
         return($this->auth->checkAuth());
     }
+
+    // }}}
+    // {{{ checkAuth()
 
     /**
       * Proxy call to auth
       * @see Auth::checkAuth()
       */
-    function checkAuth() {
+    function checkAuth()
+    {
         return($this->auth->checkAuth());
     }
+
+    // }}}
+    // {{{ logout()
 
     /**
       * Proxy call to auth
       * @see Auth::logout()
       */
-    function logout() {
+    function logout()
+    {
         return($this->auth->logout());
     }
+
+    // }}}
+    // {{{ getUsername()
 
     /**
       * Proxy call to auth
       * @see Auth::getUsername()
       */
-    function getUsername() {
+    function getUsername()
+    {
         return($this->auth->getUsername());
     }
+
+    // }}}
+    // {{{ getStatus()
 
     /**
       * Proxy call to auth
       * @see Auth::getStatus()
       */
-    function getStatus(){
+    function getStatus()
+    {
         return($this->auth->getStatus());
     }
 
+    // }}}
 
 }
 
