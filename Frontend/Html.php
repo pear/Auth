@@ -52,7 +52,6 @@ class Auth_Frontend_Html {
             print "\n";
             print '<script language="JavaScript">'."\n";
 
-            // This is ugly, better sugestions send them to me
             include 'Auth/Frontend/md5.js';
 
             print "\n";
