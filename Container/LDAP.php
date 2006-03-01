@@ -1,5 +1,5 @@
 <?php
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
 // +----------------------------------------------------------------------+
 // | PHP Version 4                                                        |
 // +----------------------------------------------------------------------+
@@ -168,12 +168,15 @@ require_once "PEAR.php";
  * Active Directory
  *
  * @author   Jan Wagner <wagner@netsols.de>
+ * @author   Adam Ashley <aashley@php.net>
  * @package  Auth
  * @version  $Revision$
  */
-
 class Auth_Container_LDAP extends Auth_Container
 {
+
+    // {{{ properties
+
     /**
      * Options for the class
      * @var array
@@ -186,6 +189,10 @@ class Auth_Container_LDAP extends Auth_Container
      */
     var $conn_id = false;
 
+    // }}}
+
+    // {{{ Auth_Container_LDAP() [constructor]
+
     /**
      * Constructor of the container class
      *
@@ -195,7 +202,8 @@ class Auth_Container_LDAP extends Auth_Container
     function Auth_Container_LDAP($params)
     {
         if (false === extension_loaded('ldap')) {
-            return PEAR::raiseError('Auth_Container_LDAP: LDAP Extension not loaded', 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError('Auth_Container_LDAP: LDAP Extension not loaded',
+                    41, PEAR_ERROR_DIE);
         }
 
         $this->_setDefaults();
@@ -260,6 +268,9 @@ class Auth_Container_LDAP extends Auth_Container
         $this->_debug('Binding was successful', __LINE__);
     }
 
+    // }}}
+    // {{{ _disconnect()
+
     /**
      * Disconnects (unbinds) from ldap server
      *
@@ -272,6 +283,9 @@ class Auth_Container_LDAP extends Auth_Container
             @ldap_unbind($this->conn_id);
         }
     }
+
+    // }}}
+    // {{{ _getBaseDN()
 
     /**
      * Tries to find Basedn via namingContext Attribute
@@ -308,6 +322,9 @@ class Auth_Container_LDAP extends Auth_Container
         return true;
     }
 
+    // }}}
+    // {{{ _isValidLink()
+
     /**
      * determines whether there is a valid ldap conenction or not
      *
@@ -323,6 +340,9 @@ class Auth_Container_LDAP extends Auth_Container
         }
         return false;
     }
+
+    // }}}
+    // {{{ _setDefaults()
 
     /**
      * Set some default options
@@ -356,6 +376,9 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['debug']       = false;
     }
 
+    // }}}
+    // {{{ _parseOptions()
+
     /**
      * Parse options passed to the container class
      *
@@ -381,8 +404,13 @@ class Auth_Container_LDAP extends Auth_Container
         }
     }
 
+    // }}}
+    // {{{ _setV12OptionsToV13()
+
     /**
      * Adapt deprecated options from Auth 1.2 LDAP to Auth 1.3 LDAP
+     * 
+     * @author Hugues Peeters <hugues.peeters@claroline.net>
      * @access private
      * @param array
      * @return array
@@ -390,15 +418,17 @@ class Auth_Container_LDAP extends Auth_Container
     function _setV12OptionsToV13($array)
     {
         if (isset($array['useroc']))
-            $array['userfilter'] = '(objectClass='.$array['useroc'].')';
+            $array['userfilter'] = "(objectClass=".$array['useroc'].")";
         if (isset($array['groupoc']))
-            $array['groupfilter'] = '(objectClass='.$array['groupoc'].')';
+            $array['groupfilter'] = "(objectClass=".$array['groupoc'].")";
         if (isset($array['scope']))
             $array['userscope'] = $array['scope'];
 
         return $array;
     }
 
+    // }}}
+    // {{{ _scope2function()
 
     /**
      * Get search function for scope
@@ -422,6 +452,9 @@ class Auth_Container_LDAP extends Auth_Container
         return $function;
     }
 
+    // }}}
+    // {{{ fetchData()
+
     /**
      * Fetch data from LDAP server
      *
@@ -443,11 +476,13 @@ class Auth_Container_LDAP extends Auth_Container
             $this->_debug('UTF8 encoding username for LDAPv3', __LINE__);
             $username = utf8_encode($username);
         }
+
         // make search filter
         $filter = sprintf('(&(%s=%s)%s)',
                           $this->options['userattr'],
                           $this->_quoteFilterString($username),
                           $this->options['userfilter']);
+
         // make search base dn
         $search_basedn = $this->options['userdn'];
         if ($search_basedn != '' && substr($search_basedn, -1) != ',') {
@@ -545,6 +580,9 @@ class Auth_Container_LDAP extends Auth_Container
         return false;
     }
 
+    // }}}
+    // {{{ checkGroup()
+
     /**
      * Validate group membership
      *
@@ -593,6 +631,9 @@ class Auth_Container_LDAP extends Auth_Container
         return false;
     }
 
+    // }}}
+    // {{{ _debug()
+
     /**
      * Outputs debugging messages
      *
@@ -610,6 +651,9 @@ class Auth_Container_LDAP extends Auth_Container
         }
     }
 
+    // }}}
+    // {{{ _quoteFilterString()
+
     /**
      * Escapes LDAP filter special characters as defined in RFC 2254.
      *
@@ -622,6 +666,9 @@ class Auth_Container_LDAP extends Auth_Container
         $quoted_metas = array('\\\\', '\*', '\(', '\)', "\\\x00");
         return str_replace($metas, $quoted_metas, $filter_str);
     }
+
+    // }}}
+
 }
 
 ?>
