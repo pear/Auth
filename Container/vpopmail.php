@@ -20,6 +20,7 @@
 //
 
 require_once "Auth/Container.php";
+require_once "PEAR.php";
 
 /**
  * Storage driver for fetching login data from vpopmail
@@ -36,11 +37,14 @@ class Auth_Container_vpopmail extends Auth_Container {
     /**
      * Constructor of the container class
      *
-     * @return integer Always returns 1.
+     * @return void
      */
     function Auth_Container_vpopmail()
     {
-        return 1;
+        if (!extension_loaded('vpopmail')) {
+            return PEAR::raiseError('Cannot use VPOPMail authentication, '
+                    .'VPOPMail extension not loaded!', 41, PEAR_ERROR_DIE);
+        }
     }
 
     // }}}
