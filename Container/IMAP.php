@@ -99,7 +99,7 @@ class Auth_Container_IMAP extends Auth_Container
     {
         if (!extension_loaded('imap')) {
             return PEAR::raiseError('Cannot use IMAP authentication, '
-                    .'IMAP extension not loaded!', 41);
+                    .'IMAP extension not loaded!', 41, PEAR_ERROR_DIE);
         }
         $this->_setDefaults();
 
