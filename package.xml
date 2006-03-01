@@ -47,19 +47,25 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.3.0RC6</version>
-    <date>2006-02-22</date>
+    <version>1.3.0RC7</version>
+    <date>2006-03-01</date>
     <license>PHP License</license>
     <state>beta</state>
     <notes>
 <![CDATA[
-This is hopefully the final release candidate before 1.3.0. Please test.
+This release is primarily a coding standard clean-up before the 1.3.0 final
+release.
 
- * MDB & MDB2 Backends: Start DB object before using quoting features in all
-   functions.
- * Updated test cases. Passes all tests for DB, MDB and MDB2.
- * Fixed Bug #6851: Double quotes caused by incorrect use of DB::quoteSmart()
-   and developer being asleep at his computer.
+In addition the following improvements to the LDAP Container where supplied
+by Hugues Peeters <hugues.peeters@claroline.net>.
+ * Changed default attrformat to AUTH so that loaded attributes are
+   presented in the same format as other backends provide.
+ * Added compatibility support to 1.2 style configuration options
+ * Attributes option now accepts a comma seperated string as well as
+   as array the same as db_fields in the DB, MDB and MDB2 backends.
+
+Finally there are additional checks that the relevant PHP module is loaded
+when loading the IMAP and VPOPMail Containers.
 ]]>
     </notes>
 
@@ -111,7 +117,7 @@ This is hopefully the final release candidate before 1.3.0. Please test.
           <file name="TestAuthContainer.php"/>
           <file name="users"/>
           <file name="tests.php"/>
-					<file name="mysql_test_db.sql"/>
+          <file name="mysql_test_db.sql"/>
       </dir>
     </filelist>
 
@@ -124,11 +130,31 @@ This is hopefully the final release candidate before 1.3.0. Please test.
         <dep type="pkg" rel="has" optional="yes">Auth_RADIUS</dep>
         <dep type="pkg" rel="ge" version="1.0.0" optional="yes">Crypt_CHAP</dep>
         <dep type="pkg" rel="has" optional="yes">File_SMBPasswd</dep>
+        <dep type="ext" rel="has" optional="yes">imap</dep>
+        <dep type="ext" rel="has" optional="yes">vpopmail</dep>
     </deps>
 
   </release>
 
   <changelog>
+    <release>
+      <version>1.3.0RC6</version>
+      <date>2006-02-22</date>
+      <license>PHP License</license>
+      <state>beta</state>
+      <notes>
+      <![CDATA[
+This is hopefully the final release candidate before 1.3.0. Please test.
+
+ * MDB & MDB2 Backends: Start DB object before using quoting features in all
+   functions.
+ * Updated test cases. Passes all tests for DB, MDB and MDB2.
+ * Fixed Bug #6851: Double quotes caused by incorrect use of DB::quoteSmart()
+   and developer being asleep at his computer.
+]]>
+      </notes>
+    </release>
+
     <release>
       <version>1.3.0r5</version>
       <date>2006-02-21</date>
