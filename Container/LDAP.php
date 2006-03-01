@@ -98,7 +98,7 @@ require_once "PEAR.php";
  * <?php
  * ...
  *
- * $a = new Auth("LDAP", array(
+ * $a1 = new Auth("LDAP", array(
  *       'host' => 'localhost',
  *       'port' => '389',
  *       'version' => 3,
@@ -118,8 +118,6 @@ require_once "PEAR.php";
  *       'memberisdn' => false,
  *       'group' => 'admin'
  *       ));
- *
- * This is a full blown example with user/group checking to an Active Directory
  *
  * $a3 = new Auth('LDAP', array(
  *       'host' => 'ldap.netsols.de',
@@ -162,10 +160,12 @@ require_once "PEAR.php";
  *
  * It seems that binding anonymously to an Active Directory
  * is not allowed, so you have to set binddn and bindpw for
- * user searching,
+ * user searching.
+ * 
+ * LDAP Referrals need to be set to false for AD to work sometimes.
  *
- * Example a3 shows a tested example for connection to Windows 2000
- * Active Directory
+ * Example a3 shows a full blown and tested example for connection to 
+ * Windows 2000 Active Directory with group mebership checking
  *
  * @author   Jan Wagner <wagner@netsols.de>
  * @author   Adam Ashley <aashley@php.net>
@@ -246,12 +246,12 @@ class Auth_Container_LDAP extends Auth_Container
 
         // switch LDAP referrals
         if (is_bool($this->options['referrals'])) {
-          $this->_debug("Switching to LDAP referrals {$this->options['referrals']}", __LINE__);
+          $this->_debug("Switching LDAP referrals to " . (($this->options['referrals']) ? 'true' : 'false'), __LINE__);
           @ldap_set_option($this->conn_id, LDAP_OPT_REFERRALS, $this->options['referrals']);
         }
 
         // bind with credentials or anonymously
-        if ($this->options['binddn'] && $this->options['bindpw']) {
+        if (strlen($this->options['binddn']) && strlen($this->options['bindpw'])) {
             $this->_debug('Binding with credentials', __LINE__);
             $bind_params = array($this->conn_id, $this->options['binddn'], $this->options['bindpw']);
         } else {
@@ -260,7 +260,7 @@ class Auth_Container_LDAP extends Auth_Container
         }
 
         // bind for searching
-        if ((@call_user_func_array('ldap_bind', $bind_params)) == false) {
+        if ((@call_user_func_array('ldap_bind', $bind_params)) === false) {
             $this->_debug();
             $this->_disconnect();
             return PEAR::raiseError("Auth_Container_LDAP: Could not bind to LDAP server.", 41);
@@ -502,7 +502,7 @@ class Auth_Container_LDAP extends Auth_Container
         $this->_debug("Searching with $func_name and filter $filter in $search_basedn", __LINE__);
 
         // search
-        if (($result_id = @call_user_func_array($func_name, $func_params)) == false) {
+        if (($result_id = @call_user_func_array($func_name, $func_params)) === false) {
             $this->_debug('User not found', __LINE__);
         } elseif (@ldap_count_entries($this->conn_id, $result_id) == 1) { // did we get just one entry?
 
