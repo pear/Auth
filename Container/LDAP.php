@@ -344,8 +344,8 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['userattr']    = 'uid';
         $this->options['userfilter']  = '(objectClass=posixAccount)';
         $this->options['attributes']  = array(''); // no attributes
-        $this->options['attrformat']  = 'LDAP'; // returns attribute array as PHP LDAP functions return it
-     // $this->options['attrformat']  = 'AUTH'; // returns attribute like other Auth containers
+     // $this->options['attrformat']  = 'LDAP'; // returns attribute array as PHP LDAP functions return it
+        $this->options['attrformat']  = 'AUTH'; // returns attribute like other Auth containers
         $this->options['group']       = '';
         $this->options['groupdn']     = '';
         $this->options['groupscope']  = 'sub';
@@ -364,12 +364,41 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _parseOptions($array)
     {
+        $array = $this->_setV12OptionsToV13($array);
+
         foreach ($array as $key => $value) {
             if (array_key_exists($key, $this->options)) {
-                $this->options[$key] = $value;
+                if ($key == 'attributes') {
+                    if (is_array($value)) {
+                        $this->options[$key] = $value;
+                    } else {
+                        $this->options[$key] = explode(',', $value);
+                    }
+                } else {
+                    $this->options[$key] = $value;
+                }
             }
         }
     }
+
+    /**
+     * Adapt deprecated options from Auth 1.2 LDAP to Auth 1.3 LDAP
+     * @access private
+     * @param array
+     * @return array
+     */
+    function _setV12OptionsToV13($array)
+    {
+        if (isset($array['useroc']))
+            $array['userfilter'] = '(objectClass='.$array['useroc'].')';
+        if (isset($array['groupoc']))
+            $array['groupfilter'] = '(objectClass='.$array['groupoc'].')';
+        if (isset($array['scope']))
+            $array['userscope'] = $array['scope'];
+
+        return $array;
+    }
+
 
     /**
      * Get search function for scope
