@@ -16,7 +16,7 @@
  * @package    Auth
  * @author     Lorenzo Alberton <l.alberton@quipo.it> 
  * @author     Adam Ashley <aashley@php.net>
- * @copyright  2001-2005 The PHP Group
+ * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
  * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
@@ -42,7 +42,7 @@ require_once 'MDB.php';
  * @package    Auth
  * @author     Lorenzo Alberton <l.alberton@quipo.it>
  * @author     Adam Ashley <aashley@php.net>
- * @copyright  2001-2005 The PHP Group
+ * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
  * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
