@@ -1,28 +1,46 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4: */
-// +----------------------------------------------------------------------+
-// | PHP Version 4                                                        |
-// +----------------------------------------------------------------------+
-// | Copyright (c) 1997-2003 The PHP Group                                |
-// +----------------------------------------------------------------------+
-// | This source file is subject to version 2.02 of the PHP license,      |
-// | that is bundled with this package in the file LICENSE, and is        |
-// | available at through the world-wide-web at                           |
-// | http://www.php.net/license/2_02.txt.                                 |
-// | If you did not receive a copy of the PHP license and are unable to   |
-// | obtain it through the world-wide-web, please send a note to          |
-// | license@php.net so we can mail you a copy immediately.               |
-// +----------------------------------------------------------------------+
-// | Authors: Martin Jansen <mj@php.net>                                  |
-// +----------------------------------------------------------------------+
-//
-// $Id$
-//
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker: */
 
+/**
+ * The main include file for Auth package
+ *
+ * PHP versions 4 and 5
+ *
+ * LICENSE: This source file is subject to version 3.01 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_01.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category   Authentication
+ * @package    Auth
+ * @author     Martin Jansen <mj@php.net>
+ * @author     Adam Ashley <aashley@php.net>
+ * @copyright  2001-2005 The PHP Group
+ * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
+ * @version    CVS: $Id$
+ * @link       http://pear.php.net/package/Auth
+ */
+
+/**
+ * Returned if session exceeds idle time
+ */
 define('AUTH_IDLED',                    -1);
+/**
+ * Returned if session has expired
+ */
 define('AUTH_EXPIRED',                  -2);
+/** 
+ * Returned if container is unable to authenticate user/password pair
+ */
 define('AUTH_WRONG_LOGIN',              -3);
+/**
+ * Returned if a container method is not supported.
+ */
 define('AUTH_METHOD_NOT_SUPPORTED',     -4);
+/**
+ * Returned if new Advanced security system detects a breach
+ */
 define('AUTH_SECURITY_BREACH',          -5);
 
 /**
@@ -31,10 +49,14 @@ define('AUTH_SECURITY_BREACH',          -5);
  * The PEAR::Auth class provides methods for creating an
  * authentication system using PHP.
  *
- * @author  Martin Jansen <mj@php.net>
- * @author  Adam Ashley <aashley@php.net>
- * @package Auth
- * @version $Revision$
+ * @category   Authentication
+ * @package    Auth
+ * @author     Martin Jansen <mj@php.net>
+ * @author     Adam Ashley <aashley@php.net>
+ * @copyright  2001-2005 The PHP Group
+ * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
+ * @version    Release: @package_version@  File: $Revision$
+ * @link       http://pear.php.net/package/Auth
  */
 class Auth {
 
@@ -229,7 +251,6 @@ class Auth {
     var $authChecks = 0;
 
     // }}}
-
     // {{{ Auth() [constructor]
 
     /**

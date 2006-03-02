@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker: */
 
 /**
- * Auth_Container Base Class
+ * Storage driver for use against PEAR website
  *
  * PHP versions 4 and 5
  *
@@ -20,6 +20,7 @@
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
  * @version    CVS: $Id$
  * @link       http://pear.php.net/package/Auth
+ * @since      File available since Release 1.3.0
  */
 
 /**
@@ -43,8 +44,9 @@ require_once 'XML/RPC.php';
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2005 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
- * @version    Release: @package_version@
+ * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
+ * @since      Class available since Release 1.3.0
  */
 class Auth_Container_Pear extends Auth_Container
 {

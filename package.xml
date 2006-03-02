@@ -19,6 +19,7 @@ the login data:
 * RADIUS
 * SAMBA password files
 * SOAP
+* PEAR website
 </description>
   <maintainers>
     <maintainer>
@@ -47,11 +48,147 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.3.0RC7</version>
-    <date>2006-03-01</date>
+    <version>1.3.0</version>
+    <date>2006-03-02</date>
     <license>PHP License</license>
-    <state>beta</state>
+    <state>stable</state>
     <notes>
+<![CDATA[
+This is the final stable release of Auth 1.3.0. This version contains many new
+features over previous versions. Summary of changes:
+
+ * New MDB2 container [30/March/2004 - quipo]
+ * New PEAR container, authenticate against pear.php.net [16/Dec/2003 - yavo]
+ * New Advanced Security mode to catch man-in-the-middle attacks.
+ * Added options for changing the post variables, patch supplied by Moritz 
+   Heidkamp <moritz.heidkamp@invision-team.de>
+ * New DBLite container, same as DB but with the user manipulation functions 
+   removed (50% smaller).
+ * Split login form to Auth_Frontend_HTML with goal to make it easily 
+   customisable.
+
+Numerous other small fixes and improvements to all storage containers thanks
+to the following people: Matt Eaton, Jeroen Houben, Cipriano Groenendal,
+Markku Turunen, Matthew Van Gundy, marc at practeo dot ch and I'm sure many
+others that have contributed over the years it's taken to get this release
+out.
+]]>
+    </notes>
+
+    <filelist>
+      <file role="php" baseinstalldir="" name="Auth.php">
+        <replace from="@package_version@" to="version" type="package-info"/>
+      </file>
+			
+      <dir name="Auth" role="php" baseinstalldir="">
+				<file name="Anonymous.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>	 
+      	<!-- Added for compatibility with the previous Auth -->
+        <file name="Auth.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+        <file name="Controller.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+      </dir>
+
+      <file role="php" baseinstalldir="Auth" name="Container.php">
+				<replace from="@package_version@" to="version" type="package-info"/>
+			</file>
+      <file role="doc" baseinstalldir="Auth" name="README.Auth"/>
+			
+      <dir name="Container" role="php" baseinstalldir="Auth">
+      	<file name="DB.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="DBLite.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="File.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="IMAP.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="POP3.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="LDAP.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="MDB.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="MDB2.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="RADIUS.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="SMBPasswd.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="SOAP.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+				<file name="vpopmail.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+ 				<file name="PEAR.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+      </dir>
+      <dir name="Frontend" role="php" baseinstalldir="Auth">
+        <file name="Html.php">
+					<replace from="@package_version@" to="version" type="package-info"/>
+				</file>
+        <file name="md5.js"/>
+      </dir>
+
+      <!-- The Test suite -->
+      <dir name="tests" role="test" baseinstalldir="Auth">
+        <file name="auth_container_db_options.php"/>
+        <file name="DBContainer.php"/>
+        <file name="auth_container_file_options.php"/>
+        <file name="FileContainer.php"/>
+        <file name="auth_container_pop3_options.php"/>
+        <file name="auth_container_mdb_options.php"/>
+        <file name="MDBContainer.php"/>
+        <file name="auth_container_mdb2_options.php"/>
+        <file name="MDB2Container.php"/>
+        <file name="POP3Container.php"/>
+        <file name="auth_container_pop3a_options.php"/>
+        <file name="POP3aContainer.php"/>
+        <file name="TestAuthContainer.php"/>
+        <file name="users"/>
+        <file name="tests.php"/>
+        <file name="mysql_test_db.sql"/>
+      </dir>
+    </filelist>
+
+    <deps>
+      <dep type="pkg" rel="ge" version="0.9.5" optional="yes">File_Passwd</dep>
+      <dep type="pkg" rel="ge" version="1.3" optional="yes">Net_POP3</dep>
+      <dep type="pkg" rel="ge" version="1.6.0" optional="yes">DB</dep>
+      <dep type="pkg" rel="has" optional="yes">MDB</dep>
+      <dep type="pkg" rel="ge" version="2.0.0RC1" optional="yes">MDB2</dep>
+      <dep type="pkg" rel="has" optional="yes">Auth_RADIUS</dep>
+      <dep type="pkg" rel="ge" version="1.0.0" optional="yes">Crypt_CHAP</dep>
+      <dep type="pkg" rel="has" optional="yes">File_SMBPasswd</dep>
+      <dep type="ext" rel="has" optional="yes">imap</dep>
+      <dep type="ext" rel="has" optional="yes">vpopmail</dep>
+    </deps>
+
+  </release>
+
+  <changelog>
+	  <release>
+  	  <version>1.3.0RC7</version>
+	    <date>2006-03-01</date>
+  	  <license>PHP License</license>
+    	<state>beta</state>
+	    <notes>
 <![CDATA[
 This release is primarily a coding standard clean-up before the 1.3.0 final
 release.
@@ -67,76 +204,9 @@ by Hugues Peeters <hugues.peeters@claroline.net>.
 Finally there are additional checks that the relevant PHP module is loaded
 when loading the IMAP and VPOPMail Containers.
 ]]>
-    </notes>
+    	</notes>
+		</release>
 
-    <filelist>
-      <file role="php" baseinstalldir="" name="Auth.php">
-          <replace from="@version@" to="version" type="package-info"/>
-      </file>
-      <!-- Added for compatibility with the previous Auth -->
-      <dir name="Auth" role="php" baseinstalldir="">
-          <file name="Auth.php" />
-          <file name="Controller.php" />
-      </dir>
-      <file role="php" baseinstalldir="Auth" name="Container.php"/>
-      <file role="doc" baseinstalldir="Auth" name="README.Auth"/>
-      <dir name="Container" role="php" baseinstalldir="Auth">
-       <file name="DB.php"/>
-       <file name="DBLite.php"/>
-       <file name="File.php"/>
-       <file name="IMAP.php"/>
-       <file name="POP3.php"/>
-       <file name="LDAP.php"/>
-       <file name="MDB.php"/>
-       <file name="MDB2.php"/>
-       <file name="RADIUS.php"/>
-       <file name="SMBPasswd.php"/>
-       <file name="SOAP.php"/>
-       <file name="vpopmail.php"/>
-       <file name="PEAR.php"/>
-      </dir>
-      <dir name="Frontend" role="php" baseinstalldir="Auth">
-        <file name="Html.php"/>
-        <file name="md5.js"/>
-      </dir>
-
-      <!-- The Test suite -->
-      <dir name="tests" role="test" baseinstalldir="Auth">
-          <file name="auth_container_db_options.php"/>
-          <file name="DBContainer.php"/>
-          <file name="auth_container_file_options.php"/>
-          <file name="FileContainer.php"/>
-          <file name="auth_container_pop3_options.php"/>
-          <file name="auth_container_mdb_options.php"/>
-          <file name="MDBContainer.php"/>
-          <file name="auth_container_mdb2_options.php"/>
-          <file name="MDB2Container.php"/>
-          <file name="POP3Container.php"/>
-          <file name="auth_container_pop3a_options.php"/>
-          <file name="POP3aContainer.php"/>
-          <file name="TestAuthContainer.php"/>
-          <file name="users"/>
-          <file name="tests.php"/>
-          <file name="mysql_test_db.sql"/>
-      </dir>
-    </filelist>
-
-    <deps>
-        <dep type="pkg" rel="ge" version="0.9.5" optional="yes">File_Passwd</dep>
-        <dep type="pkg" rel="ge" version="1.3" optional="yes">Net_POP3</dep>
-        <dep type="pkg" rel="ge" version="1.6.0" optional="yes">DB</dep>
-        <dep type="pkg" rel="has" optional="yes">MDB</dep>
-        <dep type="pkg" rel="ge" version="2.0.0RC1" optional="yes">MDB2</dep>
-        <dep type="pkg" rel="has" optional="yes">Auth_RADIUS</dep>
-        <dep type="pkg" rel="ge" version="1.0.0" optional="yes">Crypt_CHAP</dep>
-        <dep type="pkg" rel="has" optional="yes">File_SMBPasswd</dep>
-        <dep type="ext" rel="has" optional="yes">imap</dep>
-        <dep type="ext" rel="has" optional="yes">vpopmail</dep>
-    </deps>
-
-  </release>
-
-  <changelog>
     <release>
       <version>1.3.0RC6</version>
       <date>2006-02-22</date>
