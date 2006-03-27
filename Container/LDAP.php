@@ -229,6 +229,29 @@ class Auth_Container_LDAP extends Auth_Container
     }
 
     // }}}
+    // {{{ _prepare()
+
+    /**
+     * Prepare LDAP connection
+     *
+     * This function checks if we have already opened a connection to
+     * the LDAP server. If that's not the case, a new connection is opened.
+     *
+     * @access private
+     * @return mixed True or a PEAR error object.
+     */
+    function _prepare()
+    {
+        if (!$this->_isValidLink()) {
+            $res = $this->_connect();
+            if (PEAR::isError($res)) {
+                return $res;
+            }
+        }
+        return true;
+    }
+
+    // }}}
     // {{{ _connect()
 
     /**
@@ -281,6 +304,8 @@ class Auth_Container_LDAP extends Auth_Container
             return PEAR::raiseError("Auth_Container_LDAP: Could not bind to LDAP server.", 41);
         }
         $this->_debug('Binding was successful', __LINE__);
+
+        return true;
     }
 
     // }}}
@@ -309,6 +334,11 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _getBaseDN()
     {
+        $err = $this->_prepare();
+        if ($err !== true)) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
+
         if ($this->options['basedn'] == "" && $this->_isValidLink()) {
             $this->_debug("basedn not set, searching via namingContexts.", __LINE__);
 
@@ -332,7 +362,7 @@ class Auth_Container_LDAP extends Auth_Container
 
         // if base ist still not set, raise error
         if ($this->options['basedn'] == "") {
-            return PEAR::raiseError("Auth_Container_LDAP: LDAP search base not specified!", 41, PEAR_ERROR_DIE);
+            return PEAR::raiseError("Auth_Container_LDAP: LDAP search base not specified!", 41);
         }
         return true;
     }
@@ -483,8 +513,15 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function fetchData($username, $password)
     {
-        $this->_connect();
-        $this->_getBaseDN();
+        $err = $this->_prepare();
+        if ($err !== true)) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
+
+        $err = $this->_getBaseDN();
+        if ($err !== true)) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
 
         // UTF8 Encode username for LDAPv3
         if (@ldap_get_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $ver) && $ver == 3) {
@@ -604,7 +641,7 @@ class Auth_Container_LDAP extends Auth_Container
      * Validate group membership
      *
      * Searches the LDAP server for group membership of the
-     * authenticated user.  Quotes all LDAP filter meta characters in
+     * supplied username.  Quotes all LDAP filter meta characters in
      * the user name before querying the LDAP server.
      *
      * @param  string Distinguished Name of the authenticated User
@@ -612,6 +649,11 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function checkGroup($user)
     {
+        $err = $this->_prepare();
+        if ($err !== true)) {
+            return PEAR::raiseError($err->getMessage(), $err->getCode());
+        }
+
         // make filter
         $filter = sprintf('(&(%s=%s)(%s=%s)%s)',
                           $this->options['groupattr'],
