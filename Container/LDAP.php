@@ -580,7 +580,9 @@ class Auth_Container_LDAP extends Auth_Container
                     if (strlen($this->options['group'])) {
                         // decide whether memberattr value is a dn or the username
                         $this->_debug('Checking group membership', __LINE__);
-                        return $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $username);
+                        $return = $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $username);
+                        $this->_disconnect();
+                        return $return;
                     } else {
                         $this->_debug('Authenticated', __LINE__);
                         $this->_disconnect();
@@ -636,13 +638,11 @@ class Auth_Container_LDAP extends Auth_Container
             if (@ldap_count_entries($this->conn_id, $result_id) == 1) {
                 @ldap_free_result($result_id);
                 $this->_debug('User is member of group', __LINE__);
-                $this->_disconnect();
                 return true;
             }
         }
         // default
         $this->_debug('User is NOT member of group', __LINE__);
-        $this->_disconnect();
         return false;
     }
 
