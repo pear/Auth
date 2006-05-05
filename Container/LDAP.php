@@ -335,7 +335,7 @@ class Auth_Container_LDAP extends Auth_Container
     function _getBaseDN()
     {
         $err = $this->_prepare();
-        if ($err !== true)) {
+        if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
@@ -514,12 +514,12 @@ class Auth_Container_LDAP extends Auth_Container
     function fetchData($username, $password)
     {
         $err = $this->_prepare();
-        if ($err !== true)) {
+        if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
         $err = $this->_getBaseDN();
-        if ($err !== true)) {
+        if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
@@ -650,7 +650,7 @@ class Auth_Container_LDAP extends Auth_Container
     function checkGroup($user)
     {
         $err = $this->_prepare();
-        if ($err !== true)) {
+        if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
