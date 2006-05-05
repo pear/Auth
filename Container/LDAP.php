@@ -75,6 +75,8 @@ require_once "PEAR.php";
  *              these will added to auth data and can be retrieved via
  *              Auth::getAuthData(). An empty array will fetch all attributes,
  *              array('') will fetch no attributes at all (default)
+ *              If you add 'dn' as a value to this array, the users DN that was
+ *              used for binding will be added to auth data as well.
  * attrformat:  The returned format of the additional data defined in the
  *              'attributes' option. Two formats are available.
  *              LDAP returns data formatted in a
@@ -564,6 +566,12 @@ class Auth_Container_LDAP extends Auth_Container
             $entry_id = @ldap_first_entry($this->conn_id, $result_id);
             $user_dn  = @ldap_get_dn($this->conn_id, $entry_id);
 
+            // as the dn is not fetched as an attribute, we save it anyway
+            if (is_array($attributes) && in_array('dn', $attributes)) {
+                $this->_debug('Saving DN to AuthData', __LINE__);
+                $this->_auth_obj->setAuthData('dn', $user_dn);
+            }
+            
             // fetch attributes
             if ($attributes = @ldap_get_attributes($this->conn_id, $entry_id)) {
 
