@@ -347,7 +347,7 @@ class Auth {
                 $this->_sessionName = $options['sessionName'];
                 unset($options['sessionName']);
             }
-            if (!empty($options['allowLogin'])) {
+            if (isset($options['allowLogin'])) {
                 $this->allowLogin = $options['allowLogin'];
                 unset($options['allowLogin']);
             }
@@ -359,7 +359,7 @@ class Auth {
                 $this->_postPassword = $options['postPassword'];
                 unset($options['postPassword']);
             }
-            if (!empty($options['advancedsecurity'])) {
+            if (isset($options['advancedsecurity'])) {
                 $this->advancedsecurity = $options['advancedsecurity'];
                 unset($options['advancedsecurity']);
             }

@@ -57,6 +57,8 @@ the login data:
  * Fixed Bug #7031: session_regenerate_id() not cleaning up old session storage.
    Fix for this bug in PHP5.1.0+ has been done, still a problem in older versions
    of PHP.
+ * Fixed Bug #7421: Allow false to be passed in for allowLogin and advancedSecurity
+   options.
  * Fixed Bug #7537: Made File Container capable of using all File_Passwd backends.
  * Fixed Bug #7841: Added missing </center>. Really the whole frontend needs
    reworking.
