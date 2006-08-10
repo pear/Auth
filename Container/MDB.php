@@ -329,7 +329,7 @@ class Auth_Container_MDB extends Auth_Container
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = '*';
         } else {
-            $sql_from = $this->options['db_fields'];
+            $sql_from = $this->options['usernamecol'].', '.$this->options['passwordcol'].$this->options['db_fields'];
         }
 
         $query = sprintf('SELECT %s FROM %s',
