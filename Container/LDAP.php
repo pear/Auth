@@ -103,6 +103,8 @@ require_once "PEAR.php";
  *              or the value of userattr (usually uid)
  * group:       the name of group to search for
  * groupscope:  Scope for group searching: one, sub (default), or base
+ * start_tls:   enable/disable the use of START_TLS encrypted connection 
+ *              (default: false)
  * debug:       Enable/Disable debugging output (default: false)
  *
  * To use this storage container, you have to use the following syntax:
@@ -178,6 +180,13 @@ require_once "PEAR.php";
  *
  * Example a3 shows a full blown and tested example for connection to 
  * Windows 2000 Active Directory with group mebership checking
+ *
+ * Note also that if you want an encrypted connection to an MS LDAP 
+ * server, then, on your webserver, you must specify 
+ *        TLS_REQCERT never
+ * in /etc/ldap/ldap.conf or in the webserver user's ~/.ldaprc (which
+ * may or may not be read depending on your configuration).
+ *
  *
  * @category   Authentication
  * @package    Auth
@@ -282,6 +291,14 @@ class Auth_Container_LDAP extends Auth_Container
         if (is_numeric($this->options['version']) && $this->options['version'] > 2) {
             $this->_debug("Switching to LDAP version {$this->options['version']}", __LINE__);
             @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $this->options['version']);
+        
+            // start TLS if available
+            if (isset($this->options['start_tls']) && $this->options['start_tls']) {           
+                $this->_debug("Starting TLS session", __LINE__);
+                if (@ldap_start_tls($this->conn_id) === false) {
+                    return PEAR::raiseError('Auth_Container_LDAP: Could not start tls.', 41);
+                }
+            }
         }
 
         // switch LDAP referrals
@@ -420,6 +437,7 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['groupfilter'] = '(objectClass=groupOfUniqueNames)';
         $this->options['memberattr']  = 'uniqueMember';
         $this->options['memberisdn']  = true;
+        $this->options['start_tls']   = false;
         $this->options['debug']       = false;
     }
 

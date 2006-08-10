@@ -59,6 +59,8 @@ the login data:
    of PHP.
  * Fixed Bug #7421: Allow false to be passed in for allowLogin and advancedSecurity
    options.
+ * Fixed Bug #7434: Enable start_tls support for LDAP Container by Stuart Prescott
+   <php.net@nanonanonano.net>
  * Fixed Bug #7537: Made File Container capable of using all File_Passwd backends.
  * Fixed Bug #7841: Added missing </center>. Really the whole frontend needs
    reworking.
@@ -67,7 +69,7 @@ the login data:
    timeout set.
  * Fixed Bug #7956: Session handling had several security bugs before PHP4.3.3.
    Bumped PHP dependancy so we don't have to deal with them.
- * Fixed Bug #8076: MDB2 Container not using default db_fields values
+ * Fixed Bug #8076: MDB & MDB2 Containers not using default db_fields values
  * Fixed Bug #8406: Error message updates by Adam Harvey <pear@adamharvey.name>
  * Fixed Bug #8531: Documentation of $loginFailedCallback pointed to incorrect
    set function.
