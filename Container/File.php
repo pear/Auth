@@ -67,6 +67,13 @@ class Auth_Container_File extends Auth_Container
      */
     var $pwfile = '';
 
+    /**
+     * Options for container
+     *
+     * @var array
+     */
+    var $options = array();
+
     // }}}
     // {{{ Auth_Container_File() [constructor]
 
@@ -77,11 +84,15 @@ class Auth_Container_File extends Auth_Container
      * @return object Auth_Container_File   new Auth_Container_File object
      */
     function Auth_Container_File($filename) {
+        $this->_setDefaults();
+        
         // Only file is a valid option here
         if(is_array($filename)) {
-            $filename = $filename['file'];
+            $this->pwfile = $filename['file'];
+            $this->_parseOptions($filename);
+        } else {
+            $this->pwfile = $filename;
         }
-        $this->pwfile = $filename;
     }
 
     // }}}
@@ -96,7 +107,7 @@ class Auth_Container_File extends Auth_Container
      */
     function fetchData($user, $pass)
     {
-        return File_Passwd::staticAuth('Cvs', $this->pwfile, $user, $pass);
+        return File_Passwd::staticAuth($this->options['type'], $this->pwfile, $user, $pass);
     }
 
     // }}}
@@ -136,21 +147,27 @@ class Auth_Container_File extends Auth_Container
      *
      * @param string username
      * @param string password
-     * @param mixed  CVS username
+     * @param mixed  Additional parameters to File_Password_*::addUser()
      *
      * @return boolean
      */
     function addUser($user, $pass, $additional='')
     {
-        $cvs = (string) (is_array($additional) && isset($additional['cvsuser'])) ? 
-               $additional['cvsuser'] : $additional;
+        $params = array($user, $pass);
+        if (is_array($additional)) {
+            foreach ($additional as $item) {
+                $params[] = $item;
+            }
+        } else {
+            $params[] = $additional;
+        }
 
         $pw_obj = &$this->_load();
         if (PEAR::isError($pw_obj)) {
             return false;
         }
         
-        $res = $pw_obj->addUser($user, $pass, $cvs);
+        $res = call_user_func_array(array($pw_obj, 'addUser'), $params);
         if (PEAR::isError($res)) {
             return false;
         }
@@ -234,7 +251,7 @@ class Auth_Container_File extends Auth_Container
         static $pw_obj;
         
         if (!isset($pw_obj)) {
-            $pw_obj = File_Passwd::factory('Cvs');
+            $pw_obj = File_Passwd::factory($this->options['type']);
             if (PEAR::isError($pw_obj)) {
                 return $pw_obj;
             }
@@ -248,6 +265,38 @@ class Auth_Container_File extends Auth_Container
         }
         
         return $pw_obj;
+    }
+
+    // }}}
+    // {{{ _setDefaults()
+
+    /**
+     * Set some default options
+     *
+     * @access private
+     * @return void
+     */
+    function _setDefaults()
+    {
+        $this->options['type']       = 'Cvs';
+    }
+
+    // }}}
+    // {{{ _parseOptions()
+
+    /**
+     * Parse options passed to the container class
+     *
+     * @access private
+     * @param  array
+     */
+    function _parseOptions($array)
+    {
+        foreach ($array as $key => $value) {
+            if (isset($this->options[$key])) {
+                $this->options[$key] = $value;
+            }
+        }
     }
 
     // }}}

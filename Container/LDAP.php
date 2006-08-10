@@ -279,7 +279,7 @@ class Auth_Container_LDAP extends Auth_Container
         $this->_debug('Successfully connected to server', __LINE__);
 
         // switch LDAP version
-        if (is_int($this->options['version']) && $this->options['version'] > 2) {
+        if (is_numeric($this->options['version']) && $this->options['version'] > 2) {
             $this->_debug("Switching to LDAP version {$this->options['version']}", __LINE__);
             @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $this->options['version']);
         }
@@ -708,7 +708,7 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _debug($msg = '', $line = 0)
     {
-        if ($this->options['debug'] === true) {
+        if ($this->options['debug'] == true) {
             if ($msg == '' && $this->_isValidLink()) {
                 $msg = 'LDAP_Error: ' . @ldap_err2str(@ldap_errno($this->_conn_id));
             }
