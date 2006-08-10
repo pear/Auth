@@ -43,7 +43,7 @@ the login data:
     <maintainer>
       <user>aashley</user>
       <name>Adam Ashley</name>
-      <email>aashley@adamashley.name</email>
+      <email>php@adamashley.name</email>
       <role>lead</role>
     </maintainer>
   </maintainers>
@@ -66,7 +66,7 @@ the login data:
  * Fixed Bug #7956: Session handling had several security bugs before PHP4.3.3.
    Bumped PHP dependancy so we don't have to deal with them.
  * Fixed Bug #8076: MDB2 Container not using default db_fields values
- * Fixed Bug #8406: Error message updates
+ * Fixed Bug #8406: Error message updates by Adam Harvey <pear@adamharvey.name>
  * Fixed Bug #8531: Documentation of $loginFailedCallback pointed to incorrect
    set function.
 ]]>
