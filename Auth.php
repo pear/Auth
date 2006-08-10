@@ -721,7 +721,7 @@ class Auth {
     {
     
         // #2021 - Change the session id to avoid session fixation attacks php 4.3.3 > 
-        session_regenerate_id();
+        session_regenerate_id(true);
 
         if (!isset($this->session) || !is_array($this->session)) {
             $this->session = array();
