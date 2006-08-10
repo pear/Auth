@@ -54,6 +54,8 @@ the login data:
     <state>stable</state>
     <notes>
 <![CDATA[
+ * Fixed Bug #7899: sessionValidThru() returning incorrect value when no idle
+   timeout set.
  * Fixed Bug #7956: Session handling had several security bugs before PHP4.3.3.
    Bumped PHP dependancy so we don't have to deal with them.
  * Fixed Bug #8076: MDB2 Container not using default db_fields values

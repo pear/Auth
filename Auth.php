@@ -1009,6 +1009,9 @@ class Auth {
         if (!isset($this->session['idle'])) {
             return 0;
         }
+        if ($this->idle == 0) {
+            return 0;
+        }
         return ($this->session['idle'] + $this->idle);
     }
 
