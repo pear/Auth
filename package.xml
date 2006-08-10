@@ -54,6 +54,8 @@ the login data:
     <state>stable</state>
     <notes>
 <![CDATA[
+ * Fixed Bug #7956: Session handling had several security bugs before PHP4.3.3.
+   Bumped PHP dependancy so we don't have to deal with them.
  * Fixed Bug #8076: MDB2 Container not using default db_fields values
  * Fixed Bug #8531: Documentation of $loginFailedCallback pointed to incorrect
    set function.
@@ -153,6 +155,7 @@ the login data:
     </filelist>
 
     <deps>
+      <dep type="php" rel="ge" version="4.3.3" />
       <dep type="pkg" rel="ge" version="0.9.5" optional="yes">File_Passwd</dep>
       <dep type="pkg" rel="ge" version="1.3" optional="yes">Net_POP3</dep>
       <dep type="pkg" rel="ge" version="1.6.0" optional="yes">DB</dep>
