@@ -164,7 +164,7 @@ class Auth {
      * Failed Login callback function name
      *
      * @var string
-     * @see setLoginFailedCallback()
+     * @see setFailedLoginCallback()
      */
     var $loginFailedCallback = '';
 

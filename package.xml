@@ -43,35 +43,19 @@ the login data:
     <maintainer>
       <user>aashley</user>
       <name>Adam Ashley</name>
-      <email>adam.ashley@ilisys.com.au</email>
+      <email>aashley@adamashley.name</email>
       <role>lead</role>
     </maintainer>
   </maintainers>
   <release>
-    <version>1.3.0</version>
-    <date>2006-03-03</date>
+    <version>1.3.1</version>
+    <date>2006-08-10</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
 <![CDATA[
-This is the final stable release of Auth 1.3.0. This version contains many new
-features over previous versions. Summary of changes:
-
- * New MDB2 container [30/March/2004 - quipo]
- * New PEAR container, authenticate against pear.php.net [16/Dec/2003 - yavo]
- * New Advanced Security mode to catch man-in-the-middle attacks.
- * Added options for changing the post variables, patch supplied by Moritz 
-   Heidkamp <moritz.heidkamp@invision-team.de>
- * New DBLite container, same as DB but with the user manipulation functions 
-   removed (50% smaller).
- * Split login form to Auth_Frontend_HTML with goal to make it easily 
-   customisable.
-
-Numerous other small fixes and improvements to all storage containers thanks
-to the following people: Matt Eaton, Jeroen Houben, Cipriano Groenendal,
-Markku Turunen, Matthew Van Gundy, marc at practeo dot ch and I'm sure many
-others that have contributed over the years it's taken to get this release
-out.
+ * Fixed Bug #8531: Documentation of $loginFailedCallback pointed to incorrect
+   set function.
 ]]>
     </notes>
 
@@ -79,70 +63,70 @@ out.
       <file role="php" baseinstalldir="" name="Auth.php">
         <replace from="@package_version@" to="version" type="package-info"/>
       </file>
-			
+      
       <dir name="Auth" role="php" baseinstalldir="">
-				<file name="Anonymous.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>	 
-      	<!-- Added for compatibility with the previous Auth -->
+        <file name="Anonymous.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>   
+        <!-- Added for compatibility with the previous Auth -->
         <file name="Auth.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
         <file name="Controller.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
       </dir>
 
       <file role="php" baseinstalldir="Auth" name="Container.php">
-				<replace from="@package_version@" to="version" type="package-info"/>
-			</file>
+        <replace from="@package_version@" to="version" type="package-info"/>
+      </file>
       <file role="doc" baseinstalldir="Auth" name="README.Auth"/>
-			
+      
       <dir name="Container" role="php" baseinstalldir="Auth">
-      	<file name="DB.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="DBLite.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="File.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="IMAP.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="POP3.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="LDAP.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="MDB.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="MDB2.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="RADIUS.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="SMBPasswd.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="SOAP.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
-				<file name="vpopmail.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
- 				<file name="PEAR.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
+        <file name="DB.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="DBLite.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="File.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="IMAP.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="POP3.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="LDAP.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="MDB.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="MDB2.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="RADIUS.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="SMBPasswd.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="SOAP.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file name="vpopmail.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+         <file name="PEAR.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
       </dir>
       <dir name="Frontend" role="php" baseinstalldir="Auth">
         <file name="Html.php">
-					<replace from="@package_version@" to="version" type="package-info"/>
-				</file>
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
         <file name="md5.js"/>
       </dir>
 
@@ -183,12 +167,41 @@ out.
   </release>
 
   <changelog>
-	  <release>
-  	  <version>1.3.0RC7</version>
-	    <date>2006-03-01</date>
-  	  <license>PHP License</license>
-    	<state>beta</state>
-	    <notes>
+    <release>
+      <version>1.3.0</version>
+      <date>2006-03-03</date>
+      <license>PHP License</license>
+      <state>stable</state>
+      <notes>
+<![CDATA[
+This is the final stable release of Auth 1.3.0. This version contains many new
+features over previous versions. Summary of changes:
+
+ * New MDB2 container [30/March/2004 - quipo]
+ * New PEAR container, authenticate against pear.php.net [16/Dec/2003 - yavo]
+ * New Advanced Security mode to catch man-in-the-middle attacks.
+ * Added options for changing the post variables, patch supplied by Moritz 
+   Heidkamp <moritz.heidkamp@invision-team.de>
+ * New DBLite container, same as DB but with the user manipulation functions 
+   removed (50% smaller).
+ * Split login form to Auth_Frontend_HTML with goal to make it easily 
+   customisable.
+
+Numerous other small fixes and improvements to all storage containers thanks
+to the following people: Matt Eaton, Jeroen Houben, Cipriano Groenendal,
+Markku Turunen, Matthew Van Gundy, marc at practeo dot ch and I'm sure many
+others that have contributed over the years it's taken to get this release
+out.
+]]>
+      </notes>
+    </release>
+
+    <release>
+      <version>1.3.0RC7</version>
+      <date>2006-03-01</date>
+      <license>PHP License</license>
+      <state>beta</state>
+      <notes>
 <![CDATA[
 This release is primarily a coding standard clean-up before the 1.3.0 final
 release.
@@ -204,8 +217,8 @@ by Hugues Peeters <hugues.peeters@claroline.net>.
 Finally there are additional checks that the relevant PHP module is loaded
 when loading the IMAP and VPOPMail Containers.
 ]]>
-    	</notes>
-		</release>
+      </notes>
+    </release>
 
     <release>
       <version>1.3.0RC6</version>
