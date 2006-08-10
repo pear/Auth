@@ -56,7 +56,9 @@ the login data:
 <![CDATA[
  * Fixed Bug #7031: session_regenerate_id() not cleaning up old session storage.
    Fix for this bug in PHP5.1.0+ has been done, still a problem in older versions
-	 of PHP.
+   of PHP.
+ * Fixed Bug #7841: Added missing </center>. Really the whole frontend needs
+   reworking.
  * Fixed Bug #7860: Removed deprecated session_register call.
  * Fixed Bug #7899: sessionValidThru() returning incorrect value when no idle
    timeout set.

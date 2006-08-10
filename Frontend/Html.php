@@ -132,6 +132,7 @@ class Auth_Frontend_Html {
         // Might be a good idea to make the variable name variable 
         print '<input type="hidden" id="authsecret" name="authsecret" value="" />';
         print '</form>'."\n";
+        print '</center>'."\n";
     }
 
     // }}}
