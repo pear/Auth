@@ -57,6 +57,7 @@ the login data:
  * Fixed Bug #7031: session_regenerate_id() not cleaning up old session storage.
    Fix for this bug in PHP5.1.0+ has been done, still a problem in older versions
 	 of PHP.
+ * Fixed Bug #7860: Removed deprecated session_register call.
  * Fixed Bug #7899: sessionValidThru() returning incorrect value when no idle
    timeout set.
  * Fixed Bug #7956: Session handling had several security bugs before PHP4.3.3.

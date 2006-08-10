@@ -286,7 +286,9 @@ class Auth {
         // Make Sure Auth session variable is there
         if(   !isset($_SESSION[$this->_sessionName]) 
            && !isset($GLOBALS['HTTP_SESSION_VARS'][$this->_sessionName])) {
-            session_register($this->_sessionName);
+            isset($_SESSION)
+                ? $_SESSION[$this->_sessionName] = array()
+                : $GLOBALS['HTTP_SESSION_VARS'][$this->_sessionName] = array();
         }
 
         // Assign Some globals to internal references, this will replace _importGlobalVariable
