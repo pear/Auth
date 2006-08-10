@@ -279,7 +279,7 @@ class Auth {
                 include_once 'PEAR.php';
                 PEAR::throwError('Session could not be started by Auth, '
                         .'possibly headers are already sent, try putting '
-                        .'ob_start in the begninig of your script');
+                        .'ob_start in the beginning of your script');
             }
         }
 

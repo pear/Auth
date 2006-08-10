@@ -86,7 +86,7 @@ class Auth_Container_RADIUS extends Auth_Container
         }
         $classname = 'Auth_RADIUS_' . $this->authtype;
         if (!class_exists($classname)) {
-            PEAR::raiseError("Unknown Authtype, please use on of: "
+            PEAR::raiseError("Unknown Authtype, please use one of: "
                     ."PAP, CHAP_MD5, MSCHAPv1, MSCHAPv2!", 41, PEAR_ERROR_DIE);
         }
         
