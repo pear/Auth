@@ -54,6 +54,7 @@ the login data:
     <state>stable</state>
     <notes>
 <![CDATA[
+ * Fixed Bug #8076: MDB2 Container not using default db_fields values
  * Fixed Bug #8531: Documentation of $loginFailedCallback pointed to incorrect
    set function.
 ]]>
