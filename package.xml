@@ -54,6 +54,10 @@ the login data:
     <state>beta</state>
     <notes>
 <![CDATA[
+This release candidate is test the numerous fixes described below. It is also
+to get feedback on the change made for Bug #8407. Bug #8407 adds automatic 
+quoting of table and field names used in SQL in the Database backends.
+
  * Fixed Bug #7031: session_regenerate_id() not cleaning up old session storage.
    Fix for this bug in PHP5.1.0+ has been done, still a problem in older versions
    of PHP.
