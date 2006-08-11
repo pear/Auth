@@ -214,16 +214,35 @@ class Auth_Container_DB extends Auth_Container
                 $this->options[$key] = $value;
             }
         }
-
-        /* Include additional fields if they exist */
-        if (!empty($this->options['db_fields'])) {
-            if (is_array($this->options['db_fields'])) {
-                $this->options['db_fields'] = join($this->options['db_fields'], ', ');
-            }
-            $this->options['db_fields'] = ', '.$this->options['db_fields'];
-        }
     }
 
+    // }}}
+    // {{{ _quoteDBFields()
+
+    /**
+     * Quote the db_fields option to avoid the possibility of SQL injection.
+     *
+     * @access private
+     * @return string A properly quoted string that can be concatenated into a
+     * SELECT clause.
+     */
+    function _quoteDBFields()
+    {
+        if (isset($this->options['db_fields'])) {
+            if (is_array($this->options['db_fields'])) {
+                $fields = array();
+                foreach ($this->options['db_fields'] as $field) {
+                    $fields[] = $this->db->quoteIdentifier($field);
+                }
+                return implode(', ', $fields);
+            } else {
+                return $this->db->quoteIdentifier($this->options['db_fields']);
+            }
+        }
+
+        return '';
+    }
+    
     // }}}
     // {{{ fetchData()
 
@@ -255,8 +274,14 @@ class Auth_Container_DB extends Auth_Container
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = "*";
         } else {
-            $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
+            $sql_from = $this->db->quoteIdentifier($this->options['usernamecol']).
+                ", ".$this->db->quoteIdentifier($this->options['passwordcol']);
+
+            if (strlen($fields = $this->_quoteDBFields()) > 0) {
+                $sql_from .= ', '.$fields;
+            }
         }
+
         /*
          Old Style, removed to go around the oci8
          problem
@@ -273,8 +298,8 @@ class Auth_Container_DB extends Auth_Container
         */
 
         $query = "SELECT ".$sql_from.
-                " FROM ".$this->options['table'].
-                " WHERE ".$this->options['usernamecol']." = ".$this->db->quoteSmart($username);
+                " FROM ".$this->db->quoteIdentifier($this->options['table']).
+                " WHERE ".$this->db->quoteIdentifier($this->options['usernamecol'])." = ".$this->db->quoteSmart($username);
 
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
@@ -346,12 +371,17 @@ class Auth_Container_DB extends Auth_Container
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = "*";
         } else {
-            $sql_from = $this->options['usernamecol'] . ", ".$this->options['passwordcol'].$this->options['db_fields'];
+            $sql_from = $this->db->quoteIdentifier($this->options['usernamecol']).
+                ", ".$this->db->quoteIdentifier($this->options['passwordcol']);
+
+            if (strlen($fields = $this->_quoteDBFields()) > 0) {
+                $sql_from .= ', '.$fields;
+            }
         }
 
         $query = sprintf("SELECT %s FROM %s",
                          $sql_from,
-                         $this->options['table']
+                         $this->db->quoteIdentifier($this->options['table'])
                          );
         $res = $this->db->getAll($query, null, DB_FETCHMODE_ASSOC);
 
@@ -403,15 +433,15 @@ class Auth_Container_DB extends Auth_Container
 
         if (is_array($additional)) {
             foreach ($additional as $key => $value) {
-                $additional_key .= ', ' . $key;
+                $additional_key .= ', ' . $this->db->quoteIdentifier($key);
                 $additional_value .= ", " . $this->db->quoteSmart($value);
             }
         }
 
         $query = sprintf("INSERT INTO %s (%s, %s%s) VALUES (%s, %s%s)",
-                         $this->options['table'],
-                         $this->options['usernamecol'],
-                         $this->options['passwordcol'],
+                         $this->db->quoteIdentifier($this->options['table']),
+                         $this->db->quoteIdentifier($this->options['usernamecol']),
+                         $this->db->quoteIdentifier($this->options['passwordcol']),
                          $additional_key,
                          $this->db->quoteSmart($username),
                          $this->db->quoteSmart($password),
@@ -446,8 +476,8 @@ class Auth_Container_DB extends Auth_Container
         }
 
         $query = sprintf("DELETE FROM %s WHERE %s = %s",
-                         $this->options['table'],
-                         $this->options['usernamecol'],
+                         $this->db->quoteIdentifier($this->options['table']),
+                         $this->db->quoteIdentifier($this->options['usernamecol']),
                          $this->db->quoteSmart($username)
                          );
 
@@ -489,10 +519,10 @@ class Auth_Container_DB extends Auth_Container
         $password = $cryptFunction($password);
 
         $query = sprintf("UPDATE %s SET %s = %s WHERE %s = %s",
-                         $this->options['table'],
-                         $this->options['passwordcol'],
+                         $this->db->quoteIdentifier($this->options['table']),
+                         $this->db->quoteIdentifier($this->options['passwordcol']),
                          $this->db->quoteSmart($password),
-                         $this->options['usernamecol'],
+                         $this->db->quoteIdentifier($this->options['usernamecol']),
                          $this->db->quoteSmart($username)
                          );
 
