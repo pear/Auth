@@ -70,11 +70,11 @@ the login data:
  * Fixed Bug #7956: Session handling had several security bugs before PHP4.3.3.
    Bumped PHP dependancy so we don't have to deal with them.
  * Fixed Bug #8076: MDB & MDB2 Containers not using default db_fields values
+ * Fixed Bug #8351: Documentation of $loginFailedCallback pointed to incorrect
+   set function.
  * Fixed Bug #8406: Error message updates by Adam Harvey <pear@adamharvey.name>
  * Fixed Bug #8407: Database containers don't quote table/field names by Adam
    Harvey <pear@adamharvey.name>
- * Fixed Bug #8531: Documentation of $loginFailedCallback pointed to incorrect
-   set function.
 ]]>
     </notes>
 
