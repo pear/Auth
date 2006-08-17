@@ -192,7 +192,9 @@ class Auth_Container_DBLite extends Auth_Container
                 }
                 return implode(', ', $fields);
             } else {
-                return $this->db->quoteIdentifier($this->options['db_fields']);
+                if (strlen($this->options['db_fields']) > 0) {
+                    return $this->db->quoteIdentifier($this->options['db_fields']);
+                }
             }
         }
 
