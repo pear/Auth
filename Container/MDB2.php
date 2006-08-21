@@ -229,12 +229,12 @@ class Auth_Container_MDB2 extends Auth_Container
             if (is_array($this->options['db_fields'])) {
                 $fields = array();
                 foreach ($this->options['db_fields'] as $field) {
-                    $fields[] = $this->db->quoteIdentifier($field);
+                    $fields[] = $this->db->quoteIdentifier($field, true);
                 }
                 return implode(', ', $fields);
             } else {
                 if (strlen($this->options['db_fields']) > 0) {
-                    return $this->db->quoteIdentifier($this->options['db_fields']);
+                    return $this->db->quoteIdentifier($this->options['db_fields'], true);
                 }
             }
         }
@@ -273,8 +273,8 @@ class Auth_Container_MDB2 extends Auth_Container
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = '*';
         } else {
-            $sql_from = $this->db->quoteIdentifier($this->options['usernamecol']).
-                ", ".$this->db->quoteIdentifier($this->options['passwordcol']);
+            $sql_from = $this->db->quoteIdentifier($this->options['usernamecol'], true).
+                ", ".$this->db->quoteIdentifier($this->options['passwordcol'], true);
 
             if (strlen($fields = $this->_quoteDBFields()) > 0) {
                 $sql_from .= ', '.$fields;
@@ -282,8 +282,8 @@ class Auth_Container_MDB2 extends Auth_Container
         }
         $query = sprintf("SELECT %s FROM %s WHERE %s = %s",
                          $sql_from,
-                         $this->db->quoteIdentifier($this->options['table']),
-                         $this->db->quoteIdentifier($this->options['usernamecol']),
+                         $this->db->quoteIdentifier($this->options['table'], true),
+                         $this->db->quoteIdentifier($this->options['usernamecol'], true),
                          $this->db->quote($username, 'text')
                          );
 
@@ -350,8 +350,8 @@ class Auth_Container_MDB2 extends Auth_Container
         if (strstr($this->options['db_fields'], '*')) {
             $sql_from = '*';
         } else {
-            $sql_from = $this->db->quoteIdentifier($this->options['usernamecol']).
-                ", ".$this->db->quoteIdentifier($this->options['passwordcol']);
+            $sql_from = $this->db->quoteIdentifier($this->options['usernamecol'], true).
+                ", ".$this->db->quoteIdentifier($this->options['passwordcol'], true);
 
             if (strlen($fields = $this->_quoteDBFields()) > 0) {
                 $sql_from .= ', '.$fields;
@@ -360,7 +360,7 @@ class Auth_Container_MDB2 extends Auth_Container
 
         $query = sprintf('SELECT %s FROM %s',
                          $sql_from,
-                         $this->db->quoteIdentifier($this->options['table'])
+                         $this->db->quoteIdentifier($this->options['table'], true)
                          );
 
         $res = $this->db->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
@@ -412,15 +412,15 @@ class Auth_Container_MDB2 extends Auth_Container
 
         if (is_array($additional)) {
             foreach ($additional as $key => $value) {
-                $additional_key   .= ', ' . $this->db->quoteIdentifier($key);
+                $additional_key   .= ', ' . $this->db->quoteIdentifier($key, true);
                 $additional_value .= ', ' . $this->db->quote($value, 'text');
             }
         }
 
         $query = sprintf("INSERT INTO %s (%s, %s%s) VALUES (%s, %s%s)",
-                         $this->db->quoteIdentifier($this->options['table']),
-                         $this->db->quoteIdentifier($this->options['usernamecol']),
-                         $this->db->quoteIdentifier($this->options['passwordcol']),
+                         $this->db->quoteIdentifier($this->options['table'], true),
+                         $this->db->quoteIdentifier($this->options['usernamecol'], true),
+                         $this->db->quoteIdentifier($this->options['passwordcol'], true),
                          $additional_key,
                          $this->db->quote($username, 'text'),
                          $this->db->quote($password, 'text'),
@@ -455,8 +455,8 @@ class Auth_Container_MDB2 extends Auth_Container
         }
 
         $query = sprintf("DELETE FROM %s WHERE %s = %s",
-                         $this->db->quoteIdentifier($this->options['table']),
-                         $this->db->quoteIdentifier($this->options['usernamecol']),
+                         $this->db->quoteIdentifier($this->options['table'], true),
+                         $this->db->quoteIdentifier($this->options['usernamecol'], true),
                          $this->db->quote($username, 'text')
                          );
 
@@ -496,10 +496,10 @@ class Auth_Container_MDB2 extends Auth_Container
         $password = $cryptFunction($password);
 
         $query = sprintf("UPDATE %s SET %s = %s WHERE %s = %s",
-                         $this->db->quoteIdentifier($this->options['table']),
-                         $this->db->quoteIdentifier($this->options['passwordcol']),
+                         $this->db->quoteIdentifier($this->options['table'], true),
+                         $this->db->quoteIdentifier($this->options['passwordcol'], true),
                          $this->db->quote($password, 'text'),
-                         $this->db->quoteIdentifier($this->options['usernamecol']),
+                         $this->db->quoteIdentifier($this->options['usernamecol'], true),
                          $this->db->quote($username, 'text')
                          );
 
