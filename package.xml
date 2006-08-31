@@ -48,33 +48,18 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.3.1</version>
-    <date>2006-08-21</date>
+    <version>1.3.2</version>
+    <date>2006-08-31</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
 <![CDATA[
- * Fixed Bug #7031: session_regenerate_id() not cleaning up old session storage.
-   Fix for this bug in PHP5.1.0+ has been done, still a problem in older versions
-   of PHP.
- * Fixed Bug #7421: Allow false to be passed in for allowLogin and advancedSecurity
-   options.
- * Fixed Bug #7434: Enable start_tls support for LDAP Container by Stuart Prescott
-   <php.net@nanonanonano.net>
- * Fixed Bug #7537: Made File Container capable of using all File_Passwd backends.
- * Fixed Bug #7841: Added missing </center>. Really the whole frontend needs
-   reworking.
- * Fixed Bug #7860: Removed deprecated session_register call.
- * Fixed Bug #7899: sessionValidThru() returning incorrect value when no idle
-   timeout set.
- * Fixed Bug #7956: Session handling had several security bugs before PHP4.3.3.
-   Bumped PHP dependancy so we don't have to deal with them.
- * Fixed Bug #8076: MDB & MDB2 Containers not using default db_fields values
- * Fixed Bug #8351: Documentation of $loginFailedCallback pointed to incorrect
-   set function.
- * Fixed Bug #8406: Error message updates by Adam Harvey <pear@adamharvey.name>
- * Fixed Bug #8407: Database containers don't quote table/field names by Adam
-   Harvey <pear@adamharvey.name>
+ * Fixed Bug #8524: Notice from attempting to perform string operation on what
+   might be an array in DB, DBLite, MDB and MDB2. Thanks to dozoyousan at gmail
+   dot com.
+ * Remove debug message from RADIUS Container when using CHAP_MD5 or MSCHAPv1
+   style passwords. Thanks to Stoyan Stefanov <ssttoo at gmail dot com> for
+   pointing out this 3yr old bug.
 ]]>
     </notes>
 
@@ -187,12 +172,44 @@ the login data:
   </release>
 
   <changelog>
-	  <release>
-	    <version>1.3.1RC1</version>
-		  <date>2006-08-11</date>
-	    <license>PHP License</license>
-		  <state>beta</state>
-			<notes>
+    <release>
+      <version>1.3.1</version>
+      <date>2006-08-21</date>
+      <license>PHP License</license>
+      <state>stable</state>
+      <notes>
+<![CDATA[
+ * Fixed Bug #7031: session_regenerate_id() not cleaning up old session storage.
+   Fix for this bug in PHP5.1.0+ has been done, still a problem in older versions
+   of PHP.
+ * Fixed Bug #7421: Allow false to be passed in for allowLogin and advancedSecurity
+   options.
+ * Fixed Bug #7434: Enable start_tls support for LDAP Container by Stuart Prescott
+   <php.net@nanonanonano.net>
+ * Fixed Bug #7537: Made File Container capable of using all File_Passwd backends.
+ * Fixed Bug #7841: Added missing </center>. Really the whole frontend needs
+   reworking.
+ * Fixed Bug #7860: Removed deprecated session_register call.
+ * Fixed Bug #7899: sessionValidThru() returning incorrect value when no idle
+   timeout set.
+ * Fixed Bug #7956: Session handling had several security bugs before PHP4.3.3.
+   Bumped PHP dependancy so we don't have to deal with them.
+ * Fixed Bug #8076: MDB & MDB2 Containers not using default db_fields values
+ * Fixed Bug #8351: Documentation of $loginFailedCallback pointed to incorrect
+   set function.
+ * Fixed Bug #8406: Error message updates by Adam Harvey <pear@adamharvey.name>
+ * Fixed Bug #8407: Database containers don't quote table/field names by Adam
+   Harvey <pear@adamharvey.name>
+]]>
+     </notes>
+    </release>
+
+    <release>
+      <version>1.3.1RC1</version>
+      <date>2006-08-11</date>
+      <license>PHP License</license>
+      <state>beta</state>
+      <notes>
 <![CDATA[
 This release candidate is test the numerous fixes described below. It is also
 to get feedback on the change made for Bug #8407. Bug #8407 adds automatic 
@@ -220,8 +237,8 @@ quoting of table and field names used in SQL in the Database backends.
  * Fixed Bug #8407: Database containers don't quote table/field names by Adam
    Harvey <pear@adamharvey.name>
 ]]>
-	    </notes>
-		</release>
+      </notes>
+    </release>
 
     <release>
       <version>1.3.0</version>
