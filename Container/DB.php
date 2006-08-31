@@ -273,7 +273,8 @@ class Auth_Container_DB extends Auth_Container
         }
 
         // Find if db_fields contains a *, if so assume all columns are selected
-        if (strstr($this->options['db_fields'], '*')) {
+        if (is_string($this->options['db_fields'])
+            && strstr($this->options['db_fields'], '*')) {
             $sql_from = "*";
         } else {
             $sql_from = $this->db->quoteIdentifier($this->options['usernamecol']).
