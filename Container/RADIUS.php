@@ -129,7 +129,6 @@ class Auth_Container_RADIUS extends Auth_Container
         case 'CHAP_MD5':
         case 'MSCHAPv1':
             if (isset($challenge)) {
-                echo $password;
                 $this->radius->challenge = $challenge;
                 $this->radius->chapid    = 1;
                 $this->radius->response  = pack('H*', $password);
