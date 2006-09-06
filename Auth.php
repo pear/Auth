@@ -284,27 +284,15 @@ class Auth {
         }
 
         // Make Sure Auth session variable is there
-        if(   !isset($_SESSION[$this->_sessionName]) 
-           && !isset($GLOBALS['HTTP_SESSION_VARS'][$this->_sessionName])) {
-            isset($_SESSION)
-                ? $_SESSION[$this->_sessionName] = array()
-                : $GLOBALS['HTTP_SESSION_VARS'][$this->_sessionName] = array();
+        if(!isset($_SESSION[$this->_sessionName])) {
+            $_SESSION[$this->_sessionName] = array();
         }
 
         // Assign Some globals to internal references, this will replace _importGlobalVariable
-        isset($_SESSION) 
-            ? $this->session =& $_SESSION[$this->_sessionName] 
-            : $this->session =& $GLOBALS['HTTP_SESSION_VARS'][$this->_sessionName] ;
-        isset($_SERVER) 
-            ? $this->server =& $_SERVER 
-            : $this->server =& $GLOBALS['HTTP_SERVER_VARS'];
-        isset($_POST) 
-            ? $this->post =& $_POST 
-            : $this->post =& $GLOBALS['HTTP_POST_VARS'];
-        isset($_COOKIE) 
-            ? $this->cookie =& $_COOKIE 
-            : $this->cookie =& $GLOBALS['HTTP_COOKIE_VARS'];
-        //isset($_GET) ? $var = &$_GET : $var = &$GLOBALS['HTTP_GET_VARS'];
+        $this->session =& $_SESSION[$this->_sessionName];
+        $this->server =& $_SERVER;
+        $this->post =& $_POST;
+        $this->cookie =& $_COOKIE;
 
         if ($loginFunction != '' && is_callable($loginFunction)) {
             $this->loginFunction = $loginFunction;
@@ -574,9 +562,7 @@ class Auth {
     function setSessionName($name = 'session')
     {
         $this->_sessionName = '_auth_'.$name;
-        isset($_SESSION) 
-            ? $this->session =& $_SESSION[$this->_sessionName] 
-            : $this->session =& $GLOBALS['HTTP_SESSION_VARS'][$this->_sessionName] ;
+        $this->session =& $_SESSION[$this->_sessionName];
     }
 
     // }}}

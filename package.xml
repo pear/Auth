@@ -67,6 +67,8 @@ the login data:
  * Added KADM5 container that makes use of the PECL kadm5 extension to 
    authenticate against Kerberos 5 servers. Thanks to Andrew Teixeira 
    <ateixeira@gmail.com>. Fixes #6671.
+ * Fixed #8597. Remove references to $GLOBALS['HTTP_*_VARS'] now that we require
+   PHP 4.3.3+ for other reasons.
 ]]>
     </notes>
 
