@@ -20,6 +20,7 @@ the login data:
 * SAMBA password files
 * SOAP (Using either PEAR SOAP package or PHP5 SOAP extension)
 * PEAR website
+* Kerberos V servers.
 </description>
   <maintainers>
     <maintainer>
@@ -63,6 +64,9 @@ the login data:
  * Added new Array container for simple authentication setups where it's easier
    to list users in the file than setup some sort of backend. Thanks to 
    georg_1 at have2 dot com. Fixes #5832.
+ * Added KADM5 container that makes use of the PECL kadm5 extension to 
+   authenticate against Kerberos 5 servers. Thanks to Andrew Teixeira 
+   <ateixeira@gmail.com>. Fixes #6671.
 ]]>
     </notes>
 
@@ -93,31 +97,37 @@ the login data:
         <file name="DB.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
-         <file name="DBLite.php">
+        <file name="DBLite.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
-         <file name="File.php">
+        <file name="File.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
-         <file name="IMAP.php">
+        <file name="IMAP.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
-         <file name="POP3.php">
+        <file name="KADM5.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
-         <file name="LDAP.php">
+        <file name="LDAP.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
-         <file name="MDB.php">
+        <file name="MDB.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
-         <file name="MDB2.php">
+        <file name="MDB2.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
-         <file name="RADIUS.php">
+        <file name="PEAR.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
-         <file name="SMBPasswd.php">
+        <file name="POP3.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file name="RADIUS.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file name="SMBPasswd.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file name="SOAP.php">
@@ -127,9 +137,6 @@ the login data:
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file name="vpopmail.php">
-          <replace from="@package_version@" to="version" type="package-info"/>
-        </file>
-         <file name="PEAR.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
       </dir>
@@ -173,6 +180,7 @@ the login data:
       <dep type="pkg" rel="has" optional="yes">File_SMBPasswd</dep>
       <dep type="ext" rel="has" optional="yes">imap</dep>
       <dep type="ext" rel="has" optional="yes">vpopmail</dep>
+      <dep type="ext" rel="has" optional="yes">kadm5</dep>
     </deps>
 
   </release>
