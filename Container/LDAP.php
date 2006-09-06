@@ -106,6 +106,8 @@ require_once "PEAR.php";
  * start_tls:   enable/disable the use of START_TLS encrypted connection 
  *              (default: false)
  * debug:       Enable/Disable debugging output (default: false)
+ * try_all:     Whether to try all user accounts returned from the search
+ *              or just the first one. (default: false)
  *
  * To use this storage container, you have to use the following syntax:
  *
@@ -439,6 +441,7 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['memberisdn']  = true;
         $this->options['start_tls']   = false;
         $this->options['debug']       = false;
+        $this->options['try_all']     = false; // Try all user ids returned not just the first one
     }
 
     // }}}
@@ -576,84 +579,97 @@ class Auth_Container_LDAP extends Auth_Container
         // search
         if (($result_id = @call_user_func_array($func_name, $func_params)) === false) {
             $this->_debug('User not found', __LINE__);
-        } elseif (@ldap_count_entries($this->conn_id, $result_id) == 1) { // did we get just one entry?
+        } elseif (@ldap_count_entries($this->conn_id, $result_id) >= 1) { // did we get some possible results?
 
-            $this->_debug('User was found', __LINE__);
+            $this->_debug('User(s) found', __LINE__);
 
-            // then get the user dn
-            $entry_id = @ldap_first_entry($this->conn_id, $result_id);
-            $user_dn  = @ldap_get_dn($this->conn_id, $entry_id);
+            $first = true;
+            $entry_id = null;
 
-            // as the dn is not fetched as an attribute, we save it anyway
-            if (is_array($attributes) && in_array('dn', $attributes)) {
-                $this->_debug('Saving DN to AuthData', __LINE__);
-                $this->_auth_obj->setAuthData('dn', $user_dn);
-            }
+            do {
+                
+                // then get the user dn
+                if ($first) {
+                    $entry_id = @ldap_first_entry($this->conn_id, $result_id);
+                    $first = false;
+                } else {
+                    $entry_id = @ldap_next_entry($this->conn_id, $entry_id);
+                    if ($entry_id === false)
+                        break;
+                }
+                $user_dn  = @ldap_get_dn($this->conn_id, $entry_id);
+
+                // as the dn is not fetched as an attribute, we save it anyway
+                if (is_array($attributes) && in_array('dn', $attributes)) {
+                    $this->_debug('Saving DN to AuthData', __LINE__);
+                    $this->_auth_obj->setAuthData('dn', $user_dn);
+                }
             
-            // fetch attributes
-            if ($attributes = @ldap_get_attributes($this->conn_id, $entry_id)) {
+                // fetch attributes
+                if ($attributes = @ldap_get_attributes($this->conn_id, $entry_id)) {
 
-                if (is_array($attributes) && isset($attributes['count']) &&
-                     $attributes['count'] > 0) {
+                    if (is_array($attributes) && isset($attributes['count']) &&
+                         $attributes['count'] > 0) {
 
-                    // ldap_get_attributes() returns a specific multi dimensional array
-                    // format containing all the attributes and where each array starts
-                    // with a 'count' element providing the number of attributes in the
-                    // entry, or the number of values for attribute. For compatibility
-                    // reasons, it remains the default format returned by LDAP container
-                    // setAuthData().
-                    // The code below optionally returns attributes in another format,
-                    // more compliant with other Auth containers, where each attribute
-                    // element are directly set in the 'authData' list. This option is
-                    // enabled by setting 'attrformat' to
-                    // 'AUTH' in the 'options' array.
-                    // eg. $this->options['attrformat'] = 'AUTH'
+                        // ldap_get_attributes() returns a specific multi dimensional array
+                        // format containing all the attributes and where each array starts
+                        // with a 'count' element providing the number of attributes in the
+                        // entry, or the number of values for attribute. For compatibility
+                        // reasons, it remains the default format returned by LDAP container
+                        // setAuthData().
+                        // The code below optionally returns attributes in another format,
+                        // more compliant with other Auth containers, where each attribute
+                        // element are directly set in the 'authData' list. This option is
+                        // enabled by setting 'attrformat' to
+                        // 'AUTH' in the 'options' array.
+                        // eg. $this->options['attrformat'] = 'AUTH'
 
-                    if ( strtoupper($this->options['attrformat']) == 'AUTH' ) {
-                        $this->_debug('Saving attributes to Auth data in AUTH format', __LINE__);
-                        unset ($attributes['count']);
-                        foreach ($attributes as $attributeName => $attributeValue ) {
-                            if (is_int($attributeName)) continue;
-                            if (is_array($attributeValue) && isset($attributeValue['count'])) {
-                                unset ($attributeValue['count']);
+                        if ( strtoupper($this->options['attrformat']) == 'AUTH' ) {
+                            $this->_debug('Saving attributes to Auth data in AUTH format', __LINE__);
+                            unset ($attributes['count']);
+                            foreach ($attributes as $attributeName => $attributeValue ) {
+                                if (is_int($attributeName)) continue;
+                                if (is_array($attributeValue) && isset($attributeValue['count'])) {
+                                    unset ($attributeValue['count']);
+                                }
+                                if (count($attributeValue)<=1) $attributeValue = $attributeValue[0];
+                                $this->_auth_obj->setAuthData($attributeName, $attributeValue);
                             }
-                            if (count($attributeValue)<=1) $attributeValue = $attributeValue[0];
-                            $this->_auth_obj->setAuthData($attributeName, $attributeValue);
+                        }
+                        else
+                        {
+                            $this->_debug('Saving attributes to Auth data in LDAP format', __LINE__);
+                            $this->_auth_obj->setAuthData('attributes', $attributes);
                         }
                     }
-                    else
-                    {
-                        $this->_debug('Saving attributes to Auth data in LDAP format', __LINE__);
-                        $this->_auth_obj->setAuthData('attributes', $attributes);
-                    }
                 }
-            }
-            @ldap_free_result($result_id);
+                @ldap_free_result($result_id);
 
-            // need to catch an empty password as openldap seems to return TRUE
-            // if anonymous binding is allowed
-            if ($password != "") {
-                $this->_debug("Bind as $user_dn", __LINE__);
+                // need to catch an empty password as openldap seems to return TRUE
+                // if anonymous binding is allowed
+                if ($password != "") {
+                    $this->_debug("Bind as $user_dn", __LINE__);
 
-                // try binding as this user with the supplied password
-                if (@ldap_bind($this->conn_id, $user_dn, $password)) {
-                    $this->_debug('Bind successful', __LINE__);
+                    // try binding as this user with the supplied password
+                    if (@ldap_bind($this->conn_id, $user_dn, $password)) {
+                        $this->_debug('Bind successful', __LINE__);
 
-                    // check group if appropiate
-                    if (strlen($this->options['group'])) {
-                        // decide whether memberattr value is a dn or the username
-                        $this->_debug('Checking group membership', __LINE__);
-                        $return = $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $username);
-                        $this->_disconnect();
-                        return $return;
-                    } else {
-                        $this->_debug('Authenticated', __LINE__);
-                        $this->_disconnect();
-                        return true; // user authenticated
-                    } // checkGroup
-                } // bind
-            } // non-empty password
-        } // one entry
+                        // check group if appropiate
+                        if (strlen($this->options['group'])) {
+                            // decide whether memberattr value is a dn or the username
+                            $this->_debug('Checking group membership', __LINE__);
+                            $return = $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $username);
+                            $this->_disconnect();
+                            return $return;
+                        } else {
+                            $this->_debug('Authenticated', __LINE__);
+                            $this->_disconnect();
+                            return true; // user authenticated
+                        } // checkGroup
+                    } // bind
+                } // non-empty password
+            } while ($this->options['try_all'] == true); // interate through entries
+        } // get results
         // default
         $this->_debug('NOT authenticated!', __LINE__);
         $this->_disconnect();

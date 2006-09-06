@@ -56,6 +56,10 @@ the login data:
 <![CDATA[
  * Added new SOAP container that makes use of the PHP5 SOAP Client. Thanks to
    Marcel Oelke <puRe at rednoize dot com>
+ * Added support for trying all the user accounts returned from an LDAP server
+   not just the first one so as to support authenticating against Lotus Notes
+	 which allows identical usernames where the only difference is the password.
+	 Fixes #5365
 ]]>
     </notes>
 
