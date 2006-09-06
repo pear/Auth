@@ -94,11 +94,12 @@ require_once "PEAR.php"
  *
  * ?>
  *
- * @author   Based upon Auth_Container_SOAP by Bruno Pedro <bpedro@co.sapo.pt>
- * @author   Marcel Oelke <puRe@rednoize.com>
- * @author   Adam Ashley <aashley@php.net>
- * @package  Auth
- * @version  $Revision$
+ * @category   Authentication
+ * @package    Auth
+ * @author     Based upon Auth_Container_SOAP by Bruno Pedro <bpedro@co.sapo.pt>
+ * @author     Marcel Oelke <puRe@rednoize.com>
+ * @author     Adam Ashley <aashley@php.net>
+ * @version    Release: @package_version@  File: $Revision$
  */
 class Auth_Container_SOAP5 extends Auth_Container
 {
