@@ -73,6 +73,8 @@ the login data:
  * Added SAP container that makes use of the SAPRFC extension available from
    http://saprfc.sourceforge.net/. Thanks to Stoyan Stefanov <ssttoo at gmail dot com>.
    Fixes #8637.
+ * Fix #8599. Allow identifier quoting in DB, DBLite, MDB and MDB2 backends to 
+   be switched off by developer.
 ]]>
     </notes>
 
