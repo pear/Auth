@@ -20,7 +20,8 @@ the login data:
 * SAMBA password files
 * SOAP (Using either PEAR SOAP package or PHP5 SOAP extension)
 * PEAR website
-* Kerberos V servers.
+* Kerberos V servers
+* SAP servers
 </description>
   <maintainers>
     <maintainer>
@@ -50,7 +51,7 @@ the login data:
   </maintainers>
   <release>
     <version>1.4.0RC1</version>
-    <date>2006-09-06</date>
+    <date>2006-09-07</date>
     <license>PHP License</license>
     <state>beta</state>
     <notes>
@@ -66,9 +67,12 @@ the login data:
    georg_1 at have2 dot com. Fixes #5832.
  * Added KADM5 container that makes use of the PECL kadm5 extension to 
    authenticate against Kerberos 5 servers. Thanks to Andrew Teixeira 
-   <ateixeira@gmail.com>. Fixes #6671.
+   <ateixeira at gmail dot com>. Fixes #6671.
  * Fixed #8597. Remove references to $GLOBALS['HTTP_*_VARS'] now that we require
    PHP 4.3.3+ for other reasons.
+ * Added SAP container that makes use of the SAPRFC extension available from
+   http://saprfc.sourceforge.net/. Thanks to Stoyan Stefanov <ssttoo at gmail dot com>.
+   Fixes #8637.
 ]]>
     </notes>
 
@@ -129,6 +133,9 @@ the login data:
         <file name="RADIUS.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
+        <file name="SAP.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
         <file name="SMBPasswd.php">
           <replace from="@package_version@" to="version" type="package-info"/>
         </file>
@@ -183,6 +190,7 @@ the login data:
       <dep type="ext" rel="has" optional="yes">imap</dep>
       <dep type="ext" rel="has" optional="yes">vpopmail</dep>
       <dep type="ext" rel="has" optional="yes">kadm5</dep>
+      <dep type="ext" rel="has" optional="yes">saprfc</dep>
     </deps>
 
   </release>
