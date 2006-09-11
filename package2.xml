@@ -226,25 +226,33 @@ the login data:
    <package>
     <name>File_SMBPasswd</name>
     <channel>pear.php.net</channel>
-		<min>1.0.0</min>
+    <min>1.0.0</min>
    </package>
-	 <package>
-		<name>vpopmail</name>
-		<channel>pecl.php.net</channel>
-		<min>0.2</min>
-		<providesextension>vpopmail</providesextension>
-	 </package>
-	 <package>
-		<name>kadm5</name>
-		<channel>pecl.php.net</channel>
-		<min>0.2.3</min>
-		<providesextension>kadm5</providesextension>
-	 </package>
+   <package>
+    <name>SOAP</name>
+    <channel>pear.php.net</channel>
+    <min>0.9.0</min>
+   </package>
+   <package>
+    <name>vpopmail</name>
+    <channel>pecl.php.net</channel>
+    <min>0.2</min>
+    <providesextension>vpopmail</providesextension>
+   </package>
+   <package>
+    <name>kadm5</name>
+    <channel>pecl.php.net</channel>
+    <min>0.2.3</min>
+    <providesextension>kadm5</providesextension>
+   </package>
    <extension>
     <name>imap</name>
    </extension>
    <extension>
     <name>saprfc</name>
+   </extension>
+   <extension>
+    <name>soap</name>
    </extension>
   </optional>
  </dependencies>
