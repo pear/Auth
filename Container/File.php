@@ -167,7 +167,7 @@ class Auth_Container_File extends Auth_Container
             return false;
         }
         
-        $res = call_user_func_array(array($pw_obj, 'addUser'), $params);
+        $res = call_user_func_array(array(&$pw_obj, 'addUser'), $params);
         if (PEAR::isError($res)) {
             return false;
         }
