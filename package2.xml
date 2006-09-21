@@ -66,7 +66,7 @@ the login data:
  <notes> * Fix Bug #8732: Auth_Container_DB having problems with SQLite databases.
    SQLite returns the name of quoted field names including the quotes instead
    of stripping the quotes like all other DBs.
-* Fix Bug #8735: Auth_Container_File::addUser() working on different instances
+ * Fix Bug #8735: Auth_Container_File::addUser() working on different instances
    of File_Passwrd object.
  </notes>
  <contents>
