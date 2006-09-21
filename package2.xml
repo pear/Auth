@@ -52,10 +52,10 @@ the login data:
   <email>jflemer@acm.jhu.edu</email>
   <active>no</active>
  </developer>
- <date>2006-09-20</date>
+ <date>2006-09-21</date>
  <time>10:00:00</time>
  <version>
-  <release>1.4.0RC2</release>
+  <release>1.4.0RC3</release>
   <api>1.4.0</api>
  </version>
  <stability>
@@ -63,7 +63,10 @@ the login data:
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
- <notes>* Fix Bug #8735: Auth_Container_File::addUser() working on different instances
+ <notes> * Fix Bug #8732: Auth_Container_DB having problems with SQLite databases.
+   SQLite returns the name of quoted field names including the quotes instead
+   of stripping the quotes like all other DBs.
+* Fix Bug #8735: Auth_Container_File::addUser() working on different instances
    of File_Passwrd object.
  </notes>
  <contents>

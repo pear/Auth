@@ -151,7 +151,7 @@ class Auth_Container_DB extends Auth_Container
                 return $res;
             }
         }
-        if ($this->options['auto_quote']) {
+        if ($this->options['auto_quote'] && $this->db->dsn['phptype'] != 'sqlite') {
             $this->options['final_table'] = $this->db->quoteIdentifier($this->options['table']);
             $this->options['final_usernamecol'] = $this->db->quoteIdentifier($this->options['usernamecol']);
             $this->options['final_passwordcol'] = $this->db->quoteIdentifier($this->options['passwordcol']);

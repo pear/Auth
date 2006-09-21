@@ -50,12 +50,15 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.4.0RC2</version>
-    <date>2006-09-20</date>
+    <version>1.4.0RC3</version>
+    <date>2006-09-21</date>
     <license>PHP License</license>
     <state>beta</state>
     <notes>
 <![CDATA[
+ * Fix Bug #8732: Auth_Container_DB having problems with SQLite databases.
+   SQLite returns the name of quoted field names including the quotes instead
+   of stripping the quotes like all other DBs.
  * Fix Bug #8735: Auth_Container_File::addUser() working on different instances
    of File_Passwrd object.
 ]]>
