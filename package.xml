@@ -50,12 +50,31 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.4.0RC3</version>
-    <date>2006-09-21</date>
+    <version>1.4.0</version>
+    <date>2006-10-20</date>
     <license>PHP License</license>
-    <state>beta</state>
+    <state>stable</state>
     <notes>
 <![CDATA[
+ * Added new SOAP container that makes use of the PHP5 SOAP Client. Thanks to
+   Marcel Oelke <puRe at rednoize dot com>. Fixes #2612.
+ * Added support for trying all the user accounts returned from an LDAP server
+   not just the first one so as to support authenticating against Lotus Notes
+   which allows identical usernames where the only difference is the password.
+   Fixes #5365.
+ * Added new Array container for simple authentication setups where it's easier
+   to list users in the file than setup some sort of backend. Thanks to 
+   georg_1 at have2 dot com. Fixes #5832.
+ * Added KADM5 container that makes use of the PECL kadm5 extension to 
+   authenticate against Kerberos 5 servers. Thanks to Andrew Teixeira 
+   <ateixeira at gmail dot com>. Fixes #6671.
+ * Fixed #8597. Remove references to $GLOBALS['HTTP_*_VARS'] now that we require
+   PHP 4.3.3+ for other reasons.
+ * Added SAP container that makes use of the SAPRFC extension available from
+   http://saprfc.sourceforge.net/. Thanks to Stoyan Stefanov <ssttoo at gmail dot com>.
+   Fixes #8637.
+ * Fix #8599. Allow identifier quoting in DB, DBLite, MDB and MDB2 backends to 
+   be switched off by developer.
  * Fix Bug #8732: Auth_Container_DB having problems with SQLite databases.
    SQLite returns the name of quoted field names including the quotes instead
    of stripping the quotes like all other DBs.
@@ -188,6 +207,22 @@ the login data:
   </release>
 
   <changelog>
+    <release>
+      <version>1.4.0RC3</version>
+      <date>2006-09-21</date>
+      <license>PHP License</license>
+      <state>beta</state>
+      <notes>
+<![CDATA[
+ * Fix Bug #8732: Auth_Container_DB having problems with SQLite databases.
+   SQLite returns the name of quoted field names including the quotes instead
+   of stripping the quotes like all other DBs.
+ * Fix Bug #8735: Auth_Container_File::addUser() working on different instances
+   of File_Passwrd object.
+]]>
+      </notes>
+    </release>
+
     <release>
       <version>1.4.0RC1</version>
       <date>2006-09-11</date>

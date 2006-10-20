@@ -52,18 +52,37 @@ the login data:
   <email>jflemer@acm.jhu.edu</email>
   <active>no</active>
  </developer>
- <date>2006-09-21</date>
+ <date>2006-10-20</date>
  <time>10:00:00</time>
  <version>
-  <release>1.4.0RC3</release>
+  <release>1.4.0</release>
   <api>1.4.0</api>
  </version>
  <stability>
-  <release>beta</release>
+  <release>stable</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
- <notes> * Fix Bug #8732: Auth_Container_DB having problems with SQLite databases.
+ <notes> * Added new SOAP container that makes use of the PHP5 SOAP Client. Thanks to
+   Marcel Oelke &lt;puRe at rednoize dot com&gt;. Fixes #2612.
+ * Added support for trying all the user accounts returned from an LDAP server
+   not just the first one so as to support authenticating against Lotus Notes
+   which allows identical usernames where the only difference is the password.
+   Fixes #5365.
+ * Added new Array container for simple authentication setups where it&apos;s easier
+   to list users in the file than setup some sort of backend. Thanks to 
+   georg_1 at have2 dot com. Fixes #5832.
+ * Added KADM5 container that makes use of the PECL kadm5 extension to 
+   authenticate against Kerberos 5 servers. Thanks to Andrew Teixeira 
+   &lt;ateixeira at gmail dot com&gt;. Fixes #6671.
+ * Fixed #8597. Remove references to $GLOBALS[&apos;HTTP_*_VARS&apos;] now that we require
+   PHP 4.3.3+ for other reasons.
+ * Added SAP container that makes use of the SAPRFC extension available from
+   http://saprfc.sourceforge.net/. Thanks to Stoyan Stefanov &lt;ssttoo at gmail dot com&gt;.
+   Fixes #8637.
+ * Fix #8599. Allow identifier quoting in DB, DBLite, MDB and MDB2 backends to 
+   be switched off by developer.
+ * Fix Bug #8732: Auth_Container_DB having problems with SQLite databases.
    SQLite returns the name of quoted field names including the quotes instead
    of stripping the quotes like all other DBs.
  * Fix Bug #8735: Auth_Container_File::addUser() working on different instances
@@ -245,6 +264,25 @@ the login data:
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <date>2006-09-21</date>
+   <time>10:00:00</time>
+   <version>
+    <release>1.4.0RC3</release>
+    <api>1.4.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes> * Fix Bug #8732: Auth_Container_DB having problems with SQLite databases.
+   SQLite returns the name of quoted field names including the quotes instead
+   of stripping the quotes like all other DBs.
+ * Fix Bug #8735: Auth_Container_File::addUser() working on different instances
+   of File_Passwrd object.
+   </notes>
+  </release>
   <release>
    <date>2006-09-11</date>
    <time>03:30:33</time>
