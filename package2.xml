@@ -63,7 +63,7 @@ the login data:
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
- <notes> * Forgot to add Auth/Container/Array.php to package2.xml
+ <notes> * Forgot to add Auth/Container/Array.php to package2.xml.
  </notes>
  <contents>
   <dir name="/">
