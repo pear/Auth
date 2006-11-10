@@ -50,13 +50,14 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.4.1</version>
-    <date>2006-10-28</date>
+    <version>1.4.2</version>
+    <date>2006-11-10</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
 <![CDATA[
- * Forgot to add Auth/Container/Array.php to package2.xml.
+ * Fixed Bug #9241: Callback functions where being passed a copy of
+   the login object instead of a reference to it under PHP4.
 ]]>
     </notes>
 
@@ -187,6 +188,17 @@ the login data:
   </release>
 
   <changelog>
+  <release>
+    <version>1.4.1</version>
+    <date>2006-10-28</date>
+    <license>PHP License</license>
+    <state>stable</state>
+    <notes>
+<![CDATA[
+ * Forgot to add Auth/Container/Array.php to package2.xml.
+]]>
+    </notes>
+   </release>
    <release>
       <version>1.4.0</version>
       <date>2006-10-20</date>

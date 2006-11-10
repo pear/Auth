@@ -479,7 +479,7 @@ class Auth {
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (is_callable($this->loginCallback)) {
-                call_user_func_array($this->loginCallback, array($this->username, $this));
+                call_user_func_array($this->loginCallback, array($this->username, &$this));
             }
         }
 
@@ -488,13 +488,13 @@ class Auth {
         if (!empty($this->username) && !$login_ok) {
             $this->status = AUTH_WRONG_LOGIN;
             if (is_callable($this->loginFailedCallback)) {
-                call_user_func_array($this->loginFailedCallback, array($this->username, $this));
+                call_user_func_array($this->loginFailedCallback, array($this->username, &$this));
             }
         }
 
         if ((empty($this->username) || !$login_ok) && $this->showLogin) {
             if (is_callable($this->loginFunction)) {
-                call_user_func_array($this->loginFunction, array($this->username, $this->status, $this));
+                call_user_func_array($this->loginFunction, array($this->username, $this->status, &$this));
             } else {
                 // BC fix Auth used to use drawLogin for this
                 // call is sub classes implement this
@@ -901,7 +901,7 @@ class Auth {
     function logout()
     {
         if (is_callable($this->logoutCallback)) {
-            call_user_func_array($this->logoutCallback, array($this->session['username'], $this));
+            call_user_func_array($this->logoutCallback, array($this->session['username'], &$this));
         }
 
         $this->username = '';

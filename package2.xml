@@ -52,10 +52,10 @@ the login data:
   <email>jflemer@acm.jhu.edu</email>
   <active>no</active>
  </developer>
- <date>2006-10-28</date>
+ <date>2006-11-10</date>
  <time>07:00:00</time>
  <version>
-  <release>1.4.1</release>
+  <release>1.4.2</release>
   <api>1.4.0</api>
  </version>
  <stability>
@@ -63,7 +63,8 @@ the login data:
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
- <notes> * Forgot to add Auth/Container/Array.php to package2.xml.
+ <notes> * Fixed Bug #9241: Callback functions where being passed a copy of
+   the login object instead of a reference to it under PHP4.
  </notes>
  <contents>
   <dir name="/">
@@ -244,6 +245,21 @@ the login data:
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <date>2006-10-28</date>
+   <time>07:00:00</time>
+   <version>
+    <release>1.4.1</release>
+    <api>1.4.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes> * Forgot to add Auth/Container/Array.php to package2.xml.
+   </notes>
+  </release>
   <release>
    <date>2006-10-20</date>
    <time>10:00:00</time>
