@@ -48,6 +48,12 @@ the login data:
       <email>php@adamashley.name</email>
       <role>lead</role>
     </maintainer>
+    <maintainer>
+      <user>aharvey</user>
+      <name>Adam Harvey</name>
+      <email>aharvey@php.net</email>
+      <role>developer</role>
+    </maintainer>
   </maintainers>
   <release>
     <version>1.4.2</version>
@@ -58,6 +64,8 @@ the login data:
 <![CDATA[
  * Fixed Bug #9241: Callback functions where being passed a copy of
    the login object instead of a reference to it under PHP4.
+ * Fixed Bug #9286: Comparison of passwords and their hashes could give
+   false positive.
 ]]>
     </notes>
 

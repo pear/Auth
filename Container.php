@@ -92,20 +92,20 @@ class Auth_Container
     {
         switch ($cryptType) {
             case "crypt" :
-                return ( crypt($password1, $password2) == $password2 );
+                return ((string)crypt($password1, $password2) === (string)$password2);
                 break;
             case "none" :
             case "" :
-                return ($password1 == $password2);
+                return ((string)$password1 === (string)$password2);
                 break;
             case "md5" :
-                return (md5($password1) == $password2);
+                return ((string)md5($password1) === (string)$password2);
                 break;
             default :
                 if (function_exists($cryptType)) {
-                    return ($cryptType($password1) == $password2);
+                    return ((string)$cryptType($password1) === (string)$password2);
                 } elseif (method_exists($this,$cryptType)) { 
-                    return ($this->$cryptType($password1) == $password2);
+                    return ((string)$this->$cryptType($password1) === (string)$password2);
                 } else {
                     return false;
                 }

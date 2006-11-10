@@ -52,6 +52,12 @@ the login data:
   <email>jflemer@acm.jhu.edu</email>
   <active>no</active>
  </developer>
+ <developer>
+  <name>Adam Harvey</name>
+	<user>aharvey</user>
+	<email>aharvey@php.net</email>
+	<active>yes</active>
+ </developer>
  <date>2006-11-10</date>
  <time>07:00:00</time>
  <version>
@@ -65,6 +71,8 @@ the login data:
  <license uri="http://www.php.net/license">PHP License</license>
  <notes> * Fixed Bug #9241: Callback functions where being passed a copy of
    the login object instead of a reference to it under PHP4.
+ * Fixed Bug #9286: Comparison of passwords and their hashes could give
+   false positive.
  </notes>
  <contents>
   <dir name="/">
