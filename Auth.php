@@ -617,6 +617,7 @@ class Auth {
      * @param  string  callback function name
      * @return void
      * @access public
+     * @since Method available since Release 1.4.3
      */
     function setCheckAuthCallback($checkAuthCallback)
     {
