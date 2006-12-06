@@ -69,7 +69,8 @@ the login data:
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
- <notes> * Fixed Bug #9479: Typo in Auth_Container_KADM5::_checkServer causes
+ <notes> * Fixed Bug #9407: Add callback in checkAuth() process.
+ * Fixed Bug #9479: Typo in Auth_Container_KADM5::_checkServer causes
    failure. Thanks to Matt T. Proud (khanreaper at nerp dot net).
  </notes>
  <contents>

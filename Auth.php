@@ -42,6 +42,10 @@ define('AUTH_METHOD_NOT_SUPPORTED',     -4);
  * Returned if new Advanced security system detects a breach
  */
 define('AUTH_SECURITY_BREACH',          -5);
+/**
+ * Returned if checkAuthCallback says session should not continue.
+ */
+define('AUTH_CALLBACK_ABORT',           -6);
 
 /**
  * PEAR::Auth
@@ -151,6 +155,14 @@ class Auth {
      * @var string
      */
     var $password = '';
+
+    /**
+     * checkAuth callback function name
+     *
+     * @var string
+     * @see setCheckAuthCallback()
+     */
+    var $checkAuthCallback = '';
 
     /**
      * Login callback function name
@@ -596,6 +608,22 @@ class Auth {
     }
 
     // }}}
+    // {{{ setCheckAuthCallback()
+
+    /**
+     * Register a callback function to be called whenever the validity of the login is checked
+     * The function will receive two parameters, the username and a reference to the auth object.
+     *
+     * @param  string  callback function name
+     * @return void
+     * @access public
+     */
+    function setCheckAuthCallback($checkAuthCallback)
+    {
+        $this->checkAuthCallback = $checkAuthCallback;
+    }
+
+    // }}}
     // {{{ setLoginCallback()
     
     /**
@@ -617,7 +645,7 @@ class Auth {
 
     /**
      * Register a callback function to be called on failed user login.
-     * The function will receive a single parameter, the username and a reference to the auth object.
+     * The function will receive two parameters, the username and a reference to the auth object.
      *
      * @param  string  callback function name
      * @return void
@@ -841,6 +869,16 @@ class Auth {
                         $this->status = AUTH_SECURITY_BREACH;
                         $this->logout();
                         $this->login();
+                        return false;
+                    }
+                }
+
+                if (is_callable($this->checkAuthCallback)) {
+                    $checkCallback = call_user_func_array($this->checkAuthCallback, array($this->username, &$this));
+                    if ($checkCallback == false) {
+                        $this->expired = true;
+                        $this->status = AUTH_CALLBACK_ABORT;
+                        $this->logout();
                         return false;
                     }
                 }
