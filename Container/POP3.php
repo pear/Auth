@@ -92,7 +92,7 @@ class Auth_Container_POP3 extends Auth_Container
      */
     function Auth_Container_POP3($server=null)
     {
-        if (isset($server)) {
+        if (isset($server) && !is_null($server)) {
             if (is_array($server)) {
                 if (isset($server['host'])) {
                     $this->server = $server['host'];

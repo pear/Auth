@@ -62,6 +62,8 @@ the login data:
     <state>stable</state>
     <notes>
 <![CDATA[
+ * Fixed Bug #9380: Default Auth_Container_POP3 configuration not 
+   working.
  * Fixed Bug #9407: Add callback in checkAuth() process.
  * Fixed Bug #9479: Typo in Auth_Container_KADM5::_checkServer causes
    failure. Thanks to Matt T. Proud (khanreaper at nerp dot net).
