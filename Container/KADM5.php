@@ -153,12 +153,12 @@ class Auth_Container_KADM5 extends Auth_Container {
      * @access private
      */
     function _checkServer() {
-        $fp = @fsockopen ($this->options['host'], 88, $errno, $errstr, $this->options['timeout']);
+        $fp = @fsockopen ($this->options['hostname'], 88, $errno, $errstr, $this->options['timeout']);
         if (is_resource($fp)) {
             @fclose($fp);
         } else {
             $message = "Error connecting to Kerberos V server "
-                .$this->options['host'].":".$this->options['port'];
+                .$this->options['hostname'].":".$this->options['port'];
             return PEAR::raiseError($message, 41, PEAR_ERROR_DIE);
         }
     }

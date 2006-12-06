@@ -58,10 +58,10 @@ the login data:
 	<email>aharvey@php.net</email>
 	<active>yes</active>
  </developer>
- <date>2006-11-10</date>
+ <date>2006-12-06</date>
  <time>07:00:00</time>
  <version>
-  <release>1.4.2</release>
+  <release>1.4.3</release>
   <api>1.4.0</api>
  </version>
  <stability>
@@ -69,10 +69,8 @@ the login data:
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
- <notes> * Fixed Bug #9241: Callback functions where being passed a copy of
-   the login object instead of a reference to it under PHP4.
- * Fixed Bug #9286: Comparison of passwords and their hashes could give
-   false positive.
+ <notes> * Fixed Bug #9479: Typo in Auth_Container_KADM5::_checkServer causes
+   failure. Thanks to Matt T. Proud (khanreaper at nerp dot net).
  </notes>
  <contents>
   <dir name="/">
@@ -253,6 +251,24 @@ the login data:
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <date>2006-11-10</date>
+   <time>07:00:00</time>
+   <version>
+    <release>1.4.2</release>
+    <api>1.4.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes> * Fixed Bug #9241: Callback functions where being passed a copy of
+   the login object instead of a reference to it under PHP4.
+ * Fixed Bug #9286: Comparison of passwords and their hashes could give
+   false positive.
+   </notes>
+	</release>
   <release>
    <date>2006-10-28</date>
    <time>07:00:00</time>

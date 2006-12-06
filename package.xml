@@ -56,16 +56,14 @@ the login data:
     </maintainer>
   </maintainers>
   <release>
-    <version>1.4.2</version>
+    <version>1.4.3</version>
     <date>2006-11-10</date>
     <license>PHP License</license>
     <state>stable</state>
     <notes>
 <![CDATA[
- * Fixed Bug #9241: Callback functions where being passed a copy of
-   the login object instead of a reference to it under PHP4.
- * Fixed Bug #9286: Comparison of passwords and their hashes could give
-   false positive.
+ * Fixed Bug #9479: Typo in Auth_Container_KADM5::_checkServer causes
+   failure. Thanks to Matt T. Proud (khanreaper at nerp dot net).
 ]]>
     </notes>
 
@@ -196,7 +194,22 @@ the login data:
   </release>
 
   <changelog>
-  <release>
+   <release>
+    <version>1.4.2</version>
+    <date>2006-11-10</date>
+    <license>PHP License</license>
+    <state>stable</state>
+    <notes>
+<![CDATA[
+ * Fixed Bug #9241: Callback functions where being passed a copy of
+   the login object instead of a reference to it under PHP4.
+ * Fixed Bug #9286: Comparison of passwords and their hashes could give
+   false positive.
+]]>
+    </notes>
+	 </release>
+
+   <release>
     <version>1.4.1</version>
     <date>2006-10-28</date>
     <license>PHP License</license>
