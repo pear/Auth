@@ -58,22 +58,19 @@ the login data:
 	<email>aharvey@php.net</email>
 	<active>yes</active>
  </developer>
- <date>2006-12-06</date>
+ <date>2006-12-21</date>
  <time>07:00:00</time>
  <version>
-  <release>1.4.3</release>
-  <api>1.4.0</api>
+  <release>1.5.0</release>
+  <api>1.5.0</api>
  </version>
  <stability>
   <release>stable</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
- <notes> * Fixed Bug #9380: Default Auth_Container_POP3 configuration not 
-   working.
- * Fixed Bug #9407: Add callback in checkAuth() process.
- * Fixed Bug #9479: Typo in Auth_Container_KADM5::_checkServer causes
-   failure. Thanks to Matt T. Proud (khanreaper at nerp dot net).
+ <notes> * Completed Request #4126: Enhancements to Advanced Security Mode. Thanks
+   to makler at man dot torun dot pl.
  </notes>
  <contents>
   <dir name="/">
@@ -254,6 +251,25 @@ the login data:
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <date>2006-12-06</date>
+   <time>07:00:00</time>
+   <version>
+    <release>1.4.3</release>
+    <api>1.4.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes> * Fixed Bug #9380: Default Auth_Container_POP3 configuration not 
+   working.
+ * Fixed Bug #9407: Add callback in checkAuth() process.
+ * Fixed Bug #9479: Typo in Auth_Container_KADM5::_checkServer causes
+   failure. Thanks to Matt T. Proud (khanreaper at nerp dot net).
+   </notes>
+	</release>
   <release>
    <date>2006-11-10</date>
    <time>07:00:00</time>

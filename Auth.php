@@ -754,6 +754,9 @@ class Auth {
         $this->session['sessionuseragent'] = isset($this->server['HTTP_USER_AGENT']) 
             ? $this->server['HTTP_USER_AGENT'] 
             : '';
+        $this->session['sessionforwardedfor'] = isset($this->server['HTTP_X_FORWARDED_FOR']) 
+            ? $this->server['HTTP_X_FORWARDED_FOR'] 
+            : '';
 
         // This should be set by the container to something more safe
         // Like md5(passwd.microtime)
@@ -843,6 +846,18 @@ class Auth {
                         && $this->session['sessionip'] != $this->server['REMOTE_ADDR']) {
                         // Check if the IP of the user has changed, if so we 
                         // assume a man in the middle attack and log him out
+                        $this->expired = true;
+                        $this->status = AUTH_SECURITY_BREACH;
+                        $this->logout();
+                        return false;
+                    }
+
+                    // Check for ip change (if connected via proxy)
+                    if (   isset($this->server['HTTP_X_FORWARDED_FOR'])
+                        && $this->session['sessionforwardedfor'] != $this->server['HTTP_X_FORWARDED_FOR']) {
+                        // Check if the IP of the user connecting via proxy has 
+                        // changed, if so we assume a man in the middle attack 
+                        // and log him out.
                         $this->expired = true;
                         $this->status = AUTH_SECURITY_BREACH;
                         $this->logout();
