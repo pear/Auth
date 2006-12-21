@@ -171,6 +171,7 @@ the login data:
     <tasks:replace from="@package_version@" to="version" type="package-info" />
    </file>
    <file baseinstalldir="Auth" name="README.Auth" role="doc" />
+   <file baseinstalldir="Auth" name="README.AdvancedSecurity" role="doc" />
   </dir> <!-- / -->
  </contents>
  <dependencies>
