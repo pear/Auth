@@ -54,9 +54,9 @@ the login data:
  </developer>
  <developer>
   <name>Adam Harvey</name>
-	<user>aharvey</user>
-	<email>aharvey@php.net</email>
-	<active>yes</active>
+  <user>aharvey</user>
+  <email>aharvey@php.net</email>
+  <active>yes</active>
  </developer>
  <date>2006-12-21</date>
  <time>07:00:00</time>
@@ -71,6 +71,8 @@ the login data:
  <license uri="http://www.php.net/license">PHP License</license>
  <notes> * Completed Request #4126: Enhancements to Advanced Security Mode. Thanks
    to makler at man dot torun dot pl.
+ * Completed Request #7089: Add optional extra WHERE options to DB and MDB(2) 
+   containers.
  </notes>
  <contents>
   <dir name="/">
@@ -270,7 +272,7 @@ the login data:
  * Fixed Bug #9479: Typo in Auth_Container_KADM5::_checkServer causes
    failure. Thanks to Matt T. Proud (khanreaper at nerp dot net).
    </notes>
-	</release>
+  </release>
   <release>
    <date>2006-11-10</date>
    <time>07:00:00</time>
@@ -288,7 +290,7 @@ the login data:
  * Fixed Bug #9286: Comparison of passwords and their hashes could give
    false positive.
    </notes>
-	</release>
+  </release>
   <release>
    <date>2006-10-28</date>
    <time>07:00:00</time>

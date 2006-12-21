@@ -204,6 +204,7 @@ class Auth_Container_MDB2 extends Auth_Container
         $this->options['db_fields']   = '';
         $this->options['cryptType']   = 'md5';
         $this->options['db_options']  = array();
+        $this->options['db_where']    = '';
         $this->options['auto_quote']  = true;
     }
 
@@ -308,6 +309,12 @@ class Auth_Container_MDB2 extends Auth_Container
                          $this->db->quote($username, 'text')
                          );
 
+        // check if there is an optional parameter db_where
+        if ($this->options['db_where'] != '') {
+            // there is one, so add it to the query
+            $query .= " AND ".$this->options['db_where'];
+        }
+
         $res = $this->db->queryRow($query, null, MDB2_FETCHMODE_ASSOC);
         if (MDB2::isError($res) || PEAR::isError($res)) {
             return PEAR::raiseError($res->getMessage(), $res->getCode());
@@ -384,6 +391,12 @@ class Auth_Container_MDB2 extends Auth_Container
                          $sql_from,
                          $this->options['final_table']
                          );
+
+        // check if there is an optional parameter db_where
+        if ($this->options['db_where'] != '') {
+            // there is one, so add it to the query
+            $query .= " WHERE ".$this->options['db_where'];
+        }
 
         $res = $this->db->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
         if (MDB2::isError($res)) {
@@ -486,6 +499,12 @@ class Auth_Container_MDB2 extends Auth_Container
                          $this->db->quote($username, 'text')
                          );
 
+        // check if there is an optional parameter db_where
+        if ($this->options['db_where'] != '') {
+            // there is one, so add it to the query
+            $query .= " AND ".$this->options['db_where'];
+        }
+
         $res = $this->query($query);
 
         if (MDB2::isError($res)) {
@@ -528,6 +547,12 @@ class Auth_Container_MDB2 extends Auth_Container
                          $this->options['final_usernamecol'],
                          $this->db->quote($username, 'text')
                          );
+
+        // check if there is an optional parameter db_where
+        if ($this->options['db_where'] != '') {
+            // there is one, so add it to the query
+            $query .= " AND ".$this->options['db_where'];
+        }
 
         $res = $this->query($query);
 

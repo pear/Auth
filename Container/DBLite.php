@@ -93,6 +93,7 @@ class Auth_Container_DBLite extends Auth_Container
         $this->options['db_fields']   = '';
         $this->options['cryptType']   = 'md5';
         $this->options['db_options']  = array();
+        $this->options['db_where']    = '';
         $this->options['auto_quote']  = true;
 
         if (is_array($dsn)) {
@@ -259,6 +260,13 @@ class Auth_Container_DBLite extends Auth_Container
         $query = "SELECT ".$sql_from.
                 " FROM ".$this->options['final_table'].
                 " WHERE ".$this->options['final_usernamecol']." = ".$this->db->quoteSmart($username);
+
+        // check if there is an optional parameter db_where
+        if ($this->options['db_where'] != '') {
+            // there is one, so add it to the query
+            $query .= " AND ".$this->options['db_where'];
+        }
+
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {

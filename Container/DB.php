@@ -205,6 +205,7 @@ class Auth_Container_DB extends Auth_Container
         $this->options['db_fields']   = '';
         $this->options['cryptType']   = 'md5';
         $this->options['db_options']  = array();
+        $this->options['db_where']    = '';
         $this->options['auto_quote']  = true;
     }
 
@@ -307,6 +308,12 @@ class Auth_Container_DB extends Auth_Container
                 " FROM ".$this->options['final_table'].
                 " WHERE ".$this->options['final_usernamecol']." = ".$this->db->quoteSmart($username);
 
+        // check if there is an optional parameter db_where
+        if ($this->options['db_where'] != '') {
+            // there is one, so add it to the query
+            $query .= " AND ".$this->options['db_where'];
+        }
+
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
@@ -390,6 +397,13 @@ class Auth_Container_DB extends Auth_Container
                          $sql_from,
                          $this->options['final_table']
                          );
+
+        // check if there is an optional parameter db_where
+        if ($this->options['db_where'] != '') {
+            // there is one, so add it to the query
+            $query .= " WHERE ".$this->options['db_where'];
+        }
+
         $res = $this->db->getAll($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
@@ -486,10 +500,19 @@ class Auth_Container_DB extends Auth_Container
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
-        $query = sprintf("DELETE FROM %s WHERE %s = %s",
+        // check if there is an optional parameter db_where
+        if ($this->options['db_where'] != '') {
+            // there is one, so add it to the query
+            $where = " AND ".$this->options['db_where'];
+        } else {
+            $where = '';
+        }
+
+        $query = sprintf("DELETE FROM %s WHERE %s = %s %s",
                          $this->options['final_table'],
                          $this->options['final_usernamecol'],
-                         $this->db->quoteSmart($username)
+                         $this->db->quoteSmart($username),
+                         $where
                          );
 
         $res = $this->query($query);
@@ -529,12 +552,21 @@ class Auth_Container_DB extends Auth_Container
 
         $password = $cryptFunction($password);
 
-        $query = sprintf("UPDATE %s SET %s = %s WHERE %s = %s",
+        // check if there is an optional parameter db_where
+        if ($this->options['db_where'] != '') {
+            // there is one, so add it to the query
+            $where = " AND ".$this->options['db_where'];
+        } else {
+            $where = '';
+        }
+
+        $query = sprintf("UPDATE %s SET %s = %s WHERE %s = %s %s",
                          $this->options['final_table'],
                          $this->options['final_passwordcol'],
                          $this->db->quoteSmart($password),
                          $this->options['final_usernamecol'],
-                         $this->db->quoteSmart($username)
+                         $this->db->quoteSmart($username),
+                         $where
                          );
 
         $res = $this->query($query);
