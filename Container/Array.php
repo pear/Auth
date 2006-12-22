@@ -104,7 +104,7 @@ class Auth_Container_Array extends Auth_Container {
             $this->users = $data['users'];
         } else {
             $this->users = array();
-            PEAR::raiseError('Auth_Container_Array: no user data found inoptions array');
+            PEAR::raiseError('Auth_Container_Array: no user data found in options array');
         } 
         if (isset($data['cryptType'])) {
             $this->cryptType = $data['cryptType'];
@@ -128,6 +128,7 @@ class Auth_Container_Array extends Auth_Container {
      */
     function fetchData($user, $pass)
     {
+        $this->log('Auth_Container_Array::fetchData() called.', PEAR_LOG_DEBUG);
         if (   isset($this->users[$user])
             && $this->verifyPassword($pass, $this->users[$user], $this->cryptType)) {
             return true;
@@ -145,6 +146,7 @@ class Auth_Container_Array extends Auth_Container {
      */
     function listUsers()
     {
+        $this->log('Auth_Container_Array::listUsers() called.', PEAR_LOG_DEBUG);
         $ret = array();
         foreach ($this->users as $username => $password) {
             $ret[]['username'] = $username;

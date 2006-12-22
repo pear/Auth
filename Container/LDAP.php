@@ -340,6 +340,7 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _disconnect()
     {
+        $this->log('Auth_Container_LDAP::_disconnect() called.', PEAR_LOG_DEBUG);
         if ($this->_isValidLink()) {
             $this->log('disconnecting from server');
             @ldap_unbind($this->conn_id);
@@ -356,6 +357,7 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _getBaseDN()
     {
+        $this->log('Auth_Container_LDAP::_getBaseDN() called.', PEAR_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
@@ -431,7 +433,6 @@ class Auth_Container_LDAP extends Auth_Container
         $this->options['userattr']    = 'uid';
         $this->options['userfilter']  = '(objectClass=posixAccount)';
         $this->options['attributes']  = array(''); // no attributes
-     // $this->options['attrformat']  = 'LDAP'; // returns attribute array as PHP LDAP functions return it
         $this->options['attrformat']  = 'AUTH'; // returns attribute like other Auth containers
         $this->options['group']       = '';
         $this->options['groupdn']     = '';
@@ -537,6 +538,7 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function fetchData($username, $password)
     {
+        $this->log('Auth_Container_LDAP::fetchData() called.', PEAR_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
@@ -634,6 +636,7 @@ class Auth_Container_LDAP extends Auth_Container
                                     unset ($attributeValue['count']);
                                 }
                                 if (count($attributeValue)<=1) $attributeValue = $attributeValue[0];
+                                $this->log('Storing additional field: '.$attributeName, PEAR_LOG_DEBUG);
                                 $this->_auth_obj->setAuthData($attributeName, $attributeValue);
                             }
                         }
@@ -692,6 +695,7 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function checkGroup($user)
     {
+        $this->log('Auth_Container_LDAP::checkGroup() called.', PEAR_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());

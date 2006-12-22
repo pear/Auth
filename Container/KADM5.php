@@ -114,6 +114,7 @@ class Auth_Container_KADM5 extends Auth_Container {
      * @return  boolean
      */
     function fetchData($username, $password) {
+        $this->log('Auth_Container_KADM5::fetchData() called.', PEAR_LOG_DEBUG);
         if ( ($username == NULL) || ($password == NULL) ) {
             return false;
         }

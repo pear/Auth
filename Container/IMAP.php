@@ -188,13 +188,16 @@ class Auth_Container_IMAP extends Auth_Container
      */
     function fetchData($username, $password)
     {
+        $this->log('Auth_Container_IMAP::fetchData() called.', PEAR_LOG_DEBUG);
         $dsn = '{'.$this->options['host'].':'.$this->options['port'].$this->options['baseDSN'].'}';
         $conn = @imap_open ($dsn, $username, $password, OP_HALFOPEN);
         if (is_resource($conn)) {
+            $this->log('Successfully connected to IMAP server.', PEAR_LOG_DEBUG);
             $this->activeUser = $username;
             @imap_close($conn);
             return true;
         } else {
+            $this->log('Connection to IMAP server failed.', PEAR_LOG_DEBUG);
             $this->activeUser = '';
             return false;
         }

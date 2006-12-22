@@ -118,6 +118,7 @@ class Auth_Container_DBLite extends Auth_Container
      */
     function _connect(&$dsn)
     {
+        $this->log('Auth_Container_DBLite::_connect() called.', PEAR_LOG_DEBUG);
         if (is_string($dsn) || is_array($dsn)) {
             $this->db =& DB::connect($dsn, $this->options['db_options']);
         } elseif (is_subclass_of($dsn, "db_common")) {
@@ -238,6 +239,7 @@ class Auth_Container_DBLite extends Auth_Container
      */
     function fetchData($username, $password)
     {
+        $this->log('Auth_Container_DBLite::fetchData() called.', PEAR_LOG_DEBUG);
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
@@ -267,6 +269,8 @@ class Auth_Container_DBLite extends Auth_Container
             $query .= " AND ".$this->options['db_where'];
         }
 
+        $this->log('Running SQL against DB: '.$query, PEAR_LOG_DEBUG);
+
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
@@ -285,6 +289,9 @@ class Auth_Container_DBLite extends Auth_Container
                     $key == $this->options['usernamecol']) {
                     continue;
                 }
+                
+                $this->log('Storing additional field: '.$key, PEAR_LOG_DEBUG);
+
                 // Use reference to the auth object if exists
                 // This is because the auth session variable can change so a static call to setAuthData does not make sence
                 if (is_object($this->_auth_obj)) {
