@@ -175,6 +175,9 @@ the login data:
    </file>
    <file baseinstalldir="Auth" name="README.Auth" role="doc" />
    <file baseinstalldir="Auth" name="README.AdvancedSecurity" role="doc" />
+	 <dir name="examples">
+		<file baseinstalldir="Auth" name="logging.php" role="doc" />
+	 </dir>
   </dir> <!-- / -->
  </contents>
  <dependencies>

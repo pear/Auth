@@ -1220,6 +1220,9 @@ class Auth {
     function _loadLogger()
     {
         if(is_null($this->logger)) {
+            if (!class_exists('Log')) {
+                include_once 'Log.php';
+            }
             $this->logger =& Log::singleton('null',
                     null,
                     'auth['.getmypid().']',
