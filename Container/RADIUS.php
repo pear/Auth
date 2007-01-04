@@ -125,38 +125,40 @@ class Auth_Container_RADIUS extends Auth_Container
      */
     function fetchData($username, $password, $challenge = null)
     {
+        $this->log('Auth_Container_RADIUS::fetchData() called.', PEAR_LOG_DEBUG);
+
         switch($this->authtype) {
-        case 'CHAP_MD5':
-        case 'MSCHAPv1':
-            if (isset($challenge)) {
-                $this->radius->challenge = $challenge;
-                $this->radius->chapid    = 1;
-                $this->radius->response  = pack('H*', $password);
-            } else {
-                require_once 'Crypt/CHAP.php';
-                $classname = 'Crypt_' . $this->authtype;
-                $crpt = new $classname;
-                $crpt->password = $password;
-                $this->radius->challenge = $crpt->challenge;
-                $this->radius->chapid    = $crpt->chapid;
-                $this->radius->response  = $crpt->challengeResponse();
+            case 'CHAP_MD5':
+            case 'MSCHAPv1':
+                if (isset($challenge)) {
+                    $this->radius->challenge = $challenge;
+                    $this->radius->chapid    = 1;
+                    $this->radius->response  = pack('H*', $password);
+                } else {
+                    require_once 'Crypt/CHAP.php';
+                    $classname = 'Crypt_' . $this->authtype;
+                    $crpt = new $classname;
+                    $crpt->password = $password;
+                    $this->radius->challenge = $crpt->challenge;
+                    $this->radius->chapid    = $crpt->chapid;
+                    $this->radius->response  = $crpt->challengeResponse();
+                }
                 break;
-            }
-
-        case 'MSCHAPv2':
-            require_once 'Crypt/CHAP.php';
-            $crpt = new Crypt_MSCHAPv2;
-            $crpt->username = $username;
-            $crpt->password = $password;
-            $this->radius->challenge     = $crpt->authChallenge;
-            $this->radius->peerChallenge = $crpt->peerChallenge;
-            $this->radius->chapid        = $crpt->chapid;
-            $this->radius->response      = $crpt->challengeResponse();
-            break;
-
-        default:
-            $this->radius->password = $password;
-            break;
+                
+            case 'MSCHAPv2':
+                require_once 'Crypt/CHAP.php';
+                $crpt = new Crypt_MSCHAPv2;
+                $crpt->username = $username;
+                $crpt->password = $password;
+                $this->radius->challenge     = $crpt->authChallenge;
+                $this->radius->peerChallenge = $crpt->peerChallenge;
+                $this->radius->chapid        = $crpt->chapid;
+                $this->radius->response      = $crpt->challengeResponse();
+                break;
+                
+            default:
+                $this->radius->password = $password;
+                break;
         }
 
         $this->radius->username = $username;

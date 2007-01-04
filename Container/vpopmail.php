@@ -74,6 +74,7 @@ class Auth_Container_vpopmail extends Auth_Container {
      */
     function fetchData($username, $password)
     {
+        $this->log('Auth_Container_vpopmail::fetchData() called.', PEAR_LOG_DEBUG);
         $userdata = array();
         $userdata = preg_split("/@/", $username, 2);
         $result = @vpopmail_auth_user($userdata[0], $userdata[1], $password);

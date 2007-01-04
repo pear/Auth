@@ -148,6 +148,7 @@ class Auth_Container_IMAP extends Auth_Container
      * @access private
      */
     function _checkServer() {
+        $this->log('Auth_Container_IMAP::_checkServer() called.', PEAR_LOG_DEBUG);
         $fp = @fsockopen ($this->options['host'], $this->options['port'],
                           $errno, $errstr, $this->options['timeout']);
         if (is_resource($fp)) {

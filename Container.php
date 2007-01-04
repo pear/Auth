@@ -232,7 +232,7 @@ class Auth_Container
     }
 
     // }}}
-    // {{{
+    // {{{ log()
 
     /**
      * Log a message to the Auth log

@@ -181,7 +181,8 @@ class Auth_Container_SOAP5 extends Auth_Container
      * @return mixed Returns the SOAP response or false if something went wrong
      */
     function fetchData($username, $password)
-    {        
+    {
+        $this->log('Auth_Container_SOAP5::fetchData() called.', PEAR_LOG_DEBUG);
         $result = $this->_validateOptions();
         if (PEAR::isError($result))
             return $result;
