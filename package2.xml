@@ -69,7 +69,9 @@ the login data:
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
- <notes> * Completed Request #4126: Enhancements to Advanced Security Mode. Thanks
+ <notes> * Completed Request #2229: Ability to attach fall through containers. This
+   is implemented through the use of a new container Auth_Container_Multiple.
+ * Completed Request #4126: Enhancements to Advanced Security Mode. Thanks
    to makler at man dot torun dot pl.
  * Completed Request #6949: Use Log package for debugging messages.
  * Completed Request #7089: Add optional extra WHERE options to DB and MDB(2) 
@@ -114,6 +116,9 @@ the login data:
      <tasks:replace from="@package_version@" to="version" type="package-info" />
     </file>
     <file baseinstalldir="Auth" name="MDB2.php" role="php">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+    <file baseinstalldir="Auth" name="Multiple.php" role="php">
      <tasks:replace from="@package_version@" to="version" type="package-info" />
     </file>
     <file baseinstalldir="Auth" name="PEAR.php" role="php">
@@ -175,9 +180,9 @@ the login data:
    </file>
    <file baseinstalldir="Auth" name="README.Auth" role="doc" />
    <file baseinstalldir="Auth" name="README.AdvancedSecurity" role="doc" />
-	 <dir name="examples">
-		<file baseinstalldir="Auth" name="logging.php" role="doc" />
-	 </dir>
+   <dir name="examples">
+    <file baseinstalldir="Auth" name="logging.php" role="doc" />
+   </dir>
   </dir> <!-- / -->
  </contents>
  <dependencies>
