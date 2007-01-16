@@ -58,14 +58,14 @@ the login data:
   <email>aharvey@php.net</email>
   <active>yes</active>
  </developer>
- <date>2007-01-04</date>
+ <date>2007-01-16</date>
  <time>07:00:00</time>
  <version>
-  <release>1.5.0</release>
+  <release>1.5.0RC1</release>
   <api>1.5.0</api>
  </version>
  <stability>
-  <release>stable</release>
+  <release>beta</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
@@ -76,6 +76,8 @@ the login data:
  * Completed Request #6949: Use Log package for debugging messages.
  * Completed Request #7089: Add optional extra WHERE options to DB and MDB(2) 
    containers.
+ * Add ability to pass an instanciated DB, MDB or MDB2 database connection to each
+   of the respective Auth Containers.
  </notes>
  <contents>
   <dir name="/">

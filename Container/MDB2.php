@@ -95,6 +95,10 @@ class Auth_Container_MDB2 extends Auth_Container
         } else {
             $this->options['dsn'] = $dsn;
         }
+        if (   is_object($this->options['dsn'])
+            && is_subclass_of($this->options['dsn'], 'MDB2_Driver_Common')) {
+            $this->db =& $this->options['dsn'];
+        }
     }
 
     // }}}
