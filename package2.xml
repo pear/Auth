@@ -58,7 +58,7 @@ the login data:
   <email>aharvey@php.net</email>
   <active>yes</active>
  </developer>
- <date>2007-01-16</date>
+ <date>2007-01-17</date>
  <time>07:00:00</time>
  <version>
   <release>1.5.0RC1</release>
@@ -71,9 +71,11 @@ the login data:
  <license uri="http://www.php.net/license">PHP License</license>
  <notes> * Completed Request #2229: Ability to attach fall through containers. This
    is implemented through the use of a new container Auth_Container_Multiple.
+   See multi-container.php in examples directory.
  * Completed Request #4126: Enhancements to Advanced Security Mode. Thanks
    to makler at man dot torun dot pl.
- * Completed Request #6949: Use Log package for debugging messages.
+ * Completed Request #6949: Use Log package for debugging messages. See logging.php
+   in examples directory.
  * Completed Request #7089: Add optional extra WHERE options to DB and MDB(2) 
    containers.
  * Add ability to pass an instanciated DB, MDB or MDB2 database connection to each
@@ -184,6 +186,7 @@ the login data:
    <file baseinstalldir="Auth" name="README.AdvancedSecurity" role="doc" />
    <dir name="examples">
     <file baseinstalldir="Auth" name="logging.php" role="doc" />
+    <file baseinstalldir="Auth" name="multi-container.php" role="doc" />
    </dir>
   </dir> <!-- / -->
  </contents>
