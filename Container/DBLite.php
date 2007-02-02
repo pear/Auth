@@ -104,10 +104,6 @@ class Auth_Container_DBLite extends Auth_Container
         } else {
             $this->options['dsn'] = $dsn;
         }
-        if (   is_object($this->options['dsn'])
-            && DB::isConnection($this->db)) {
-            $this->db =& $this->options['dsn'];
-        }
     }
 
     // }}}

@@ -95,10 +95,6 @@ class Auth_Container_MDB extends Auth_Container
         } else {
             $this->options['dsn'] = $dsn;
         }
-        if (   is_object($this->options['dsn'])
-            && is_subclass_of($this->db, 'mdb_common')) {
-            $this->db =& $this->options['dsn'];
-        }
     }
 
     // }}}

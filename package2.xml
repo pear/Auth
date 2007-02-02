@@ -71,6 +71,8 @@ the login data:
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
  * Fixed Bug #9944: Logging constants not defined when logging disabled.
+ * Fixed Bug #10000: Stupid developer didn't stop to look what he was doing
+   and broke things.
  </notes>
  <contents>
   <dir name="/">
