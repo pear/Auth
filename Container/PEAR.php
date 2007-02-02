@@ -80,7 +80,7 @@ class Auth_Container_Pear extends Auth_Container
      */
     function fetchData($username, $password)
     {
-        $this->log('Auth_Container_PEAR::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_PEAR::fetchData() called.', AUTH_LOG_DEBUG);
         $rpc = new XML_RPC_Client('/xmlrpc.php', 'pear.php.net');
         $rpc_message = new XML_RPC_Message("user.info", array(new XML_RPC_Value($username, "string")) );
         

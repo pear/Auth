@@ -116,7 +116,7 @@ class Auth_Container_SAP extends Auth_Container {
      */
     function fetchData($username, $password)
     {
-        $this->log('Auth_Container_SAP::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_SAP::fetchData() called.', AUTH_LOG_DEBUG);
         $connection_options = $this->options;
         $connection_options['USER'] = $username;
         $connection_options['PASSWD'] = $password;
@@ -131,7 +131,7 @@ class Auth_Container_SAP extends Auth_Container {
             return false;
         } else {
             if (!empty($this->options['GETSSO2'])) {
-                $this->log('Attempting to retrieve SSO2 ticket.', PEAR_LOG_DEBUG);
+                $this->log('Attempting to retrieve SSO2 ticket.', AUTH_LOG_DEBUG);
                 if ($ticket = @saprfc_get_ticket($rfc)) {
                     $this->options['MYSAPSSO2'] = $ticket;
                     unset($this->options['GETSSO2']);

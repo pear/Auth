@@ -104,7 +104,7 @@ class Auth_Container_SMBPasswd extends Auth_Container
      */
     function fetchData($username, $password)
     {
-        $this->log('Auth_Container_SMBPasswd::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_SMBPasswd::fetchData() called.', AUTH_LOG_DEBUG);
         return $this->pwfile->verifyAccount($username, $password);
     }
 
@@ -113,7 +113,7 @@ class Auth_Container_SMBPasswd extends Auth_Container
     
     function listUsers()
     {
-        $this->log('Auth_Container_SMBPasswd::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_SMBPasswd::fetchData() called.', AUTH_LOG_DEBUG);
         return $this->pwfile->getAccounts();
     }
 
@@ -131,7 +131,7 @@ class Auth_Container_SMBPasswd extends Auth_Container
      */
     function addUser($username, $password, $additional = '')
     {
-        $this->log('Auth_Container_SMBPasswd::addUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_SMBPasswd::addUser() called.', AUTH_LOG_DEBUG);
         $res = $this->pwfile->addUser($user, $additional['userid'], $pass);
         if ($res === true) {
             return $this->pwfile->save();
@@ -149,7 +149,7 @@ class Auth_Container_SMBPasswd extends Auth_Container
      */
     function removeUser($username)
     {
-        $this->log('Auth_Container_SMBPasswd::removeUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_SMBPasswd::removeUser() called.', AUTH_LOG_DEBUG);
         $res = $this->pwfile->delUser($username);
         if ($res === true) {
             return $this->pwfile->save();
@@ -168,7 +168,7 @@ class Auth_Container_SMBPasswd extends Auth_Container
      */
     function changePassword($username, $password)
     {
-        $this->log('Auth_Container_SMBPasswd::changePassword() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_SMBPasswd::changePassword() called.', AUTH_LOG_DEBUG);
         $res = $this->pwfile->modUser($username, '', $password);
         if ($res === true) {
             return $this->pwfile->save();

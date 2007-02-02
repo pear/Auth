@@ -137,11 +137,11 @@ class Auth_Container_Multiple extends Auth_Container {
      */
     function fetchData($user, $pass)
     {
-        $this->log('Auth_Container_Multiple::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_Multiple::fetchData() called.', AUTH_LOG_DEBUG);
         
         foreach ($this->options as $key => $options) {
 
-            $this->log('Using Container '.$key.' of type '.$options['type'].'.', PEAR_LOG_DEBUG);
+            $this->log('Using Container '.$key.' of type '.$options['type'].'.', AUTH_LOG_DEBUG);
 
             if (isset($this->containers[$key]) && is_a($this->containers[$key], 'Auth_Container')) {
 
@@ -159,23 +159,23 @@ class Auth_Container_Multiple extends Auth_Container {
 
             if (PEAR::isError($result)) {
 
-                $this->log('Container '.$key.': '.$result->getMessage(), PEAR_LOG_ERR);
+                $this->log('Container '.$key.': '.$result->getMessage(), AUTH_LOG_ERR);
                 return $result;
 
             } elseif ($result == true) {
 
-                $this->log('Container '.$key.': Authentication successful.', PEAR_LOG_DEBUG);
+                $this->log('Container '.$key.': Authentication successful.', AUTH_LOG_DEBUG);
                 return true;
 
             } else {
 
-                $this->log('Container '.$key.': Authentication failed.', PEAR_LOG_DEBUG);
+                $this->log('Container '.$key.': Authentication failed.', AUTH_LOG_DEBUG);
 
             }
 
         }
 
-        $this->log('Auth_Container_Multiple: All containers rejected user credentials.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_Multiple: All containers rejected user credentials.', AUTH_LOG_DEBUG);
 
         return false;
 

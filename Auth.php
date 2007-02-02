@@ -48,6 +48,16 @@ define('AUTH_SECURITY_BREACH',          -5);
 define('AUTH_CALLBACK_ABORT',           -6);
 
 /**
+ * Auth Log level - INFO
+ */
+define('AUTH_LOG_INFO',     6);
+/**
+ * Auth Log level - DEBUG
+ */
+define('AUTH_LOG_DEBUG',    7);
+
+
+/**
  * PEAR::Auth
  *
  * The PEAR::Auth class provides methods for creating an
@@ -404,7 +414,7 @@ class Auth {
             $this->storage =& $this->_factory($this->storage_driver, 
                     $this->storage_options);
             $this->storage->_auth_obj =& $this;
-            $this->log('Loaded storage container ('.$this->storage_driver.')', PEAR_LOG_DEBUG);
+            $this->log('Loaded storage container ('.$this->storage_driver.')', AUTH_LOG_DEBUG);
             return(true);
         }
         return(false);
@@ -448,7 +458,7 @@ class Auth {
      */
     function assignData()
     {
-        $this->log('Auth::assignData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::assignData() called.', AUTH_LOG_DEBUG);
 
         if (   isset($this->post[$this->_postUsername]) 
             && $this->post[$this->_postUsername] != '') {
@@ -475,7 +485,7 @@ class Auth {
      */
     function start()
     {
-        $this->log('Auth::start() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::start() called.', AUTH_LOG_DEBUG);
 
         $this->assignData();
         if (!$this->checkAuth() && $this->allowLogin) {
@@ -494,7 +504,7 @@ class Auth {
      */
     function login()
     {
-        $this->log('Auth::login() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::login() called.', AUTH_LOG_DEBUG);
 
         $login_ok = false;
         $this->_loadStorage();
@@ -510,14 +520,14 @@ class Auth {
             if (true === $this->storage->fetchData($this->username, $this->password, $usingChap)) {
                 $this->session['challengekey'] = md5($this->username.$this->password);
                 $login_ok = true;
-                $this->log('Successful login.', PEAR_LOG_INFO);
+                $this->log('Successful login.', AUTH_LOG_INFO);
             }
         }
 
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (is_callable($this->loginCallback)) {
-                $this->log('Calling loginCallback ('.$this->loginCallback.').', PEAR_LOG_DEBUG);
+                $this->log('Calling loginCallback ('.$this->loginCallback.').', AUTH_LOG_DEBUG);
                 call_user_func_array($this->loginCallback, array($this->username, &$this));
             }
         }
@@ -525,28 +535,28 @@ class Auth {
         // If the login failed or the user entered no username, 
         // output the login screen again.
         if (!empty($this->username) && !$login_ok) {
-            $this->log('Incorrect login.', PEAR_LOG_INFO);
+            $this->log('Incorrect login.', AUTH_LOG_INFO);
             $this->status = AUTH_WRONG_LOGIN;
             if (is_callable($this->loginFailedCallback)) {
-                $this->log('Calling loginFailedCallback ('.$this->loginFailedCallback.').', PEAR_LOG_DEBUG);
+                $this->log('Calling loginFailedCallback ('.$this->loginFailedCallback.').', AUTH_LOG_DEBUG);
                 call_user_func_array($this->loginFailedCallback, array($this->username, &$this));
             }
         }
 
         if ((empty($this->username) || !$login_ok) && $this->showLogin) {
-            $this->log('Rendering Login Form.', PEAR_LOG_INFO);
+            $this->log('Rendering Login Form.', AUTH_LOG_INFO);
             if (is_callable($this->loginFunction)) {
-                $this->log('Calling loginFunction ('.$this->loginFunction.').', PEAR_LOG_DEBUG);
+                $this->log('Calling loginFunction ('.$this->loginFunction.').', AUTH_LOG_DEBUG);
                 call_user_func_array($this->loginFunction, array($this->username, $this->status, &$this));
             } else {
                 // BC fix Auth used to use drawLogin for this
                 // call is sub classes implement this
                 if (is_callable(array($this, 'drawLogin'))) {
-                    $this->log('Calling Auth::drawLogin()', PEAR_LOG_DEBUG);
+                    $this->log('Calling Auth::drawLogin()', AUTH_LOG_DEBUG);
                     return $this->drawLogin($this->username, $this);
                 }
 
-                $this->log('Using default Auth_Frontend_Html', PEAR_LOG_DEBUG);
+                $this->log('Using default Auth_Frontend_Html', AUTH_LOG_DEBUG);
 
                 // New Login form
                 include_once 'Auth/Frontend/Html.php';
@@ -770,7 +780,7 @@ class Auth {
      */
     function setAuth($username)
     {
-        $this->log('Auth::setAuth() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::setAuth() called.', AUTH_LOG_DEBUG);
     
         // #2021 - Change the session id to avoid session fixation attacks php 4.3.3 > 
         session_regenerate_id(true);
@@ -839,14 +849,14 @@ class Auth {
      */
     function checkAuth()
     {
-        $this->log('Auth::checkAuth() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::checkAuth() called.', AUTH_LOG_DEBUG);
         $this->authChecks++;
         if (isset($this->session)) {
             // Check if authentication session is expired
             if (   $this->expire > 0
                 && isset($this->session['timestamp'])
                 && ($this->session['timestamp'] + $this->expire) < time()) {
-                $this->log('Session Expired', PEAR_LOG_INFO);
+                $this->log('Session Expired', AUTH_LOG_INFO);
                 $this->expired = true;
                 $this->status = AUTH_EXPIRED;
                 $this->logout();
@@ -857,7 +867,7 @@ class Auth {
             if (   $this->idle > 0
                 && isset($this->session['idle']) 
                 && ($this->session['idle'] + $this->idle) < time()) {
-                $this->log('Session Idle Time Reached', PEAR_LOG_INFO);
+                $this->log('Session Idle Time Reached', AUTH_LOG_INFO);
                 $this->idled = true;
                 $this->status = AUTH_IDLED;
                 $this->logout();
@@ -871,11 +881,11 @@ class Auth {
                 Auth::updateIdle();
 
                 if ($this->advancedsecurity) {
-                    $this->log('Advanced Security Mode Enabled.', PEAR_LOG_DEBUG);
+                    $this->log('Advanced Security Mode Enabled.', AUTH_LOG_DEBUG);
                     
                     // Only Generate the challenge once
                     if($this->authChecks == 1) {
-                        $this->log('Generating new Challenge Cookie.', PEAR_LOG_DEBUG);
+                        $this->log('Generating new Challenge Cookie.', AUTH_LOG_DEBUG);
                         $this->session['challengecookieold'] = $this->session['challengecookie'];
                         $this->session['challengecookie'] = md5($this->session['challengekey'].microtime());
                         setcookie('authchallenge', $this->session['challengecookie']);
@@ -884,7 +894,7 @@ class Auth {
                     // Check for ip change
                     if (   isset($this->server['REMOTE_ADDR']) 
                         && $this->session['sessionip'] != $this->server['REMOTE_ADDR']) {
-                        $this->log('Security Breach. Remote IP Address changed.', PEAR_LOG_INFO);
+                        $this->log('Security Breach. Remote IP Address changed.', AUTH_LOG_INFO);
                         // Check if the IP of the user has changed, if so we 
                         // assume a man in the middle attack and log him out
                         $this->expired = true;
@@ -896,7 +906,7 @@ class Auth {
                     // Check for ip change (if connected via proxy)
                     if (   isset($this->server['HTTP_X_FORWARDED_FOR'])
                         && $this->session['sessionforwardedfor'] != $this->server['HTTP_X_FORWARDED_FOR']) {
-                        $this->log('Security Breach. Forwarded For IP Address changed.', PEAR_LOG_INFO);
+                        $this->log('Security Breach. Forwarded For IP Address changed.', AUTH_LOG_INFO);
                         // Check if the IP of the user connecting via proxy has 
                         // changed, if so we assume a man in the middle attack 
                         // and log him out.
@@ -909,7 +919,7 @@ class Auth {
                     // Check for useragent change
                     if (   isset($this->server['HTTP_USER_AGENT']) 
                         && $this->session['sessionuseragent'] != $this->server['HTTP_USER_AGENT']) {
-                        $this->log('Security Breach. User Agent changed.', PEAR_LOG_INFO);
+                        $this->log('Security Breach. User Agent changed.', AUTH_LOG_INFO);
                         // Check if the User-Agent of the user has changed, if 
                         // so we assume a man in the middle attack and log him out
                         $this->expired = true;
@@ -924,7 +934,7 @@ class Auth {
                     // in tab) auth breach is caused find out a way around that if possible
                     if (   isset($this->session['challengecookieold']) 
                         && $this->session['challengecookieold'] != $this->cookie['authchallenge']) {
-                        $this->log('Security Breach. Challenge Cookie mismatch.', PEAR_LOG_INFO);
+                        $this->log('Security Breach. Challenge Cookie mismatch.', AUTH_LOG_INFO);
                         $this->expired = true;
                         $this->status = AUTH_SECURITY_BREACH;
                         $this->logout();
@@ -934,10 +944,10 @@ class Auth {
                 }
 
                 if (is_callable($this->checkAuthCallback)) {
-                    $this->log('Calling checkAuthCallback ('.$this->checkAuthCallback.').', PEAR_LOG_DEBUG);
+                    $this->log('Calling checkAuthCallback ('.$this->checkAuthCallback.').', AUTH_LOG_DEBUG);
                     $checkCallback = call_user_func_array($this->checkAuthCallback, array($this->username, &$this));
                     if ($checkCallback == false) {
-                        $this->log('checkAuthCallback failed.', PEAR_LOG_INFO);
+                        $this->log('checkAuthCallback failed.', AUTH_LOG_INFO);
                         $this->expired = true;
                         $this->status = AUTH_CALLBACK_ABORT;
                         $this->logout();
@@ -945,11 +955,11 @@ class Auth {
                     }
                 }
 
-                $this->log('Session OK.', PEAR_LOG_INFO);
+                $this->log('Session OK.', AUTH_LOG_INFO);
                 return true;
             }
         }
-        $this->log('Unable to locate session storage.', PEAR_LOG_DEBUG);
+        $this->log('Unable to locate session storage.', AUTH_LOG_DEBUG);
         return false;
     }
 
@@ -970,7 +980,7 @@ class Auth {
         if(!isset($staticAuth)) {
             $staticAuth = new Auth('null', $options);
         }
-        $staticAuth->log('Auth::staticCheckAuth() called', PEAR_LOG_DEBUG);
+        $staticAuth->log('Auth::staticCheckAuth() called', AUTH_LOG_DEBUG);
         return $staticAuth->checkAuth();
     }
 
@@ -985,7 +995,7 @@ class Auth {
      */
     function getAuth()
     {
-        $this->log('Auth::getAuth() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::getAuth() called.', AUTH_LOG_DEBUG);
         return $this->checkAuth();
     }
 
@@ -1004,10 +1014,10 @@ class Auth {
      */
     function logout()
     {
-        $this->log('Auth::logout() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::logout() called.', AUTH_LOG_DEBUG);
 
         if (is_callable($this->logoutCallback)) {
-            $this->log('Calling logoutCallback ('.$this->logoutCallback.').', PEAR_LOG_DEBUG);
+            $this->log('Calling logoutCallback ('.$this->logoutCallback.').', AUTH_LOG_DEBUG);
             call_user_func_array($this->logoutCallback, array($this->session['username'], &$this));
         }
 
@@ -1122,7 +1132,7 @@ class Auth {
      */
     function listUsers()
     {
-        $this->log('Auth::listUsers() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::listUsers() called.', AUTH_LOG_DEBUG);
         $this->_loadStorage();
         return $this->storage->listUsers();
     }
@@ -1142,7 +1152,7 @@ class Auth {
      */
     function addUser($username, $password, $additional = '')
     {
-        $this->log('Auth::addUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::addUser() called.', AUTH_LOG_DEBUG);
         $this->_loadStorage();
         return $this->storage->addUser($username, $password, $additional);
     }
@@ -1160,7 +1170,7 @@ class Auth {
      */
     function removeUser($username)
     {
-        $this->log('Auth::removeUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth::removeUser() called.', AUTH_LOG_DEBUG);
         $this->_loadStorage();
         return $this->storage->removeUser($username);
     }
@@ -1179,7 +1189,7 @@ class Auth {
      */
     function changePassword($username, $password)
     {
-        $this->log('Auth::changePassword() called', PEAR_LOG_DEBUG);
+        $this->log('Auth::changePassword() called', AUTH_LOG_DEBUG);
         $this->_loadStorage();
         return $this->storage->changePassword($username, $password);
     }
@@ -1195,7 +1205,7 @@ class Auth {
      * @param string The log level to log the message under. See the Log documentation for more info.
      * @return boolean
      */
-    function log($message, $level = PEAR_LOG_DEBUG)
+    function log($message, $level = AUTH_LOG_DEBUG)
     {
         if (!$this->enableLogging) return false;
 
@@ -1227,7 +1237,7 @@ class Auth {
                     null,
                     'auth['.getmypid().']',
                     array(),
-                    PEAR_LOG_DEBUG);
+                    AUTH_LOG_DEBUG);
             return(true);
         }
         return(false);

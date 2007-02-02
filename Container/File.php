@@ -107,7 +107,7 @@ class Auth_Container_File extends Auth_Container
      */
     function fetchData($user, $pass)
     {
-        $this->log('Auth_Container_File::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_File::fetchData() called.', AUTH_LOG_DEBUG);
         return File_Passwd::staticAuth($this->options['type'], $this->pwfile, $user, $pass);
     }
 
@@ -121,7 +121,7 @@ class Auth_Container_File extends Auth_Container
      */
     function listUsers()
     {
-        $this->log('Auth_Container_File::listUsers() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_File::listUsers() called.', AUTH_LOG_DEBUG);
 
         $pw_obj = &$this->_load();
         if (PEAR::isError($pw_obj)) {
@@ -139,7 +139,7 @@ class Auth_Container_File extends Auth_Container
                               "cvsuser"  => $value['system']);
         }
 
-        $this->log('Found '.count($retVal).' users.', PEAR_LOG_DEBUG);
+        $this->log('Found '.count($retVal).' users.', AUTH_LOG_DEBUG);
 
         return $retVal;
     }
@@ -158,7 +158,7 @@ class Auth_Container_File extends Auth_Container
      */
     function addUser($user, $pass, $additional='')
     {
-        $this->log('Auth_Container_File::addUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_File::addUser() called.', AUTH_LOG_DEBUG);
         $params = array($user, $pass);
         if (is_array($additional)) {
             foreach ($additional as $item) {
@@ -197,7 +197,7 @@ class Auth_Container_File extends Auth_Container
      */
     function removeUser($user)
     {
-        $this->log('Auth_Container_File::removeUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_File::removeUser() called.', AUTH_LOG_DEBUG);
         $pw_obj = &$this->_load();
         if (PEAR::isError($pw_obj)) {
             return false;
@@ -227,7 +227,7 @@ class Auth_Container_File extends Auth_Container
      */
     function changePassword($username, $password)
     {
-        $this->log('Auth_Container_File::changePassword() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_File::changePassword() called.', AUTH_LOG_DEBUG);
         $pw_obj = &$this->_load();
         if (PEAR::isError($pw_obj)) {
             return false;
@@ -259,7 +259,7 @@ class Auth_Container_File extends Auth_Container
         static $pw_obj;
         
         if (!isset($pw_obj)) {
-            $this->log('Instanciating File_Password object of type '.$this->options['type'], PEAR_LOG_DEBUG);
+            $this->log('Instanciating File_Password object of type '.$this->options['type'], AUTH_LOG_DEBUG);
             $pw_obj = File_Passwd::factory($this->options['type']);
             if (PEAR::isError($pw_obj)) {
                 return $pw_obj;

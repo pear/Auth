@@ -275,29 +275,29 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _connect()
     {
-        $this->log('Auth_Container_LDAP::_connect() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_LDAP::_connect() called.', AUTH_LOG_DEBUG);
         // connect
         if (isset($this->options['url']) && $this->options['url'] != '') {
-            $this->log('Connecting with URL', PEAR_LOG_DEBUG);
+            $this->log('Connecting with URL', AUTH_LOG_DEBUG);
             $conn_params = array($this->options['url']);
         } else {
-            $this->log('Connecting with host:port', PEAR_LOG_DEBUG);
+            $this->log('Connecting with host:port', AUTH_LOG_DEBUG);
             $conn_params = array($this->options['host'], $this->options['port']);
         }
 
         if (($this->conn_id = @call_user_func_array('ldap_connect', $conn_params)) === false) {
             return PEAR::raiseError('Auth_Container_LDAP: Could not connect to server.', 41);
         }
-        $this->log('Successfully connected to server', PEAR_LOG_DEBUG);
+        $this->log('Successfully connected to server', AUTH_LOG_DEBUG);
 
         // switch LDAP version
         if (is_numeric($this->options['version']) && $this->options['version'] > 2) {
-            $this->log("Switching to LDAP version {$this->options['version']}", PEAR_LOG_DEBUG);
+            $this->log("Switching to LDAP version {$this->options['version']}", AUTH_LOG_DEBUG);
             @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $this->options['version']);
         
             // start TLS if available
             if (isset($this->options['start_tls']) && $this->options['start_tls']) {           
-                $this->log("Starting TLS session", PEAR_LOG_DEBUG);
+                $this->log("Starting TLS session", AUTH_LOG_DEBUG);
                 if (@ldap_start_tls($this->conn_id) === false) {
                     return PEAR::raiseError('Auth_Container_LDAP: Could not start tls.', 41);
                 }
@@ -306,26 +306,26 @@ class Auth_Container_LDAP extends Auth_Container
 
         // switch LDAP referrals
         if (is_bool($this->options['referrals'])) {
-          $this->log("Switching LDAP referrals to " . (($this->options['referrals']) ? 'true' : 'false'), PEAR_LOG_DEBUG);
+          $this->log("Switching LDAP referrals to " . (($this->options['referrals']) ? 'true' : 'false'), AUTH_LOG_DEBUG);
           @ldap_set_option($this->conn_id, LDAP_OPT_REFERRALS, $this->options['referrals']);
         }
 
         // bind with credentials or anonymously
         if (strlen($this->options['binddn']) && strlen($this->options['bindpw'])) {
-            $this->log('Binding with credentials', PEAR_LOG_DEBUG);
+            $this->log('Binding with credentials', AUTH_LOG_DEBUG);
             $bind_params = array($this->conn_id, $this->options['binddn'], $this->options['bindpw']);
         } else {
-            $this->log('Binding anonymously', PEAR_LOG_DEBUG);
+            $this->log('Binding anonymously', AUTH_LOG_DEBUG);
             $bind_params = array($this->conn_id);
         }
 
         // bind for searching
         if ((@call_user_func_array('ldap_bind', $bind_params)) === false) {
-            $this->log('Bind failed', PEAR_LOG_DEBUG);
+            $this->log('Bind failed', AUTH_LOG_DEBUG);
             $this->_disconnect();
             return PEAR::raiseError("Auth_Container_LDAP: Could not bind to LDAP server.", 41);
         }
-        $this->log('Binding was successful', PEAR_LOG_DEBUG);
+        $this->log('Binding was successful', AUTH_LOG_DEBUG);
 
         return true;
     }
@@ -340,7 +340,7 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _disconnect()
     {
-        $this->log('Auth_Container_LDAP::_disconnect() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_LDAP::_disconnect() called.', AUTH_LOG_DEBUG);
         if ($this->_isValidLink()) {
             $this->log('disconnecting from server');
             @ldap_unbind($this->conn_id);
@@ -357,27 +357,27 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function _getBaseDN()
     {
-        $this->log('Auth_Container_LDAP::_getBaseDN() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_LDAP::_getBaseDN() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
         if ($this->options['basedn'] == "" && $this->_isValidLink()) {
-            $this->log("basedn not set, searching via namingContexts.", PEAR_LOG_DEBUG);
+            $this->log("basedn not set, searching via namingContexts.", AUTH_LOG_DEBUG);
 
             $result_id = @ldap_read($this->conn_id, "", "(objectclass=*)", array("namingContexts"));
 
             if (@ldap_count_entries($this->conn_id, $result_id) == 1) {
 
-                $this->log("got result for namingContexts", PEAR_LOG_DEBUG);
+                $this->log("got result for namingContexts", AUTH_LOG_DEBUG);
 
                 $entry_id = @ldap_first_entry($this->conn_id, $result_id);
                 $attrs = @ldap_get_attributes($this->conn_id, $entry_id);
                 $basedn = $attrs['namingContexts'][0];
 
                 if ($basedn != "") {
-                    $this->log("result for namingContexts was $basedn", PEAR_LOG_DEBUG);
+                    $this->log("result for namingContexts was $basedn", AUTH_LOG_DEBUG);
                     $this->options['basedn'] = $basedn;
                 }
             }
@@ -538,7 +538,7 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function fetchData($username, $password)
     {
-        $this->log('Auth_Container_LDAP::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_LDAP::fetchData() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
@@ -551,7 +551,7 @@ class Auth_Container_LDAP extends Auth_Container
 
         // UTF8 Encode username for LDAPv3
         if (@ldap_get_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $ver) && $ver == 3) {
-            $this->log('UTF8 encoding username for LDAPv3', PEAR_LOG_DEBUG);
+            $this->log('UTF8 encoding username for LDAPv3', AUTH_LOG_DEBUG);
             $username = utf8_encode($username);
         }
 
@@ -577,14 +577,14 @@ class Auth_Container_LDAP extends Auth_Container
         // search function to use
         $func_name = $this->_scope2function($this->options['userscope']);
 
-        $this->log("Searching with $func_name and filter $filter in $search_basedn", PEAR_LOG_DEBUG);
+        $this->log("Searching with $func_name and filter $filter in $search_basedn", AUTH_LOG_DEBUG);
 
         // search
         if (($result_id = @call_user_func_array($func_name, $func_params)) === false) {
-            $this->log('User not found', PEAR_LOG_DEBUG);
+            $this->log('User not found', AUTH_LOG_DEBUG);
         } elseif (@ldap_count_entries($this->conn_id, $result_id) >= 1) { // did we get some possible results?
 
-            $this->log('User(s) found', PEAR_LOG_DEBUG);
+            $this->log('User(s) found', AUTH_LOG_DEBUG);
 
             $first = true;
             $entry_id = null;
@@ -604,7 +604,7 @@ class Auth_Container_LDAP extends Auth_Container
 
                 // as the dn is not fetched as an attribute, we save it anyway
                 if (is_array($attributes) && in_array('dn', $attributes)) {
-                    $this->log('Saving DN to AuthData', PEAR_LOG_DEBUG);
+                    $this->log('Saving DN to AuthData', AUTH_LOG_DEBUG);
                     $this->_auth_obj->setAuthData('dn', $user_dn);
                 }
             
@@ -628,7 +628,7 @@ class Auth_Container_LDAP extends Auth_Container
                         // eg. $this->options['attrformat'] = 'AUTH'
 
                         if ( strtoupper($this->options['attrformat']) == 'AUTH' ) {
-                            $this->log('Saving attributes to Auth data in AUTH format', PEAR_LOG_DEBUG);
+                            $this->log('Saving attributes to Auth data in AUTH format', AUTH_LOG_DEBUG);
                             unset ($attributes['count']);
                             foreach ($attributes as $attributeName => $attributeValue ) {
                                 if (is_int($attributeName)) continue;
@@ -636,13 +636,13 @@ class Auth_Container_LDAP extends Auth_Container
                                     unset ($attributeValue['count']);
                                 }
                                 if (count($attributeValue)<=1) $attributeValue = $attributeValue[0];
-                                $this->log('Storing additional field: '.$attributeName, PEAR_LOG_DEBUG);
+                                $this->log('Storing additional field: '.$attributeName, AUTH_LOG_DEBUG);
                                 $this->_auth_obj->setAuthData($attributeName, $attributeValue);
                             }
                         }
                         else
                         {
-                            $this->log('Saving attributes to Auth data in LDAP format', PEAR_LOG_DEBUG);
+                            $this->log('Saving attributes to Auth data in LDAP format', AUTH_LOG_DEBUG);
                             $this->_auth_obj->setAuthData('attributes', $attributes);
                         }
                     }
@@ -652,21 +652,21 @@ class Auth_Container_LDAP extends Auth_Container
                 // need to catch an empty password as openldap seems to return TRUE
                 // if anonymous binding is allowed
                 if ($password != "") {
-                    $this->log("Bind as $user_dn", PEAR_LOG_DEBUG);
+                    $this->log("Bind as $user_dn", AUTH_LOG_DEBUG);
 
                     // try binding as this user with the supplied password
                     if (@ldap_bind($this->conn_id, $user_dn, $password)) {
-                        $this->log('Bind successful', PEAR_LOG_DEBUG);
+                        $this->log('Bind successful', AUTH_LOG_DEBUG);
 
                         // check group if appropiate
                         if (strlen($this->options['group'])) {
                             // decide whether memberattr value is a dn or the username
-                            $this->log('Checking group membership', PEAR_LOG_DEBUG);
+                            $this->log('Checking group membership', AUTH_LOG_DEBUG);
                             $return = $this->checkGroup(($this->options['memberisdn']) ? $user_dn : $username);
                             $this->_disconnect();
                             return $return;
                         } else {
-                            $this->log('Authenticated', PEAR_LOG_DEBUG);
+                            $this->log('Authenticated', AUTH_LOG_DEBUG);
                             $this->_disconnect();
                             return true; // user authenticated
                         } // checkGroup
@@ -675,7 +675,7 @@ class Auth_Container_LDAP extends Auth_Container
             } while ($this->options['try_all'] == true); // interate through entries
         } // get results
         // default
-        $this->log('NOT authenticated!', PEAR_LOG_DEBUG);
+        $this->log('NOT authenticated!', AUTH_LOG_DEBUG);
         $this->_disconnect();
         return false;
     }
@@ -695,7 +695,7 @@ class Auth_Container_LDAP extends Auth_Container
      */
     function checkGroup($user)
     {
-        $this->log('Auth_Container_LDAP::checkGroup() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_LDAP::checkGroup() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
@@ -720,18 +720,18 @@ class Auth_Container_LDAP extends Auth_Container
                              array($this->options['memberattr']));
         $func_name = $this->_scope2function($this->options['groupscope']);
 
-        $this->log("Searching with $func_name and filter $filter in $search_basedn", PEAR_LOG_DEBUG);
+        $this->log("Searching with $func_name and filter $filter in $search_basedn", AUTH_LOG_DEBUG);
 
         // search
         if (($result_id = @call_user_func_array($func_name, $func_params)) != false) {
             if (@ldap_count_entries($this->conn_id, $result_id) == 1) {
                 @ldap_free_result($result_id);
-                $this->log('User is member of group', PEAR_LOG_DEBUG);
+                $this->log('User is member of group', AUTH_LOG_DEBUG);
                 return true;
             }
         }
         // default
-        $this->log('User is NOT member of group', PEAR_LOG_DEBUG);
+        $this->log('User is NOT member of group', AUTH_LOG_DEBUG);
         return false;
     }
 

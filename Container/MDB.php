@@ -113,7 +113,7 @@ class Auth_Container_MDB extends Auth_Container
      */
     function _connect($dsn)
     {
-        $this->log('Auth_Container_MDB::_connect() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_MDB::_connect() called.', AUTH_LOG_DEBUG);
         if (is_string($dsn) || is_array($dsn)) {
             $this->db =& MDB::connect($dsn, $this->options['db_options']);
         } elseif (is_subclass_of($dsn, 'mdb_common')) {
@@ -184,7 +184,7 @@ class Auth_Container_MDB extends Auth_Container
      */
     function query($query)
     {
-        $this->log('Auth_Container_MDB::query() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_MDB::query() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return $err;
@@ -290,7 +290,7 @@ class Auth_Container_MDB extends Auth_Container
      */
     function fetchData($username, $password, $isChallengeResponse=false)
     {
-        $this->log('Auth_Container_MDB::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_MDB::fetchData() called.', AUTH_LOG_DEBUG);
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
@@ -323,7 +323,7 @@ class Auth_Container_MDB extends Auth_Container
             $query .= " AND ".$this->options['db_where'];
         }
 
-        $this->log('Running SQL against MDB: '.$query, PEAR_LOG_DEBUG);
+        $this->log('Running SQL against MDB: '.$query, AUTH_LOG_DEBUG);
 
         $res = $this->db->getRow($query, null, null, null, MDB_FETCHMODE_ASSOC);
 
@@ -359,7 +359,7 @@ class Auth_Container_MDB extends Auth_Container
                     continue;
                 }
 
-                $this->log('Storing additional field: '.$key, PEAR_LOG_DEBUG);
+                $this->log('Storing additional field: '.$key, AUTH_LOG_DEBUG);
                 // Use reference to the auth object if exists
                 // This is because the auth session variable can change so a static
                 // call to setAuthData does not make sense
@@ -383,7 +383,7 @@ class Auth_Container_MDB extends Auth_Container
      */
     function listUsers()
     {
-        $this->log('Auth_Container_MDB::listUsers() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_MDB::listUsers() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
@@ -415,7 +415,7 @@ class Auth_Container_MDB extends Auth_Container
             $query .= " WHERE ".$this->options['db_where'];
         }
 
-        $this->log('Running SQL against MDB: '.$query, PEAR_LOG_DEBUG);
+        $this->log('Running SQL against MDB: '.$query, AUTH_LOG_DEBUG);
 
         $res = $this->db->getAll($query, null, null, null, MDB_FETCHMODE_ASSOC);
 
@@ -427,7 +427,7 @@ class Auth_Container_MDB extends Auth_Container
                 $retVal[] = $user;
             }
         }
-        $this->log('Found '.count($retVal).' users.', PEAR_LOG_DEBUG);
+        $this->log('Found '.count($retVal).' users.', AUTH_LOG_DEBUG);
         return $retVal;
     }
 
@@ -446,7 +446,7 @@ class Auth_Container_MDB extends Auth_Container
      */
     function addUser($username, $password, $additional = "")
     {
-        $this->log('Auth_Container_MDB::addUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_MDB::addUser() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
@@ -486,7 +486,7 @@ class Auth_Container_MDB extends Auth_Container
                          $additional_value
                          );
 
-        $this->log('Running SQL against MDB: '.$query, PEAR_LOG_DEBUG);
+        $this->log('Running SQL against MDB: '.$query, AUTH_LOG_DEBUG);
 
         $res = $this->query($query);
 
@@ -509,7 +509,7 @@ class Auth_Container_MDB extends Auth_Container
      */
     function removeUser($username)
     {
-        $this->log('Auth_Container_MDB::removeUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_MDB::removeUser() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
@@ -527,7 +527,7 @@ class Auth_Container_MDB extends Auth_Container
             $query .= " AND ".$this->options['db_where'];
         }
 
-        $this->log('Running SQL against MDB: '.$query, PEAR_LOG_DEBUG);
+        $this->log('Running SQL against MDB: '.$query, AUTH_LOG_DEBUG);
 
         $res = $this->query($query);
 
@@ -548,7 +548,7 @@ class Auth_Container_MDB extends Auth_Container
      */
     function changePassword($username, $password)
     {
-        $this->log('Auth_Container_MDB::changePassword() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_MDB::changePassword() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
             return PEAR::raiseError($err->getMessage(), $err->getCode());
@@ -578,7 +578,7 @@ class Auth_Container_MDB extends Auth_Container
             $query .= " AND ".$this->options['db_where'];
         }
 
-        $this->log('Running SQL against MDB: '.$query, PEAR_LOG_DEBUG);
+        $this->log('Running SQL against MDB: '.$query, AUTH_LOG_DEBUG);
 
         $res = $this->query($query);
 

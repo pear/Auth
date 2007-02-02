@@ -128,7 +128,7 @@ class Auth_Container_Array extends Auth_Container {
      */
     function fetchData($user, $pass)
     {
-        $this->log('Auth_Container_Array::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_Array::fetchData() called.', AUTH_LOG_DEBUG);
         if (   isset($this->users[$user])
             && $this->verifyPassword($pass, $this->users[$user], $this->cryptType)) {
             return true;
@@ -146,7 +146,7 @@ class Auth_Container_Array extends Auth_Container {
      */
     function listUsers()
     {
-        $this->log('Auth_Container_Array::listUsers() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_Array::listUsers() called.', AUTH_LOG_DEBUG);
         $ret = array();
         foreach ($this->users as $username => $password) {
             $ret[]['username'] = $username;

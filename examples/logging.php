@@ -39,11 +39,11 @@ $options = array(
 		);
 $a = new Auth("Array", $options, "loginFunction");
 
-$infoObserver = new Auth_Log_Observer(PEAR_LOG_INFO);
+$infoObserver = new Auth_Log_Observer(AUTH_LOG_INFO);
 
 $a->attachLogObserver($infoObserver);
 
-$debugObserver = new Auth_Log_Observer(PEAR_LOG_DEBUG);
+$debugObserver = new Auth_Log_Observer(AUTH_LOG_DEBUG);
 
 $a->attachLogObserver($debugObserver);
 
@@ -57,14 +57,14 @@ if ($a->checkAuth()) {
 }
 
 print '<h3>Logging Output:</h3>'
-	.'<b>PEAR_LOG_INFO level messages:</b><br/>';
+	.'<b>AUTH_LOG_INFO level messages:</b><br/>';
 
 foreach ($infoObserver->messages as $event) {
 	print $event['priority'].': '.$event['message'].'<br/>';
 }
 
 print '<br/>'
-	.'<b>PEAR_LOG_DEBUG level messages:</b><br/>';
+	.'<b>AUTH_LOG_DEBUG level messages:</b><br/>';
 
 foreach ($debugObserver->messages as $event) {
 	print $event['priority'].': '.$event['message'].'<br/>';

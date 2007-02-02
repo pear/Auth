@@ -182,7 +182,7 @@ class Auth_Container_SOAP5 extends Auth_Container
      */
     function fetchData($username, $password)
     {
-        $this->log('Auth_Container_SOAP5::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_SOAP5::fetchData() called.', AUTH_LOG_DEBUG);
         $result = $this->_validateOptions();
         if (PEAR::isError($result))
             return $result;

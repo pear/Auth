@@ -127,11 +127,11 @@ class Auth_Container_POP3 extends Auth_Container
      */
     function fetchData($username, $password)
     {
-        $this->log('Auth_Container_POP3::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_POP3::fetchData() called.', AUTH_LOG_DEBUG);
         $pop3 =& new Net_POP3();
         $res = $pop3->connect($this->server, $this->port, $this->method);
         if (!$res) {
-            $this->log('Connection to POP3 server failed.', PEAR_LOG_DEBUG);
+            $this->log('Connection to POP3 server failed.', AUTH_LOG_DEBUG);
             return $res;
         }
         $result = $pop3->login($username, $password);

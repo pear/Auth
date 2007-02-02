@@ -79,7 +79,7 @@ class Auth_Container
      */
     function fetchData($username, $password, $isChallengeResponse=false)
     {
-        $this->log('Auth_Container::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container::fetchData() called.', AUTH_LOG_DEBUG);
     }
 
     // }}}
@@ -98,7 +98,7 @@ class Auth_Container
      */
     function verifyPassword($password1, $password2, $cryptType = "md5")
     {
-        $this->log('Auth_Container::verifyPassword() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container::verifyPassword() called.', AUTH_LOG_DEBUG);
         switch ($cryptType) {
             case "crypt" :
                 return ((string)crypt($password1, $password2) === (string)$password2);
@@ -155,7 +155,7 @@ class Auth_Container
      */
     function listUsers()
     {
-        $this->log('Auth_Container::listUsers() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container::listUsers() called.', AUTH_LOG_DEBUG);
         return AUTH_METHOD_NOT_SUPPORTED;
     }
 
@@ -171,7 +171,7 @@ class Auth_Container
      */
     function getUser($username)
     {
-        $this->log('Auth_Container::getUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container::getUser() called.', AUTH_LOG_DEBUG);
         $users = $this->listUsers();
         if ($users === AUTH_METHOD_NOT_SUPPORTED) {
             return AUTH_METHOD_NOT_SUPPORTED;
@@ -198,7 +198,7 @@ class Auth_Container
      */
     function addUser($username, $password, $additional=null)
     {
-        $this->log('Auth_Container::addUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container::addUser() called.', AUTH_LOG_DEBUG);
         return AUTH_METHOD_NOT_SUPPORTED;
     }
 
@@ -212,7 +212,7 @@ class Auth_Container
      */
     function removeUser($username)
     {
-        $this->log('Auth_Container::removeUser() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container::removeUser() called.', AUTH_LOG_DEBUG);
         return AUTH_METHOD_NOT_SUPPORTED;
     }
 
@@ -227,7 +227,7 @@ class Auth_Container
      */
     function changePassword($username, $password)
     {
-        $this->log('Auth_Container::changePassword() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container::changePassword() called.', AUTH_LOG_DEBUG);
         return AUTH_METHOD_NOT_SUPPORTED;
     }
 
@@ -241,7 +241,7 @@ class Auth_Container
      * @param int
      * @return boolean
      */
-    function log($message, $level = PEAR_LOG_DEBUG) {
+    function log($message, $level = AUTH_LOG_DEBUG) {
 
         if (is_null($this->_auth_obj)) {
 

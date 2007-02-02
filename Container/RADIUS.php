@@ -125,7 +125,7 @@ class Auth_Container_RADIUS extends Auth_Container
      */
     function fetchData($username, $password, $challenge = null)
     {
-        $this->log('Auth_Container_RADIUS::fetchData() called.', PEAR_LOG_DEBUG);
+        $this->log('Auth_Container_RADIUS::fetchData() called.', AUTH_LOG_DEBUG);
 
         switch($this->authtype) {
             case 'CHAP_MD5':
