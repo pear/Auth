@@ -73,6 +73,7 @@ the login data:
  * Fixed Bug #9944: Logging constants not defined when logging disabled.
  * Fixed Bug #10000: Stupid developer didn't stop to look what he was doing
    and broke things.
+ * Fixed Bug #10004: Logging of connection failures in LDAP container missing.
  </notes>
  <contents>
   <dir name="/">

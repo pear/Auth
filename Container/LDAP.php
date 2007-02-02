@@ -286,6 +286,8 @@ class Auth_Container_LDAP extends Auth_Container
         }
 
         if (($this->conn_id = @call_user_func_array('ldap_connect', $conn_params)) === false) {
+            $this->log('Connection to server failed.', AUTH_LOG_DEBUG);
+            $this->log('LDAP ERROR: '.ldap_errno($this->conn_id).': '.ldap_error($this->conn_id), AUTH_LOG_DEBUG);
             return PEAR::raiseError('Auth_Container_LDAP: Could not connect to server.', 41);
         }
         $this->log('Successfully connected to server', AUTH_LOG_DEBUG);
@@ -299,6 +301,8 @@ class Auth_Container_LDAP extends Auth_Container
             if (isset($this->options['start_tls']) && $this->options['start_tls']) {           
                 $this->log("Starting TLS session", AUTH_LOG_DEBUG);
                 if (@ldap_start_tls($this->conn_id) === false) {
+                    $this->log('Could not start TLS session', AUTH_LOG_DEBUG);
+                    $this->log('LDAP ERROR: '.ldap_errno($this->conn_id).': '.ldap_error($this->conn_id), AUTH_LOG_DEBUG);
                     return PEAR::raiseError('Auth_Container_LDAP: Could not start tls.', 41);
                 }
             }
@@ -306,8 +310,11 @@ class Auth_Container_LDAP extends Auth_Container
 
         // switch LDAP referrals
         if (is_bool($this->options['referrals'])) {
-          $this->log("Switching LDAP referrals to " . (($this->options['referrals']) ? 'true' : 'false'), AUTH_LOG_DEBUG);
-          @ldap_set_option($this->conn_id, LDAP_OPT_REFERRALS, $this->options['referrals']);
+            $this->log("Switching LDAP referrals to " . (($this->options['referrals']) ? 'true' : 'false'), AUTH_LOG_DEBUG);
+            if (@ldap_set_option($this->conn_id, LDAP_OPT_REFERRALS, $this->options['referrals']) === false) {
+                $this->log('Could not change LDAP referrals options', AUTH_LOG_DEBUG);
+                $this->log('LDAP ERROR: '.ldap_errno($this->conn_id).': '.ldap_error($this->conn_id), AUTH_LOG_DEBUG);
+            }
         }
 
         // bind with credentials or anonymously
@@ -322,6 +329,7 @@ class Auth_Container_LDAP extends Auth_Container
         // bind for searching
         if ((@call_user_func_array('ldap_bind', $bind_params)) === false) {
             $this->log('Bind failed', AUTH_LOG_DEBUG);
+            $this->log('LDAP ERROR: '.ldap_errno($this->conn_id).': '.ldap_error($this->conn_id), AUTH_LOG_DEBUG);
             $this->_disconnect();
             return PEAR::raiseError("Auth_Container_LDAP: Could not bind to LDAP server.", 41);
         }
