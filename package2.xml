@@ -58,18 +58,27 @@ the login data:
   <email>aharvey@php.net</email>
   <active>yes</active>
  </developer>
- <date>2007-02-02</date>
- <time>07:00:00</time>
+ <date>2007-02-13</date>
+ <time>10:35:00</time>
  <version>
-  <release>1.5.0RC2</release>
+  <release>1.5.0</release>
   <api>1.5.0</api>
  </version>
  <stability>
-  <release>beta</release>
+  <release>stable</release>
   <api>stable</api>
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
+ * Completed Request #2229: Ability to attach fall through containers. This
+   is implemented through the use of a new container Auth_Container_Multiple.
+   See multi-container.php in examples directory.
+ * Completed Request #4126: Enhancements to Advanced Security Mode. Thanks
+   to makler at man dot torun dot pl.
+ * Completed Request #6949: Use Log package for debugging messages. See logging.php
+   in examples directory.
+ * Completed Request #7089: Add optional extra WHERE options to DB and MDB(2) 
+   containers.
  * Fixed Bug #9944: Logging constants not defined when logging disabled.
  * Fixed Bug #10000: Stupid developer didn't stop to look what he was doing
    and broke things.
@@ -262,7 +271,26 @@ the login data:
  </dependencies>
  <phprelease />
  <changelog>
-	<release>
+  <release>
+   <date>2007-02-02</date>
+   <time>07:00:00</time>
+   <version>
+    <release>1.5.0RC2</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+ * Fixed Bug #9944: Logging constants not defined when logging disabled.
+ * Fixed Bug #10000: Stupid developer didn't stop to look what he was doing
+   and broke things.
+ * Fixed Bug #10004: Logging of connection failures in LDAP container missing.
+   </notes>
+  </release>
+  <release>
    <date>2007-01-17</date>
    <time>07:00:00</time>
    <version>
