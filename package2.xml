@@ -204,6 +204,11 @@ the login data:
   </required>
   <optional>
    <package>
+    <name>Log</name>
+    <channel>pear.php.net</channel>
+    <min>1.9.10</min>
+   </package>
+   <package>
     <name>File_Passwd</name>
     <channel>pear.php.net</channel>
     <min>1.1.0</min>
