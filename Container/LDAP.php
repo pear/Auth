@@ -577,10 +577,10 @@ class Auth_Container_LDAP extends Auth_Container
         $search_basedn .= $this->options['basedn'];
 
         // attributes
-        $attributes = $this->options['attributes'];
+        $searchAttributes = $this->options['attributes'];
 
         // make functions params array
-        $func_params = array($this->conn_id, $search_basedn, $filter, $attributes);
+        $func_params = array($this->conn_id, $search_basedn, $filter, $searchAttributes);
 
         // search function to use
         $func_name = $this->_scope2function($this->options['userscope']);
@@ -611,7 +611,7 @@ class Auth_Container_LDAP extends Auth_Container
                 $user_dn  = @ldap_get_dn($this->conn_id, $entry_id);
 
                 // as the dn is not fetched as an attribute, we save it anyway
-                if (is_array($attributes) && in_array('dn', $attributes)) {
+                if (is_array($searchAttributes) && in_array('dn', $searchAttributes)) {
                     $this->log('Saving DN to AuthData', AUTH_LOG_DEBUG);
                     $this->_auth_obj->setAuthData('dn', $user_dn);
                 }
