@@ -9,7 +9,7 @@ class IMAPContainer extends TestAuthContainer {
     function IMAPContainer($name){
         $this->TestAuthContainer($name);
     }
-    
+
     function &getContainer() {
         print "IMAPContainer::getContainer\n";
         static $container;
@@ -19,7 +19,7 @@ class IMAPContainer extends TestAuthContainer {
         }
         return($container);
     }
-    
+
     function &getExtraOptions() {
         print "IMAPContainer::getExtraOptions\n";
         include './auth_container_imap_options.php';

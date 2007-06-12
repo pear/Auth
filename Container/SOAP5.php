@@ -38,7 +38,7 @@ require_once "PEAR.php";
  * thats using the PEAR SOAP Package.
  *
  * This class takes one parameter (options), where
- * you specify the following fields: 
+ * you specify the following fields:
  *  * location and uri, or wsdl file
  *  * method to call on the SOAP service
  *  * usernamefield, the name of the parameter where the username is supplied
@@ -58,10 +58,10 @@ require_once "PEAR.php";
  *       'wsdl'           => NULL,
  *       'location'       => 'http://your.soap.service/endpoint',
  *       'uri'            => 'urn:/Your/Namespace',
- *       'method'         => 'checkAuth',        
+ *       'method'         => 'checkAuth',
  *       'usernamefield'  => 'username',
  *       'passwordfield'  => 'password',
- *       'matchpasswords' => false,          
+ *       'matchpasswords' => false,
  *       '_features' => array (
  *           'extra_parameter'    => 'example_value',
  *           'another_parameter'  => 'foobar'
@@ -79,10 +79,10 @@ require_once "PEAR.php";
  *
  * $options = array (
  *       'wsdl'           => 'http://your.soap.service/wsdl',
- *       'method'         => 'checkAuth',        
+ *       'method'         => 'checkAuth',
  *       'usernamefield'  => 'username',
  *       'passwordfield'  => 'password',
- *       'matchpasswords' => false,          
+ *       'matchpasswords' => false,
  *       '_features' => array (
  *           'extra_parameter'    => 'example_value',
  *           'another_parameter'  => 'foobar'
@@ -115,7 +115,7 @@ class Auth_Container_SOAP5 extends Auth_Container
      * @access private
      */
     var $_requiredOptions = array(
-            'location', 
+            'location',
             'uri',
             'method',
             'usernamefield',
@@ -143,7 +143,7 @@ class Auth_Container_SOAP5 extends Auth_Container
      * @access public
      */
     var $soapResponse = array();
-     
+
     // }}}
     // {{{ Auth_Container_SOAP5()
 
@@ -164,7 +164,7 @@ class Auth_Container_SOAP5 extends Auth_Container
         if (!empty($this->_options['_features'])) {
             $this->_features = $this->_options['_features'];
             unset($this->_options['_features']);
-        }        
+        }
     }
 
     // }}}
@@ -189,19 +189,19 @@ class Auth_Container_SOAP5 extends Auth_Container
 
         // create a SOAP client
         $soapClient = new SoapClient($this->_options["wsdl"], $this->_options);
-        
-        $params = array();        
+
+        $params = array();
         // first, assign the optional features
         foreach ($this->_features as $fieldName => $fieldValue) {
             $params[$fieldName] = $fieldValue;
         }
         // assign username and password ...
         $params[$this->_options['usernamefield']] = $username;
-        $params[$this->_options['passwordfield']] = $password;                
-                
+        $params[$this->_options['passwordfield']] = $password;
+
         try {
             $this->soapResponse = $soapClient->__soapCall($this->_options['method'], $params);
-                        
+
             if ($this->_options['matchpasswords']) {
                 // check if passwords match
                 if ($password == $this->soapResponse[$this->_options['passwordfield']]) {
@@ -209,17 +209,17 @@ class Auth_Container_SOAP5 extends Auth_Container
                 } else {
                     return false;
                 }
-            } else {                
+            } else {
                 return true;
             }
         } catch (SoapFault $e) {
             return PEAR::raiseError("Error retrieving authentication data. Received SOAP Fault: ".$e->faultstring, $e->faultcode);
-        }        
+        }
     }
 
     // }}}
     // {{{ _validateOptions()
-    
+
     /**
      * Validate that the options passed to the container class are enough for us to proceed
      *
@@ -241,7 +241,7 @@ class Auth_Container_SOAP5 extends Auth_Container
         }
         return true;
     }
-    
+
     // }}}
     // {{{ _setDefaults()
 
@@ -263,6 +263,6 @@ class Auth_Container_SOAP5 extends Auth_Container
     }
 
     // }}}
-        
+
 }
 ?>

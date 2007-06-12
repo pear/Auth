@@ -108,7 +108,7 @@ class Auth_Container_Multiple extends Auth_Container {
     {
         if (!is_array($options)) {
             PEAR::raiseError('The options for Auth_Container_Multiple must be an array');
-        } 
+        }
         if (count($options) < 1) {
             PEAR::raiseError('You must define at least one sub container to use in Auth_Container_Multiple');
         }
@@ -138,7 +138,7 @@ class Auth_Container_Multiple extends Auth_Container {
     function fetchData($user, $pass)
     {
         $this->log('Auth_Container_Multiple::fetchData() called.', AUTH_LOG_DEBUG);
-        
+
         foreach ($this->options as $key => $options) {
 
             $this->log('Using Container '.$key.' of type '.$options['type'].'.', AUTH_LOG_DEBUG);
@@ -179,10 +179,10 @@ class Auth_Container_Multiple extends Auth_Container {
 
         return false;
 
-    } 
+    }
 
     // }}}
 
-} 
+}
 
 ?>

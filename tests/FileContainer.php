@@ -8,7 +8,7 @@ class FileContaner extends TestAuthContainer {
     function FileContaner($name){
         $this->TestAuthContainer($name);
     }
-    
+
     function &getContainer() {
         static $container;
         if(!isset($container)){
@@ -17,7 +17,7 @@ class FileContaner extends TestAuthContainer {
         }
         return($container);
     }
-    
+
     function &getExtraOptions() {
         include './auth_container_file_options.php';
         return($extra_options);

@@ -14,9 +14,9 @@
  *
  * @category   Authentication
  * @package    Auth
- * @author     Stefan Ekman <stekman@sedata.org> 
+ * @author     Stefan Ekman <stekman@sedata.org>
  * @author     Martin Jansen <mj@php.net>
- * @author     Mika Tuupola <tuupola@appelsiini.net> 
+ * @author     Mika Tuupola <tuupola@appelsiini.net>
  * @author     Michael Wallner <mike@php.net>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
@@ -45,9 +45,9 @@ require_once "PEAR.php";
  *
  * @category   Authentication
  * @package    Auth
- * @author     Stefan Ekman <stekman@sedata.org> 
+ * @author     Stefan Ekman <stekman@sedata.org>
  * @author     Martin Jansen <mj@php.net>
- * @author     Mika Tuupola <tuupola@appelsiini.net> 
+ * @author     Mika Tuupola <tuupola@appelsiini.net>
  * @author     Michael Wallner <mike@php.net>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
@@ -62,7 +62,7 @@ class Auth_Container_File extends Auth_Container
 
     /**
      * Path to passwd file
-     * 
+     *
      * @var string
      */
     var $pwfile = '';
@@ -85,7 +85,7 @@ class Auth_Container_File extends Auth_Container
      */
     function Auth_Container_File($filename) {
         $this->_setDefaults();
-        
+
         // Only file is a valid option here
         if(is_array($filename)) {
             $this->pwfile = $filename['file'];
@@ -113,10 +113,10 @@ class Auth_Container_File extends Auth_Container
 
     // }}}
     // {{{ listUsers()
-    
+
     /**
      * List all available users
-     * 
+     *
      * @return   array
      */
     function listUsers()
@@ -134,7 +134,7 @@ class Auth_Container_File extends Auth_Container
         }
 
         foreach ($users as $key => $value) {
-            $retVal[] = array("username" => $key, 
+            $retVal[] = array("username" => $key,
                               "password" => $value['passwd'],
                               "cvsuser"  => $value['system']);
         }
@@ -172,17 +172,17 @@ class Auth_Container_File extends Auth_Container
         if (PEAR::isError($pw_obj)) {
             return false;
         }
-        
+
         $res = call_user_func_array(array(&$pw_obj, 'addUser'), $params);
         if (PEAR::isError($res)) {
             return false;
         }
-        
+
         $res = $pw_obj->save();
         if (PEAR::isError($res)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -202,17 +202,17 @@ class Auth_Container_File extends Auth_Container
         if (PEAR::isError($pw_obj)) {
             return false;
         }
-        
+
         $res = $pw_obj->delUser($user);
         if (PEAR::isError($res)) {
             return false;
         }
-        
+
         $res = $pw_obj->save();
         if (PEAR::isError($res)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -223,7 +223,7 @@ class Auth_Container_File extends Auth_Container
      * Change password for user in the storage container
      *
      * @param string Username
-     * @param string The new password 
+     * @param string The new password
      */
     function changePassword($username, $password)
     {
@@ -232,47 +232,47 @@ class Auth_Container_File extends Auth_Container
         if (PEAR::isError($pw_obj)) {
             return false;
         }
-        
+
         $res = $pw_obj->changePasswd($username, $password);
         if (PEAR::isError($res)) {
             return false;
         }
-        
+
         $res = $pw_obj->save();
         if (PEAR::isError($res)) {
             return false;
         }
-        
+
         return true;
     }
 
     // }}}
     // {{{ _load()
-    
+
     /**
      * Load and initialize the File_Passwd object
-     * 
+     *
      * @return  object  File_Passwd_Cvs|PEAR_Error
      */
     function &_load()
     {
         static $pw_obj;
-        
+
         if (!isset($pw_obj)) {
             $this->log('Instanciating File_Password object of type '.$this->options['type'], AUTH_LOG_DEBUG);
             $pw_obj = File_Passwd::factory($this->options['type']);
             if (PEAR::isError($pw_obj)) {
                 return $pw_obj;
             }
-            
+
             $pw_obj->setFile($this->pwfile);
-            
+
             $res = $pw_obj->load();
             if (PEAR::isError($res)) {
                 return $res;
             }
         }
-        
+
         return $pw_obj;
     }
 

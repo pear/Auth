@@ -54,7 +54,7 @@ require_once 'PEAR.php';
 class Auth_Container_SAP extends Auth_Container {
 
     // {{{ properties
-    
+
     /**
      * @var array Default options
      */
@@ -143,7 +143,7 @@ class Auth_Container_SAP extends Auth_Container {
             @saprfc_close($rfc);
             return true;
         }
-    
+
     }
 
     // }}}

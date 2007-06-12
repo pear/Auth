@@ -24,8 +24,8 @@
  */
 
 /**
- * Controlls access to a group of php access 
- * and redirects to a predefined login page as 
+ * Controlls access to a group of php access
+ * and redirects to a predefined login page as
  * needed
  *
  * In all pages
@@ -46,7 +46,7 @@
  * $authController->start();
  * if( $authController->isAuthorised() ){
  *   $authController->redirectBack();
- * }  
+ * }
  * </code>
  *
  * @category   Authentication
@@ -63,29 +63,29 @@ class Auth_Controller
 
     // {{{ properties
 
-    /** 
+    /**
      * The Auth instance this controller is managing
      *
      * @var object Auth
      */
     var $auth = null;
-    
+
     /**
      * The login URL
      * @var string
      * */
     var $login = null;
-    
+
     /**
      * The default index page to use when the caller page is not set
      *
-     * @var string 
+     * @var string
      */
     var $default = null;
-    
-    /** 
-     * If this is set to true after a succesfull login the 
-     * Auth_Controller::redirectBack() is invoked automatically 
+
+    /**
+     * If this is set to true after a succesfull login the
+     * Auth_Controller::redirectBack() is invoked automatically
      *
      * @var boolean
      */
@@ -93,7 +93,7 @@ class Auth_Controller
 
     // }}}
     // {{{ Auth_Controller() [constructor]
-    
+
     /**
      * Constructor
      *
@@ -121,10 +121,10 @@ class Auth_Controller
 
     // }}}
     // {{{ setAutoRedirectBack()
-    
-    /** 
+
+    /**
      * Enables auto redirection when login is done
-     * 
+     *
      * @param bool Sets the autoRedirectBack flag to this
      * @see Auth_Controller::autoRedirectBack
      * @return void
@@ -136,7 +136,7 @@ class Auth_Controller
 
     // }}}
     // {{{ redirectBack()
-    
+
     /**
      * Redirects Back to the calling page
      *
@@ -146,12 +146,12 @@ class Auth_Controller
     {
         // If redirectback go there
         // else go to the default page
-        
+
         $returnUrl = $this->auth->getAuthData('returnUrl');
         if(!$returnUrl) {
             $returnUrl = $this->_defaultPage;
         }
-        
+
         // Add some entropy to the return to make it unique
         // avoind problems with cached pages and proxies
         if(strpos($returnUrl, '?') === false) {
@@ -162,17 +162,17 @@ class Auth_Controller
         // Track the auth status
         if($this->auth->status != '') {
             $url .= '&authstatus='.$this->auth->status;
-        }        
+        }
         header('Location:'.$returnUrl);
         print("You could not be redirected to <a href=\"$returnUrl\">$returnUrl</a>");
     }
 
     // }}}
     // {{{ redirectLogin()
-    
+
     /**
       * Redirects to the login Page if not authorised
-      * 
+      *
       * put return page on the query or in auth
       *
       * @return void
@@ -180,10 +180,10 @@ class Auth_Controller
     function redirectLogin()
     {
         // Go to the login Page
-        
+
         // For Auth, put some check to avoid infinite redirects, this should at least exclude
         // the login page
-        
+
         $url = $this->_loginPage;
         if(strpos($url, '?') === false) {
             $url .= '?';
@@ -204,7 +204,7 @@ class Auth_Controller
 
     // }}}
     // {{{ start()
-    
+
     /**
       * Starts the Auth Procedure
       *
@@ -226,18 +226,18 @@ class Auth_Controller
             $this->auth->start();
             // Logged on and on login page
             if(strstr($_SERVER['PHP_SELF'], $this->_loginPage) && $this->auth->checkAuth()){
-                $this->autoRedirectBack ? 
+                $this->autoRedirectBack ?
                     $this->redirectBack() :
                     null ;
             }
         }
-        
-        
+
+
     }
 
     // }}}
     // {{{ isAuthorised()
-  
+
     /**
       * Checks is the user is logged on
       * @see Auth::checkAuth()

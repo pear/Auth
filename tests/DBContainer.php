@@ -9,7 +9,7 @@ class DBContainer extends TestAuthContainer {
     function DBContainer($name){
         $this->TestAuthContainer($name);
     }
-    
+
     function &getContainer() {
         static $container;
         #print "In DBContainer::getContainer {$this->skip_tests}\n";
@@ -19,7 +19,7 @@ class DBContainer extends TestAuthContainer {
             // Catch if DB connection cannot be made
             $res = $container->_prepare();
         }
-        
+
         if(!DB::isConnection($container->db)){
             #print "In DBContainer::getContainer container->db is error \n";
             $this->skip_tests = true;
@@ -27,7 +27,7 @@ class DBContainer extends TestAuthContainer {
         }
         return($container);
     }
-    
+
     function &getExtraOptions() {
         include './auth_container_db_options.php';
         return($extra_options);

@@ -14,9 +14,9 @@
  *
  * @category   Authentication
  * @package    Auth
- * @author     Stefan Ekman <stekman@sedata.org> 
+ * @author     Stefan Ekman <stekman@sedata.org>
  * @author     Martin Jansen <mj@php.net>
- * @author     Mika Tuupola <tuupola@appelsiini.net> 
+ * @author     Mika Tuupola <tuupola@appelsiini.net>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -44,7 +44,7 @@ require_once 'Net/POP3.php';
  * @category   Authentication
  * @package    Auth
  * @author     Martin Jansen <mj@php.net>
- * @author     Mika Tuupola <tuupola@appelsiini.net> 
+ * @author     Mika Tuupola <tuupola@appelsiini.net>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -77,7 +77,7 @@ class Auth_Container_POP3 extends Auth_Container
      *      String 'DIGEST-MD5','CRAM-MD5','LOGIN','PLAIN','APOP','USER'
      *                      - Attempt this authentication style first
      *                        then fallback to autodetection.
-     * @var mixed 
+     * @var mixed
      */
     var $method=true;
 

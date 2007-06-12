@@ -14,7 +14,7 @@
  *
  * @category   Authentication
  * @package    Auth
- * @author     Lorenzo Alberton <l.alberton@quipo.it> 
+ * @author     Lorenzo Alberton <l.alberton@quipo.it>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -129,7 +129,7 @@ class Auth_Container_MDB2 extends Auth_Container
         if (MDB2::isError($this->db) || PEAR::isError($this->db)) {
             return PEAR::raiseError($this->db->getMessage(), $this->db->code);
         }
-        
+
         if ($this->options['auto_quote']) {
             $this->options['final_table'] = $this->db->quoteIdentifier($this->options['table'], true);
             $this->options['final_usernamecol'] = $this->db->quoteIdentifier($this->options['usernamecol'], true);
@@ -139,7 +139,7 @@ class Auth_Container_MDB2 extends Auth_Container
             $this->options['final_usernamecol'] = $this->options['usernamecol'];
             $this->options['final_passwordcol'] = $this->options['passwordcol'];
         }
-                
+
         return true;
     }
 
@@ -264,7 +264,7 @@ class Auth_Container_MDB2 extends Auth_Container
 
         return '';
     }
-    
+
     // }}}
     // {{{ fetchData()
 

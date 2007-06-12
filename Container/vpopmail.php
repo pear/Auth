@@ -14,7 +14,7 @@
  *
  * @category   Authentication
  * @package    Auth
- * @author     Stanislav Grozev <tacho@orbitel.bg> 
+ * @author     Stanislav Grozev <tacho@orbitel.bg>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01

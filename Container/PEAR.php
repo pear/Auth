@@ -57,17 +57,17 @@ class Auth_Container_Pear extends Auth_Container
      * Constructor
      *
      * Currently does nothing
-     * 
+     *
      * @return void
      */
     function Auth_Container_Pear()
     {
-    
+
     }
 
     // }}}
     // {{{ fetchData()
-    
+
     /**
      * Get user information from pear.php.net
      *
@@ -83,7 +83,7 @@ class Auth_Container_Pear extends Auth_Container
         $this->log('Auth_Container_PEAR::fetchData() called.', AUTH_LOG_DEBUG);
         $rpc = new XML_RPC_Client('/xmlrpc.php', 'pear.php.net');
         $rpc_message = new XML_RPC_Message("user.info", array(new XML_RPC_Value($username, "string")) );
-        
+
         // Error Checking howto ???
         $result = $rpc->send($rpc_message);
         $value = $result->value();
@@ -99,6 +99,6 @@ class Auth_Container_Pear extends Auth_Container
     }
 
     // }}}
-    
+
 }
 ?>

@@ -220,7 +220,7 @@ class Auth_Container_DBLite extends Auth_Container
 
         return '';
     }
-    
+
     // }}}
     // {{{ fetchData()
 
@@ -258,7 +258,7 @@ class Auth_Container_DBLite extends Auth_Container
                 $sql_from .= ', '.$fields;
             }
         }
-        
+
         $query = "SELECT ".$sql_from.
                 " FROM ".$this->options['final_table'].
                 " WHERE ".$this->options['final_usernamecol']." = ".$this->db->quoteSmart($username);
@@ -289,7 +289,7 @@ class Auth_Container_DBLite extends Auth_Container
                     $key == $this->options['usernamecol']) {
                     continue;
                 }
-                
+
                 $this->log('Storing additional field: '.$key, AUTH_LOG_DEBUG);
 
                 // Use reference to the auth object if exists

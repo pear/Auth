@@ -265,7 +265,7 @@ class Auth_Container_DB extends Auth_Container
 
         return '';
     }
-    
+
     // }}}
     // {{{ fetchData()
 
@@ -338,12 +338,12 @@ class Auth_Container_DB extends Auth_Container
         if ($isChallengeResponse) {
             $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']]
                     .$this->_auth_obj->session['loginchallenege']);
-            
+
             // UGLY cannot avoid without modifying verifyPassword
             if ($this->options['cryptType'] == 'md5') {
                 $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']]);
             }
-            
+
             //print " Hashed Password [{$res[$this->options['passwordcol']]}]<br/>\n";
         }
 
@@ -356,11 +356,11 @@ class Auth_Container_DB extends Auth_Container
                     $key == $this->options['usernamecol']) {
                     continue;
                 }
-                
+
                 $this->log('Storing additional field: '.$key, AUTH_LOG_DEBUG);
 
                 // Use reference to the auth object if exists
-                // This is because the auth session variable can change so a 
+                // This is because the auth session variable can change so a
                 // static call to setAuthData does not make sence
                 $this->_auth_obj->setAuthData($key, $value);
             }
@@ -450,10 +450,10 @@ class Auth_Container_DB extends Auth_Container
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
-        if (   isset($this->options['cryptType']) 
+        if (   isset($this->options['cryptType'])
             && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
-        } elseif (   isset($this->options['cryptType']) 
+        } elseif (   isset($this->options['cryptType'])
                   && function_exists($this->options['cryptType'])) {
             $cryptFunction = $this->options['cryptType'];
         } else {
@@ -560,10 +560,10 @@ class Auth_Container_DB extends Auth_Container
             return PEAR::raiseError($err->getMessage(), $err->getCode());
         }
 
-        if (   isset($this->options['cryptType']) 
+        if (   isset($this->options['cryptType'])
             && $this->options['cryptType'] == 'none') {
             $cryptFunction = 'strval';
-        } elseif (   isset($this->options['cryptType']) 
+        } elseif (   isset($this->options['cryptType'])
                   && function_exists($this->options['cryptType'])) {
             $cryptFunction = $this->options['cryptType'];
         } else {

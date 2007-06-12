@@ -14,7 +14,7 @@
  *
  * @category   Authentication
  * @package    Auth
- * @author     Jeroen Houben <jeroen@terena.nl> 
+ * @author     Jeroen Houben <jeroen@terena.nl>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -24,7 +24,7 @@
  */
 
 /**
- * Include Auth_Container base class 
+ * Include Auth_Container base class
  */
 require_once "Auth/Container.php";
 

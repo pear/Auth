@@ -82,9 +82,9 @@ class Auth_Container_KADM5 extends Auth_Container {
         if (!extension_loaded('kadm5')) {
             return PEAR::raiseError("Cannot use Kerberos V authentication, KADM5 extension not loaded!", 41, PEAR_ERROR_DIE);
         }
-        
+
         $this->_setDefaults();
-        
+
         if (isset($options['hostname'])) {
             $this->options['hostname'] = $options['hostname'];
         }
@@ -97,7 +97,7 @@ class Auth_Container_KADM5 extends Auth_Container {
         if (isset($options['checkServer'])) {
             $this->options['checkServer'] = $options['checkServer'];
         }
-        
+
         if ($this->options['checkServer']) {
             $this->_checkServer();
         }
@@ -105,7 +105,7 @@ class Auth_Container_KADM5 extends Auth_Container {
 
     // }}}
     // {{{ fetchData()
-    
+
     /**
      * Try to login to the KADM5 server
      *
@@ -118,21 +118,21 @@ class Auth_Container_KADM5 extends Auth_Container {
         if ( ($username == NULL) || ($password == NULL) ) {
             return false;
         }
-        
+
         $server = $this->options['hostname'];
         $realm = $this->options['realm'];
         $check = @kadm5_init_with_password($server, $realm, $username, $password);
-        
+
         if ($check == false) {
             return false;
         } else {
             return true;
         }
     }
-    
+
     // }}}
     // {{{ _setDefaults()
-    
+
     /**
      * Set some default options
      *
@@ -144,10 +144,10 @@ class Auth_Container_KADM5 extends Auth_Container {
         $this->options['timeout'] = 10;
         $this->options['checkServer'] = false;
     }
-    
+
     // }}}
     // {{{ _checkServer()
-    
+
     /**
      * Check if the given server and port are reachable
      *
@@ -163,7 +163,7 @@ class Auth_Container_KADM5 extends Auth_Container {
             return PEAR::raiseError($message, 41, PEAR_ERROR_DIE);
         }
     }
-    
+
     // }}}
 
 }

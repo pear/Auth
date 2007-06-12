@@ -99,16 +99,16 @@ class Auth_Container_Array extends Auth_Container {
     {
         if (!is_array($data)) {
             PEAR::raiseError('The options for Auth_Container_Array must be an array');
-        } 
+        }
         if (isset($data['users']) && is_array($data['users'])) {
             $this->users = $data['users'];
         } else {
             $this->users = array();
             PEAR::raiseError('Auth_Container_Array: no user data found in options array');
-        } 
+        }
         if (isset($data['cryptType'])) {
             $this->cryptType = $data['cryptType'];
-        } 
+        }
     }
 
     // }}}
@@ -134,7 +134,7 @@ class Auth_Container_Array extends Auth_Container {
             return true;
         }
         return false;
-    } 
+    }
 
     // }}}
     // {{{ listUsers()
@@ -150,12 +150,12 @@ class Auth_Container_Array extends Auth_Container {
         $ret = array();
         foreach ($this->users as $username => $password) {
             $ret[]['username'] = $username;
-        } 
+        }
         return $ret;
-    } 
+    }
 
     // }}}
 
-} 
+}
 
 ?>

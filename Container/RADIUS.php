@@ -14,7 +14,7 @@
  *
  * @category   Authentication
  * @package    Auth
- * @author     Michael Bretterklieber <michael@bretterklieber.com> 
+ * @author     Michael Bretterklieber <michael@bretterklieber.com>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -55,12 +55,12 @@ class Auth_Container_RADIUS extends Auth_Container
      * @var object
      */
     var $radius;
-    
+
     /**
      * Contains the authentication type
      * @var string
      */
-    var $authtype;    
+    var $authtype;
 
     // }}}
     // {{{ Auth_Container_RADIUS() [constructor]
@@ -89,7 +89,7 @@ class Auth_Container_RADIUS extends Auth_Container
             PEAR::raiseError("Unknown Authtype, please use one of: "
                     ."PAP, CHAP_MD5, MSCHAPv1, MSCHAPv2!", 41, PEAR_ERROR_DIE);
         }
-        
+
         $this->radius = new $classname;
 
         if (isset($options['configfile'])) {
@@ -107,7 +107,7 @@ class Auth_Container_RADIUS extends Auth_Container
                 $this->radius->addServer($servername, $port, $sharedsecret, $timeout, $maxtries);
             }
         }
-        
+
         if (!$this->radius->start()) {
             PEAR::raiseError($this->radius->getError(), 41, PEAR_ERROR_DIE);
         }
@@ -144,7 +144,7 @@ class Auth_Container_RADIUS extends Auth_Container
                     $this->radius->response  = $crpt->challengeResponse();
                 }
                 break;
-                
+
             case 'MSCHAPv2':
                 require_once 'Crypt/CHAP.php';
                 $crpt = new Crypt_MSCHAPv2;
@@ -155,7 +155,7 @@ class Auth_Container_RADIUS extends Auth_Container
                 $this->radius->chapid        = $crpt->chapid;
                 $this->radius->response      = $crpt->challengeResponse();
                 break;
-                
+
             default:
                 $this->radius->password = $password;
                 break;

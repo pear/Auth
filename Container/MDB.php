@@ -14,7 +14,7 @@
  *
  * @category   Authentication
  * @package    Auth
- * @author     Lorenzo Alberton <l.alberton@quipo.it> 
+ * @author     Lorenzo Alberton <l.alberton@quipo.it>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -264,7 +264,7 @@ class Auth_Container_MDB extends Auth_Container
 
         return '';
     }
-    
+
     // }}}
     // {{{ fetchData()
 
@@ -334,7 +334,7 @@ class Auth_Container_MDB extends Auth_Container
         // Perform trimming here before the hashing
         $password = trim($password, "\r\n");
         $res[$this->options['passwordcol']] = trim($res[$this->options['passwordcol']], "\r\n");
-        
+
         // If using Challenge Response md5 the pass with the secret
         if ($isChallengeResponse) {
             $res[$this->options['passwordcol']] =
@@ -344,7 +344,7 @@ class Auth_Container_MDB extends Auth_Container
                 $res[$this->options['passwordcol']] = md5($res[$this->options['passwordcol']]);
             }
         }
-        
+
         if ($this->verifyPassword($password,
                                   $res[$this->options['passwordcol']],
                                   $this->options['cryptType'])) {
@@ -394,7 +394,7 @@ class Auth_Container_MDB extends Auth_Container
         } else {
             $sql_from = $this->options['final_usernamecol']
                 .', '.$this->options['final_passwordcol'];
-            
+
             if (strlen($fields = $this->_quoteDBFields()) > 0) {
                 $sql_from .= ', '.$fields;
             }

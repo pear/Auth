@@ -9,7 +9,7 @@ class POP3aContainer extends TestAuthContainer {
     function POP3aContainer($name){
         $this->TestAuthContainer($name);
     }
-    
+
     function &getContainer() {
         static $container;
         if(!isset($container)){
@@ -18,7 +18,7 @@ class POP3aContainer extends TestAuthContainer {
         }
         return($container);
     }
-    
+
     function &getExtraOptions() {
         include './auth_container_pop3a_options.php';
         return($extra_options);

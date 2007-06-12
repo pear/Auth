@@ -14,7 +14,7 @@
  *
  * @category   Authentication
  * @package    Auth
- * @author     Michael Bretterklieber <michael@bretterklieber.com> 
+ * @author     Michael Bretterklieber <michael@bretterklieber.com>
  * @author     Adam Ashley <aashley@php.net>
  * @copyright  2001-2006 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
@@ -110,7 +110,7 @@ class Auth_Container_SMBPasswd extends Auth_Container
 
     // }}}
     // {{{ listUsers()
-    
+
     function listUsers()
     {
         $this->log('Auth_Container_SMBPasswd::fetchData() called.', AUTH_LOG_DEBUG);
@@ -164,7 +164,7 @@ class Auth_Container_SMBPasswd extends Auth_Container
      * Change password for user in the storage container
      *
      * @param string Username
-     * @param string The new password 
+     * @param string The new password
      */
     function changePassword($username, $password)
     {

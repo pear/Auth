@@ -113,7 +113,7 @@ class Auth_Container
             default :
                 if (function_exists($cryptType)) {
                     return ((string)$cryptType($password1) === (string)$password2);
-                } elseif (method_exists($this,$cryptType)) { 
+                } elseif (method_exists($this,$cryptType)) {
                     return ((string)$this->$cryptType($password1) === (string)$password2);
                 } else {
                     return false;
@@ -124,9 +124,9 @@ class Auth_Container
 
     // }}}
     // {{{ supportsChallengeResponse()
-    
+
     /**
-      * Returns true if the container supports Challenge Response 
+      * Returns true if the container supports Challenge Response
       * password authentication
       */
     function supportsChallengeResponse()
@@ -136,7 +136,7 @@ class Auth_Container
 
     // }}}
     // {{{ getCryptType()
-    
+
     /**
       * Returns the crypt current crypt type of the container
       *

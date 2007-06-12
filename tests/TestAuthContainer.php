@@ -101,31 +101,31 @@ class TestAuthContainer extends PHPUnit_TestCase
         }
 
         $this->assertTrue($fetch_res,sprintf('Could not verify with the default username (%s) and passwd (%s)', $opt['username'], $opt['passwd']));
-        
+
         // Test for fail fetchData
         $opt = $this->getExtraOptions();
         $this->assertFalse(
             $this->container->fetchData(md5($opt['username']), $opt['passwd']),
             "fetchData returned true with invalid username and pass"
         );
-        
+
     }
-    
-    
+
+
     /**
      * Tjis test depends on add user & remove user to work
      */
     function testFetchDataSpaceInPassword()
     {
-    
+
         if ($this->skip_tests) {
             $this->fail($this->skip_tests_message.'');
             return(false);
         }
-        
+
         $user = uniqid('user');
         $pass = 'Some Pass ';
-        
+
         $res = $this->container->addUser($user, $pass, array());
         if (AUTH_METHOD_NOT_SUPPORTED === $res) {
             $this->fail("This operation is not supported by ".get_class($this->container));
@@ -137,9 +137,9 @@ class TestAuthContainer extends PHPUnit_TestCase
                 return(false);
             } else {
                 $this->assertTrue($fetch_res, 'Could not verify user with space password');
-            }           
+            }
         }
-        
+
         $remove_res = $this->container->removeUser($user);
     }
 

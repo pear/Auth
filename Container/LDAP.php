@@ -14,7 +14,7 @@
  *
  * @category   Authentication
  * @package    Auth
- * @author     Jan Wagner <wagner@netsols.de> 
+ * @author     Jan Wagner <wagner@netsols.de>
  * @author     Adam Ashley <aashley@php.net>
  * @author     Hugues Peeters <hugues.peeters@claroline.net>
  * @copyright  2001-2006 The PHP Group
@@ -103,7 +103,7 @@ require_once "PEAR.php";
  *              or the value of userattr (usually uid)
  * group:       the name of group to search for
  * groupscope:  Scope for group searching: one, sub (default), or base
- * start_tls:   enable/disable the use of START_TLS encrypted connection 
+ * start_tls:   enable/disable the use of START_TLS encrypted connection
  *              (default: false)
  * debug:       Enable/Disable debugging output (default: false)
  * try_all:     Whether to try all user accounts returned from the search
@@ -177,14 +177,14 @@ require_once "PEAR.php";
  * It seems that binding anonymously to an Active Directory
  * is not allowed, so you have to set binddn and bindpw for
  * user searching.
- * 
+ *
  * LDAP Referrals need to be set to false for AD to work sometimes.
  *
- * Example a3 shows a full blown and tested example for connection to 
+ * Example a3 shows a full blown and tested example for connection to
  * Windows 2000 Active Directory with group mebership checking
  *
- * Note also that if you want an encrypted connection to an MS LDAP 
- * server, then, on your webserver, you must specify 
+ * Note also that if you want an encrypted connection to an MS LDAP
+ * server, then, on your webserver, you must specify
  *        TLS_REQCERT never
  * in /etc/ldap/ldap.conf or in the webserver user's ~/.ldaprc (which
  * may or may not be read depending on your configuration).
@@ -296,9 +296,9 @@ class Auth_Container_LDAP extends Auth_Container
         if (is_numeric($this->options['version']) && $this->options['version'] > 2) {
             $this->log("Switching to LDAP version {$this->options['version']}", AUTH_LOG_DEBUG);
             @ldap_set_option($this->conn_id, LDAP_OPT_PROTOCOL_VERSION, $this->options['version']);
-        
+
             // start TLS if available
-            if (isset($this->options['start_tls']) && $this->options['start_tls']) {           
+            if (isset($this->options['start_tls']) && $this->options['start_tls']) {
                 $this->log("Starting TLS session", AUTH_LOG_DEBUG);
                 if (@ldap_start_tls($this->conn_id) === false) {
                     $this->log('Could not start TLS session', AUTH_LOG_DEBUG);
@@ -487,7 +487,7 @@ class Auth_Container_LDAP extends Auth_Container
 
     /**
      * Adapt deprecated options from Auth 1.2 LDAP to Auth 1.3 LDAP
-     * 
+     *
      * @author Hugues Peeters <hugues.peeters@claroline.net>
      * @access private
      * @param array
@@ -598,7 +598,7 @@ class Auth_Container_LDAP extends Auth_Container
             $entry_id = null;
 
             do {
-                
+
                 // then get the user dn
                 if ($first) {
                     $entry_id = @ldap_first_entry($this->conn_id, $result_id);
@@ -615,7 +615,7 @@ class Auth_Container_LDAP extends Auth_Container
                     $this->log('Saving DN to AuthData', AUTH_LOG_DEBUG);
                     $this->_auth_obj->setAuthData('dn', $user_dn);
                 }
-            
+
                 // fetch attributes
                 if ($attributes = @ldap_get_attributes($this->conn_id, $entry_id)) {
 
