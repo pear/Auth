@@ -286,6 +286,13 @@ class Auth {
      */
     var $enableLogging = false;
 
+    /**
+     * Whether to regenerate session id everytime start is called
+     *
+     * @var boolean
+     */
+    var $regenerateSessionId = false;
+    
     // }}}
     // {{{ Auth() [constructor]
 
@@ -391,6 +398,9 @@ class Auth {
                 $this->enableLogging = $options['enableLogging'];
                 unset($options['enableLogging']);
             }
+            if (isset($options['regenerateSessionId']) && is_bool($options['regenerateSessionId'])) {
+                $this->regenerateSessionId = $options['regenerateSessionId'];
+            }
         }
         return($options);
     }
@@ -486,6 +496,12 @@ class Auth {
     function start()
     {
         $this->log('Auth::start() called.', AUTH_LOG_DEBUG);
+
+        // #10729 - Regenerate session id here if we are generating it on every
+        //          page load.
+        if ($this->regenerateSessionId) {
+            session_regenerate_id(true);
+        }
 
         $this->assignData();
         if (!$this->checkAuth() && $this->allowLogin) {
@@ -782,8 +798,13 @@ class Auth {
     {
         $this->log('Auth::setAuth() called.', AUTH_LOG_DEBUG);
     
-        // #2021 - Change the session id to avoid session fixation attacks php 4.3.3 > 
-        session_regenerate_id(true);
+        // #10729 - Regenerate session id here only if generating at login only
+        //          Don't do it if we are regenerating on every request so we don't
+        //          regenerate it twice in one request.
+        if (!$this->regenerateSessionId) {
+            // #2021 - Change the session id to avoid session fixation attacks php 4.3.3 > 
+            session_regenerate_id(true);
+        }
 
         if (!isset($this->session) || !is_array($this->session)) {
             $this->session = array();

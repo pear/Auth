@@ -70,6 +70,8 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
+ * Feature Request #10729: Optionally regenerate session id on every page request.
+   Thanks to Bernhard for patch.
  * Fixed Bug #10785: Notice when Auth::logout() called with a login callback
    defined but no user logged in. Suggested fix thanks to Sascha Grossenbacher.
  </notes>
