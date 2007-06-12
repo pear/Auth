@@ -58,10 +58,10 @@ the login data:
   <email>aharvey@php.net</email>
   <active>yes</active>
  </developer>
- <date>2007-03-23</date>
+ <date>2007-06-12</date>
  <time>10:35:00</time>
  <version>
-  <release>1.5.1</release>
+  <release>1.5.2</release>
   <api>1.5.0</api>
  </version>
  <stability>
@@ -70,9 +70,8 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
- * Added missing optional dependancy on PEAR Log to package.xml
- * Fixed Bug #10125: Auth_Container_LDAP::fetchData only fetching attributes for
-   first entry.
+ * Fixed Bug #10785: Notice when Auth::logout() called with a login callback
+   defined but no user logged in. Suggested fix thanks to Sascha Grossenbacher.
  </notes>
  <contents>
   <dir name="/">
@@ -266,6 +265,24 @@ the login data:
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <date>2007-03-23</date>
+   <time>10:35:00</time>
+   <version>
+    <release>1.5.1</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+ * Added missing optional dependancy on PEAR Log to package.xml
+ * Fixed Bug #10125: Auth_Container_LDAP::fetchData only fetching attributes for
+   first entry.
+   </notes>
+  </release>
   <release>
    <date>2007-02-13</date>
    <time>10:35:00</time>

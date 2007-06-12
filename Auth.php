@@ -1016,7 +1016,7 @@ class Auth {
     {
         $this->log('Auth::logout() called.', AUTH_LOG_DEBUG);
 
-        if (is_callable($this->logoutCallback)) {
+        if (is_callable($this->logoutCallback) && isset($this->session['username'])) {
             $this->log('Calling logoutCallback ('.$this->logoutCallback.').', AUTH_LOG_DEBUG);
             call_user_func_array($this->logoutCallback, array($this->session['username'], &$this));
         }
