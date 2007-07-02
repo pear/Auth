@@ -239,6 +239,11 @@ the login data:
     <min>1.0.0</min>
    </package>
    <package>
+    <name>HTTP_Client</name>
+    <channel>pear.php.net</channel>
+    <min>1.1.0</min>
+   </package>
+   <package>
     <name>SOAP</name>
     <channel>pear.php.net</channel>
     <min>0.9.0</min>

@@ -24,6 +24,10 @@
  */
 
 /**
+ * Include PEAR HTTP_Client.
+ */
+require_once 'HTTP/Client.php';
+/**
  * Include Auth_Container base class
  */
 require_once 'Auth/Container.php';
@@ -38,7 +42,8 @@ require_once 'Auth/Container.php';
  * @package    Auth
  * @author     Yavor Shahpasov <yavo@netsmart.com.cy>
  * @author     Adam Ashley <aashley@php.net>
- * @copyright  2001-2006 The PHP Group
+ * @author     Adam Harvey <aharvey@php.net>
+ * @copyright  2001-2007 The PHP Group
  * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
  * @version    Release: @package_version@  File: $Revision$
  * @link       http://pear.php.net/package/Auth
@@ -77,45 +82,31 @@ class Auth_Container_Pear extends Auth_Container
     function fetchData($username, $password)
     {
         $this->log('Auth_Container_PEAR::fetchData() called.', AUTH_LOG_DEBUG);
-        $salt = file_get_contents('http://pear.php.net/rest-login.php/getsalt');
-        print "<pre>\n"
-            ."-------HTTP_RESPONSE_HEADER-------\n"
-            .print_r($http_response_header, true)."\n"
-            ."-------HTTP_RESPONSE_HEADER-------\n"
-            ."</pre>\n";
-        $cookies = array_values(preg_grep('/Set-Cookie:/', $http_response_header));
-        preg_match('/PHPSESSID=(.+); /', $cookies[0], $session);
-        $pass = md5($salt . md5($password));
-        $opts = array('http' => array(
-            'method' => 'POST',
-            'header' => "Content-type: application/x-www-form-urlencoded\r\n"
-                       ."Cookie: PHPSESSID=" . $session[1] . "\r\n",
-            'content' => http_build_query(array('username' => $username, 'password' => $pass))
-        ));
-        print "<pre>\n"
-            ."-----------HEADER-----------\n"
-            .print_r($opts, true)."\n"
-            ."-----------HEADER-----------\n"
-            ."</pre>\n";
-        $context = stream_context_create($opts);
-        $result = file_get_contents('http://pear.php.net/rest-login.php/validate', false, $context);
-        print "<pre>\n"
-            ."-------HTTP_RESPONSE_HEADER-------\n"
-            .print_r($http_response_header, true)."\n"
-            ."-------HTTP_RESPONSE_HEADER-------\n"
-            ."</pre>\n";
-        print "<pre>\n"
-            ."-----------RESULT-----------\n"
-            .$result."\n"
-            ."-----------RESULT-----------\n"
-            ."</pre>\n";
 
-        // Error Checking howto ???
-        if ($result == '8 Login OK') {
-            $this->activeUser = $username;
-            return true;
+        $client = new HTTP_Client;
+
+        $this->log('Auth_Container_PEAR::fetchData() getting salt.', AUTH_LOG_DEBUG);
+        $code = $client->get('https://pear.php.net/rest-login.php/getsalt');
+        if ($code != 200) {
+            return PEAR::raiseError('Bad response to salt request.', $code);
         }
-        return false;
+        $resp = $client->currentResponse();
+        $salt = $resp['body'];
+
+        $this->log('Auth_Container_PEAR::fetchData() calling validate.', AUTH_LOG_DEBUG);
+        $code = $client->post('https://pear.php.net/rest-login.php/validate',
+                              array('username' => $username,
+                                    'password' => md5($salt.md5($password))));
+        if ($code != 200) {
+            return PEAR::raiseError('Bad response to validate request.', $code);
+        }
+        $resp = $client->currentResponse();
+
+        list($code, $message) = explode(' ', $resp['body'], 1);
+        if ($code != 8) {
+            return PEAR::raiseError($message, $code);
+        }
+        return true;
     }
 
     // }}}
