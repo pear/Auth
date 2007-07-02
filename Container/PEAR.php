@@ -27,10 +27,6 @@
  * Include Auth_Container base class
  */
 require_once 'Auth/Container.php';
-/**
- * Include PEAR XML_RPC
- */
-require_once 'XML/RPC.php';
 
 /**
  * Storage driver for authenticating against PEAR website
@@ -81,18 +77,42 @@ class Auth_Container_Pear extends Auth_Container
     function fetchData($username, $password)
     {
         $this->log('Auth_Container_PEAR::fetchData() called.', AUTH_LOG_DEBUG);
-        $rpc = new XML_RPC_Client('/xmlrpc.php', 'pear.php.net');
-        $rpc_message = new XML_RPC_Message("user.info", array(new XML_RPC_Value($username, "string")) );
+        $salt = file_get_contents('http://pear.php.net/rest-login.php/getsalt');
+        print "<pre>\n"
+            ."-------HTTP_RESPONSE_HEADER-------\n"
+            .print_r($http_response_header, true)."\n"
+            ."-------HTTP_RESPONSE_HEADER-------\n"
+            ."</pre>\n";
+        $cookies = array_values(preg_grep('/Set-Cookie:/', $http_response_header));
+        preg_match('/PHPSESSID=(.+); /', $cookies[0], $session);
+        $pass = md5($salt . md5($password));
+        $opts = array('http' => array(
+            'method' => 'POST',
+            'header' => "Content-type: application/x-www-form-urlencoded\r\n"
+                       ."Cookie: PHPSESSID=" . $session[1] . "\r\n",
+            'content' => http_build_query(array('username' => $username, 'password' => $pass))
+        ));
+        print "<pre>\n"
+            ."-----------HEADER-----------\n"
+            .print_r($opts, true)."\n"
+            ."-----------HEADER-----------\n"
+            ."</pre>\n";
+        $context = stream_context_create($opts);
+        $result = file_get_contents('http://pear.php.net/rest-login.php/validate', false, $context);
+        print "<pre>\n"
+            ."-------HTTP_RESPONSE_HEADER-------\n"
+            .print_r($http_response_header, true)."\n"
+            ."-------HTTP_RESPONSE_HEADER-------\n"
+            ."</pre>\n";
+        print "<pre>\n"
+            ."-----------RESULT-----------\n"
+            .$result."\n"
+            ."-----------RESULT-----------\n"
+            ."</pre>\n";
 
         // Error Checking howto ???
-        $result = $rpc->send($rpc_message);
-        $value = $result->value();
-        $userinfo = xml_rpc_decode($value);
-        if ($userinfo['password'] == md5($password)) {
-            $this->activeUser = $userinfo['handle'];
-            foreach ($userinfo as $uk=>$uv) {
-                $this->_auth_obj->setAuthData($uk, $uv);
-            }
+        if ($result == '8 Login OK') {
+            $this->activeUser = $username;
             return true;
         }
         return false;

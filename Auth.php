@@ -634,6 +634,10 @@ class Auth {
     function setSessionName($name = 'session')
     {
         $this->_sessionName = '_auth_'.$name;
+        // Make Sure Auth session variable is there
+        if(!isset($_SESSION[$this->_sessionName])) {
+            $_SESSION[$this->_sessionName] = array();
+        }
         $this->session =& $_SESSION[$this->_sessionName];
     }
 
