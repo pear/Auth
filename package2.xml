@@ -58,10 +58,10 @@ the login data:
   <email>aharvey@php.net</email>
   <active>yes</active>
  </developer>
- <date>2007-06-12</date>
+ <date>2007-07-02</date>
  <time>10:35:00</time>
  <version>
-  <release>1.5.2</release>
+  <release>1.5.3</release>
   <api>1.5.0</api>
  </version>
  <stability>
@@ -70,10 +70,9 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
- * Feature Request #10729: Optionally regenerate session id on every page request.
-   Thanks to Bernhard for patch.
- * Fixed Bug #10785: Notice when Auth::logout() called with a login callback
-   defined but no user logged in. Suggested fix thanks to Sascha Grossenbacher.
+ * Fixed Bug #11476: SOAP5 container's _validateOptions() and _setDefaults()
+   functions where setting options into the wrong object parameter. Thanks to
+	 Köles Mihály for fix.
  </notes>
  <contents>
   <dir name="/">
@@ -267,6 +266,25 @@ the login data:
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <date>2007-06-12</date>
+   <time>10:35:00</time>
+   <version>
+    <release>1.5.2</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+ * Feature Request #10729: Optionally regenerate session id on every page request.
+   Thanks to Bernhard for patch.
+ * Fixed Bug #10785: Notice when Auth::logout() called with a login callback
+   defined but no user logged in. Suggested fix thanks to Sascha Grossenbacher.
+   </notes>
+  </release>
   <release>
    <date>2007-03-23</date>
    <time>10:35:00</time>

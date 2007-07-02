@@ -228,15 +228,15 @@ class Auth_Container_SOAP5 extends Auth_Container
      */
     function _validateOptions($array)
     {
-        if (   (   is_null($this->options['wsdl'])
-                && is_null($this->options['location'])
-                && is_null($this->options['uri']))
-            || (   is_null($this->options['wsdl'])
-                && (   is_null($this->options['location'])
-                    || is_null($this->options['uri'])))) {
+        if (   (   is_null($this->_options['wsdl'])
+                && is_null($this->_options['location'])
+                && is_null($this->_options['uri']))
+            || (   is_null($this->_options['wsdl'])
+                && (   is_null($this->_options['location'])
+                    || is_null($this->_options['uri'])))) {
             return PEAR::raiseError('Either a WSDL file or a location/uri pair must be specified.');
         }
-        if (is_null($this->options['method'])) {
+        if (is_null($this->_options['method'])) {
             return PEAR::raiseError('A method to call on the soap service must be specified.');
         }
         return true;
@@ -253,13 +253,13 @@ class Auth_Container_SOAP5 extends Auth_Container
      */
     function _setDefaults()
     {
-        $this->options['wsdl']           = null;
-        $this->options['location']       = null;
-        $this->options['uri']            = null;
-        $this->options['method']         = null;
-        $this->options['usernamefield']  = 'username';
-        $this->options['passwordfield']  = 'password';
-        $this->options['matchpasswords'] = true;
+        $this->_options['wsdl']           = null;
+        $this->_options['location']       = null;
+        $this->_options['uri']            = null;
+        $this->_options['method']         = null;
+        $this->_options['usernamefield']  = 'username';
+        $this->_options['passwordfield']  = 'password';
+        $this->_options['matchpasswords'] = true;
     }
 
     // }}}
