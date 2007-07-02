@@ -72,6 +72,8 @@ the login data:
  <notes>
  * Fixed Bug: If Auth::setSessionName() is called new session name variable is
    not initialised so checks for session storage fail.
+ * Fixed Bug #11396: Auth_Container_Pear doesn't work with latest changes to
+   pear.php.net. Fix by Adam Harvey.
  * Fixed Bug #11476: SOAP5 container's _validateOptions() and _setDefaults()
    functions where setting options into the wrong object parameter. Thanks to
    Köles Mihály for fix.
