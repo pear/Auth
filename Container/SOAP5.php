@@ -226,7 +226,7 @@ class Auth_Container_SOAP5 extends Auth_Container
      * @access private
      * @param  array
      */
-    function _validateOptions($array)
+    function _validateOptions()
     {
         if (   (   is_null($this->_options['wsdl'])
                 && is_null($this->_options['location'])
