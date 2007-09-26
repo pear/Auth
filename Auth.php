@@ -56,6 +56,19 @@ define('AUTH_LOG_INFO',     6);
  */
 define('AUTH_LOG_DEBUG',    7);
 
+/**
+ * Auth Advanced Security - IP Checks
+ */
+define('AUTH_ADV_IPCHECK', 1);
+/**
+ * Auth Advanced Security - User Agent Checks
+ */
+define('AUTH_ADV_USERAGENT', 2);
+/**
+ * Auth Advanced Security - Challenge Response
+ */
+define('AUTH_ADV_CHALLENGE', 3);
+
 
 /**
  * PEAR::Auth
@@ -218,7 +231,14 @@ class Auth {
      * user's IP or useragent have changed across requests.
      * Turned off by default to preserve BC.
      *
-     * @var boolean
+     * @var mixed Boolean to turn all advanced security options on or off
+     *            Array containing named values turning specific advanced
+     *            security features on or off individually
+     *              array(
+     *                  AUTH_ADV_IPCHECK    => true,
+     *                  AUTH_ADV_USERAGENT  => true,
+     *                  AUTH_ADV_CHALLENGE  => true,
+     *              );
      */
     var $advancedsecurity = false;
 
@@ -905,11 +925,12 @@ class Auth {
                 && $this->session['username'] != '') {
                 Auth::updateIdle();
 
-                if ($this->advancedsecurity) {
+                if ($this->_isAdvancedSecurityEnabled()) {
                     $this->log('Advanced Security Mode Enabled.', AUTH_LOG_DEBUG);
 
                     // Only Generate the challenge once
-                    if($this->authChecks == 1) {
+                    if (   $this->authChecks == 1
+                        && $this->_isAdvancedSecurityEnabled(AUTH_ADV_CHALLENGE)) {
                         $this->log('Generating new Challenge Cookie.', AUTH_LOG_DEBUG);
                         $this->session['challengecookieold'] = $this->session['challengecookie'];
                         $this->session['challengecookie'] = md5($this->session['challengekey'].microtime());
@@ -917,7 +938,8 @@ class Auth {
                     }
 
                     // Check for ip change
-                    if (   isset($this->server['REMOTE_ADDR'])
+                    if (   $this->_isAdvancedSecurityEnabled(AUTH_ADV_IPCHECK)
+                        && isset($this->server['REMOTE_ADDR'])
                         && $this->session['sessionip'] != $this->server['REMOTE_ADDR']) {
                         $this->log('Security Breach. Remote IP Address changed.', AUTH_LOG_INFO);
                         // Check if the IP of the user has changed, if so we
@@ -929,7 +951,8 @@ class Auth {
                     }
 
                     // Check for ip change (if connected via proxy)
-                    if (   isset($this->server['HTTP_X_FORWARDED_FOR'])
+                    if (   $this->_isAdvancedSecurityEnabled(AUTH_ADV_IPCHECK)
+                        && isset($this->server['HTTP_X_FORWARDED_FOR'])
                         && $this->session['sessionforwardedfor'] != $this->server['HTTP_X_FORWARDED_FOR']) {
                         $this->log('Security Breach. Forwarded For IP Address changed.', AUTH_LOG_INFO);
                         // Check if the IP of the user connecting via proxy has
@@ -942,7 +965,8 @@ class Auth {
                     }
 
                     // Check for useragent change
-                    if (   isset($this->server['HTTP_USER_AGENT'])
+                    if (   $this->_isAdvancedSecurityEnabled(AUTH_ADV_USERAGENT)
+                        && isset($this->server['HTTP_USER_AGENT'])
                         && $this->session['sessionuseragent'] != $this->server['HTTP_USER_AGENT']) {
                         $this->log('Security Breach. User Agent changed.', AUTH_LOG_INFO);
                         // Check if the User-Agent of the user has changed, if
@@ -957,7 +981,8 @@ class Auth {
                     // this is the first time and check is skipped
                     // TODO when user open two pages similtaneuly (open in new window,open
                     // in tab) auth breach is caused find out a way around that if possible
-                    if (   isset($this->session['challengecookieold'])
+                    if (   $this->_isAdvancedSecurityEnabled(AUTH_ADV_CHALLENGE)
+                        && isset($this->session['challengecookieold'])
                         && $this->session['challengecookieold'] != $this->cookie['authchallenge']) {
                         $this->log('Security Breach. Challenge Cookie mismatch.', AUTH_LOG_INFO);
                         $this->expired = true;
@@ -1282,6 +1307,49 @@ class Auth {
         $this->_loadLogger();
 
         return $this->logger->attach($observer);
+
+    }
+
+    // }}}
+    // {{{ _isAdvancedSecurityEnabled()
+
+    /**
+     * Is advanced security enabled?
+     *
+     * Pass one of the Advanced Security constants as the first parameter
+     * to check if that advanced security check is enabled.
+     *
+     * @param integer
+     * @return boolean
+     */
+    function _isAdvancedSecurityEnabled($feature = null) {
+
+        if (is_null($feature)) {
+
+            if ($this->advancedsecurity === true)
+                return true;
+
+            if (   is_array($this->advancedsecurity)
+                && in_array(true, $this->advancedsecurity, true))
+                return true;
+
+            return false;
+
+        } else {
+
+            if (is_array($this->advancedsecurity)) {
+
+                if (   isset($this->advancedsecurity[$feature])
+                    && $this->advancedsecurity[$feature] == true)
+                    return true;
+
+                return false;
+
+            }
+
+            return (bool)$this->advancedsecurity;
+
+        }
 
     }
 
