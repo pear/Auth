@@ -74,6 +74,8 @@ the login data:
    schema.tableName -> "schema"."tableName"
  * Implemented Request #12087: Ability to select which Advanced Security options
    are used.
+ * Fixed Doc Bug #12156: Correction to doc page for Auth::setSessionName() by
+   Adam Harvey (aharvey)
  </notes>
  <contents>
   <dir name="/">
