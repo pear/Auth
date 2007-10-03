@@ -131,7 +131,14 @@ class Auth_Container_MDB2 extends Auth_Container
         }
 
         if ($this->options['auto_quote']) {
-            $this->options['final_table'] = $this->db->quoteIdentifier($this->options['table'], true);
+            if (strpos('.', $this->options['table']) === false)) {
+                $this->options['final_table'] = $this->db->quoteIdentifier($this->options['table'], true);
+            } else {
+                $t = explode('.', $this->options['table']);
+                for ($i = 0, $count = count($t); $i < $count; $i++)
+                    $t[$i] = $this->db->quoteIdentifier($t[$i], true);
+                $this->options['final_table'] = implode('.', $t);
+            }
             $this->options['final_usernamecol'] = $this->db->quoteIdentifier($this->options['usernamecol'], true);
             $this->options['final_passwordcol'] = $this->db->quoteIdentifier($this->options['passwordcol'], true);
         } else {
