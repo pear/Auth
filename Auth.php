@@ -1008,8 +1008,11 @@ class Auth {
                 $this->log('Session OK.', AUTH_LOG_INFO);
                 return true;
             }
+        } else {
+            $this->log('Unable to locate session storage.', AUTH_LOG_DEBUG);
+            return false;
         }
-        $this->log('Unable to locate session storage.', AUTH_LOG_DEBUG);
+        $this->log('No login session.', AUTH_LOG_DEBUG);
         return false;
     }
 
