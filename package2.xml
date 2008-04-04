@@ -59,9 +59,9 @@ the login data:
   <active>yes</active>
  </developer>
  <date>2008-04-04</date>
- <time>10:35:00</time>
+ <time>15:33:00</time>
  <version>
-  <release>1.6.0</release>
+  <release>1.6.1</release>
   <api>1.5.0</api>
  </version>
  <stability>
@@ -70,20 +70,8 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
- * Fixed Bug #12112: Advanced Security Cookie has different settings to
-   session cookie.
- * Implemented Request #13337: New vpopmail container utilising Net_Vpopmaild.
-   Patch supplied by Bill Shupp (shupp)
- * Implemented Request #13418: Karma support for PEAR Container. Patch supplied
-   by Christian Weiske (cweiske).
- * Added correct debug message for when no login has occured instead of session
-   storage not found.
- * Implemented Request #12061: Auto Quote handle database schema changes. ie
-   schema.tableName -> "schema"."tableName"
- * Implemented Request #12087: Ability to select which Advanced Security options
-   are used.
- * Fixed Doc Bug #12156: Correction to doc page for Auth::setSessionName() by
-   Adam Harvey (aharvey)
+  * Actually included the new NetVPOPMaild container file.
+	  *mutter*grumble*stupid package.xml*grumble*mutter*
  </notes>
  <contents>
   <dir name="/">
@@ -151,6 +139,9 @@ the login data:
      <tasks:replace from="@package_version@" to="version" type="package-info" />
     </file>
     <file baseinstalldir="Auth" name="vpopmail.php" role="php">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+    <file baseinstalldir="Auth" name="NetVPOPMaild.php" role="php">
      <tasks:replace from="@package_version@" to="version" type="package-info" />
     </file>
    </dir> <!-- /Container -->
@@ -287,6 +278,35 @@ the login data:
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <date>2008-04-04</date>
+   <time>10:35:00</time>
+   <version>
+    <release>1.6.0</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+ * Fixed Bug #12112: Advanced Security Cookie has different settings to
+   session cookie.
+ * Implemented Request #13337: New vpopmail container utilising Net_Vpopmaild.
+   Patch supplied by Bill Shupp (shupp)
+ * Implemented Request #13418: Karma support for PEAR Container. Patch supplied
+   by Christian Weiske (cweiske).
+ * Added correct debug message for when no login has occured instead of session
+   storage not found.
+ * Implemented Request #12061: Auto Quote handle database schema changes. ie
+   schema.tableName -> "schema"."tableName"
+ * Implemented Request #12087: Ability to select which Advanced Security options
+   are used.
+ * Fixed Doc Bug #12156: Correction to doc page for Auth::setSessionName() by
+   Adam Harvey (aharvey)
+   </notes>
+	</release>
   <release>
    <date>2007-07-02</date>
    <time>10:35:00</time>
