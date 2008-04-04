@@ -38,6 +38,11 @@ require_once 'Auth/Container.php';
  * This driver provides a method for authenticating against the pear.php.net
  * authentication system.
  *
+ * Supports two options:
+ * - "url": The base URL with schema to authenticate against
+ * - "karma": An array of karma levels which the user needs one of.
+ *            When empty, no karma level is required.
+ *
  * @category   Authentication
  * @package    Auth
  * @author     Yavor Shahpasov <yavo@netsmart.com.cy>
@@ -51,19 +56,52 @@ require_once 'Auth/Container.php';
  */
 class Auth_Container_Pear extends Auth_Container
 {
+    // {{{ properties
 
+    /**
+     * URL to connect to, with schema
+     *
+     * @var string
+     */
+    var $url = 'https://pear.php.net/rest-login.php/';
+
+    /**
+     * Array of karma levels the user can have.
+     * A user needs only one of the levels to succeed login.
+     * No levels mean that only username and password need to match
+     *
+     * @var array
+     */
+    var $karma = array();
+
+    // }}}
     // {{{ Auth_Container_Pear() [constructor]
 
     /**
      * Constructor
      *
-     * Currently does nothing
+     * Accepts options "url" and "karma", see class docs.
+     *
+     * @param array $data Array of options
      *
      * @return void
      */
-    function Auth_Container_Pear()
+    function Auth_Container_Pear($data = null)
     {
+        if (!is_array($data)) {
+            PEAR::raiseError('The options for Auth_Container_Pear must be an array');
+        }
+        if (isset($data['karma'])) {
+            if (is_array($data['karma'])) {
+                $this->karma = $data['karma'];
+            } else {
+                $this->karma = array($data['karma']);
+            }
+        }
 
+        if (isset($data['url'])) {
+            $this->url = $data['url'];
+        }
     }
 
     // }}}
@@ -86,7 +124,7 @@ class Auth_Container_Pear extends Auth_Container
         $client = new HTTP_Client;
 
         $this->log('Auth_Container_PEAR::fetchData() getting salt.', AUTH_LOG_DEBUG);
-        $code = $client->get('https://pear.php.net/rest-login.php/getsalt');
+        $code = $client->get($this->url . '/getsalt');
         if ($code != 200) {
             return PEAR::raiseError('Bad response to salt request.', $code);
         }
@@ -94,9 +132,15 @@ class Auth_Container_Pear extends Auth_Container
         $salt = $resp['body'];
 
         $this->log('Auth_Container_PEAR::fetchData() calling validate.', AUTH_LOG_DEBUG);
-        $code = $client->post('https://pear.php.net/rest-login.php/validate',
-                              array('username' => $username,
-                                    'password' => md5($salt.md5($password))));
+        $postOptions = array(
+            'username' => $username,
+            'password' => md5($salt . md5($password))
+        );
+        if (is_array($this->karma) && count($this->karma) > 0) {
+            $postOptions['karma'] = implode(',', $this->karma);
+        }
+
+        $code = $client->post($this->url . '/validate', $postOptions);
         if ($code != 200) {
             return PEAR::raiseError('Bad response to validate request.', $code);
         }
