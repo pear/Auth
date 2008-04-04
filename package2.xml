@@ -70,6 +70,8 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
+ * Fixed Bug #12112: Advanced Security Cookie has different settings to
+   session cookie.
  * Implemented Request #13337: New vpopmail container utilising Net_Vpopmaild.
    Patch supplied by Bill Shupp (shupp)
  * Implemented Request #13418: Karma support for PEAR Container. Patch supplied

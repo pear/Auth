@@ -855,7 +855,7 @@ class Auth {
         }
 
         $this->session['challengecookie'] = md5($this->session['challengekey'].microtime());
-        setcookie('authchallenge', $this->session['challengecookie']);
+        setcookie('authchallenge', $this->session['challengecookie'], 0, '/');
 
         $this->session['registered'] = true;
         $this->session['username']   = $username;
@@ -934,7 +934,7 @@ class Auth {
                         $this->log('Generating new Challenge Cookie.', AUTH_LOG_DEBUG);
                         $this->session['challengecookieold'] = $this->session['challengecookie'];
                         $this->session['challengecookie'] = md5($this->session['challengekey'].microtime());
-                        setcookie('authchallenge', $this->session['challengecookie']);
+                        setcookie('authchallenge', $this->session['challengecookie'], 0, '/');
                     }
 
                     // Check for ip change
