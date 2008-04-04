@@ -70,6 +70,8 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
+ * Implemented Request #13337: New vpopmail container utilising Net_Vpopmaild.
+   Patch supplied by Bill Shupp (shupp)
  * Implemented Request #13418: Karma support for PEAR Container. Patch supplied
    by Christian Weiske (cweiske).
  * Added correct debug message for when no login has occured instead of session
@@ -252,6 +254,11 @@ the login data:
     <name>SOAP</name>
     <channel>pear.php.net</channel>
     <min>0.9.0</min>
+   </package>
+   <package>
+    <name>Net_Vpopmaild</name>
+    <channel>pear.php.net</channel>
+    <min>0.1.0</min>
    </package>
    <package>
     <name>vpopmail</name>
