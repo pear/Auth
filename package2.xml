@@ -19,7 +19,7 @@ the login data:
 * LDAP servers
 * POP3 servers
 * IMAP servers
-* vpopmail accounts
+* vpopmail accounts (Using either PECL vpopmail or PEAR Net_Vpopmaild)
 * RADIUS
 * SAMBA password files
 * SOAP (Using either PEAR SOAP package or PHP5 SOAP extension)
