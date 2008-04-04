@@ -131,7 +131,7 @@ class Auth_Container_MDB extends Auth_Container
         }
 
         if ($this->options['auto_quote']) {
-            if (strpos('.', $this->options['table']) === false)) {
+            if (strpos('.', $this->options['table']) === false) {
                 $this->options['final_table'] = $this->db->quoteIdentifier($this->options['table']);
             } else {
                 $t = explode('.', $this->options['table']);

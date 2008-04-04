@@ -72,6 +72,7 @@ the login data:
  <notes>
   * Actually included the new NetVPOPMaild container file.
 	  *mutter*grumble*stupid package.xml*grumble*mutter*
+  * Fix Bug #13578: Parse errors in DB Containers
  </notes>
  <contents>
   <dir name="/">
