@@ -1043,6 +1043,9 @@ class Auth {
     /**
      * Has the user been authenticated?
      *
+     * Is there a valid login session. Previously this was different from
+     * checkAuth() but now it is just an alias.
+     *
      * @access public
      * @return bool  True if the user is logged in, otherwise false.
      */
