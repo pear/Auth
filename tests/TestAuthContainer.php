@@ -1,24 +1,9 @@
 <?php
+require_once 'PHPUnit/Framework/TestCase.php';
+require_once 'Auth.php';
 
-include_once 'PHPUnit.php';
-
-
-class TestAuthContainer extends PHPUnit_TestCase
+class TestAuthContainer extends PHPUnit_Framework_TestCase
 {
-
-    var $skip_tests = false;
-    var $skip_tests_message = "SKIP TEST";
-
-    function TestAuthContainer($name)
-    {
-        $this->PHPUnit_TestCase($name);
-        $this->container =& $this->getContainer();
-        $this->user = 'joe';
-        $this->pass = 'doe';
-        $this->opt = 'VeryCoolUser';
-        // Nedded since lazy loading of container was introduced
-        $this->container->_auth_obj =& new Auth(&$this);
-    }
 
     // Abstract
     function getContainer() {}
@@ -26,6 +11,13 @@ class TestAuthContainer extends PHPUnit_TestCase
 
     function setUp()
     {
+        $this->container =& $this->getContainer();
+        $this->user = 'joe';
+        $this->pass = 'doe';
+        $this->opt = 'VeryCoolUser';
+        // Nedded since lazy loading of container was introduced
+        $this->container->_auth_obj =& new Auth(&$this);
+
         $opt = $this->getExtraOptions();
         // Add the default user to be used for some testing
         $this->container->addUser($opt['username'], $opt['passwd']);
@@ -40,15 +32,10 @@ class TestAuthContainer extends PHPUnit_TestCase
 
     function testListUsers()
     {
-        if ($this->skip_tests) {
-            $this->fail($this->skip_tests_message.'');
-            return(false);
-        }
 
         $users = $this->container->listUsers();
         if (AUTH_METHOD_NOT_SUPPORTED === $users) {
-            $this->fail('This operation is not supported by '.get_class($this->container));
-            return(false);
+            $this->markTestSkipped('This operation is not supported by '.get_class($this->container));
         }
 
         $opt = $this->getExtraOptions();
@@ -58,16 +45,10 @@ class TestAuthContainer extends PHPUnit_TestCase
 
     function testAddUser()
     {
-        if ($this->skip_tests) {
-            $this->fail($this->skip_tests_message.'');
-            return(false);
-        }
-
         $cb = count($this->container->listUsers());
         $res = $this->container->addUser($this->user, $this->pass, $this->opt);
         if (AUTH_METHOD_NOT_SUPPORTED === $res) {
-            $this->fail("This operation is not supported by ".get_class($this->container));
-            return(false);
+            $this->markTestSkipped("This operation is not supported by ".get_class($this->container));
         }
 
         if (PEAR::isError($res)) {
@@ -88,16 +69,10 @@ class TestAuthContainer extends PHPUnit_TestCase
 
     function testFetchData()
     {
-        if ($this->skip_tests) {
-            $this->fail($this->skip_tests_message.'');
-            return(false);
-        }
-
         $opt = $this->getExtraOptions();
         $fetch_res = $this->container->fetchData($opt['username'], $opt['passwd']);
         if (AUTH_METHOD_NOT_SUPPORTED === $fetch_res) {
-            $this->fail("This operation is not supported by ".get_class($this->container));
-            return(false);
+            $this->markTestSkipped("This operation is not supported by ".get_class($this->container));
         }
 
         $this->assertTrue($fetch_res,sprintf('Could not verify with the default username (%s) and passwd (%s)', $opt['username'], $opt['passwd']));
@@ -117,28 +92,20 @@ class TestAuthContainer extends PHPUnit_TestCase
      */
     function testFetchDataSpaceInPassword()
     {
-
-        if ($this->skip_tests) {
-            $this->fail($this->skip_tests_message.'');
-            return(false);
-        }
-
         $user = uniqid('user');
         $pass = 'Some Pass ';
 
         $res = $this->container->addUser($user, $pass, array());
         if (AUTH_METHOD_NOT_SUPPORTED === $res) {
-            $this->fail("This operation is not supported by ".get_class($this->container));
-            return(false);
-        } else {
-            $fetch_res = $this->container->fetchData($user, $pass);
-            if (AUTH_METHOD_NOT_SUPPORTED === $fetch_res) {
-                $this->fail("This operation is not supported by ".get_class($this->container));
-                return(false);
-            } else {
-                $this->assertTrue($fetch_res, 'Could not verify user with space password');
-            }
+            $this->markTestSkipped("This operation is not supported by ".get_class($this->container));
         }
+
+        $fetch_res = $this->container->fetchData($user, $pass);
+        if (AUTH_METHOD_NOT_SUPPORTED === $fetch_res) {
+            $this->markTestSkipped("This operation is not supported by ".get_class($this->container));
+        }
+
+        $this->assertTrue($fetch_res, 'Could not verify user with space password');
 
         $remove_res = $this->container->removeUser($user);
     }
@@ -148,22 +115,15 @@ class TestAuthContainer extends PHPUnit_TestCase
 
     function testRemoveUser()
     {
-        if ($this->skip_tests) {
-            $this->fail($this->skip_tests_message.'');
-            return(false);
-        }
-
         // Add a user to be removed when testing removeUuser method
         // Assume add user works
         $this->container->addUser('for_remove', 'for_remove');
         $cb = count($this->container->listUsers());
         $remove_res = $this->container->removeUser('for_remove');
         if (AUTH_METHOD_NOT_SUPPORTED === $remove_res) {
-            $this->fail("This operation is not supported by ".get_class($this->container));
-            return(false);
+            $this->markTestSkipped("This operation is not supported by ".get_class($this->container));
         }
 
-        $this->assertTrue(AUTH_METHOD_NOT_SUPPORTED == $remove_res, "This operation is not supported by ".get_class($this));
         $ca = count($this->container->listUsers());
         $this->assertTrue($cb === $ca+1, sprintf('Could not remove user "%s", count before:%s count after:%s ', 'for_remove', $cb, $ca));
     }

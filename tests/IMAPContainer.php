@@ -1,20 +1,21 @@
 <?php
 
-include_once 'TestAuthContainer.php';
-include_once 'Auth/Container/IMAP.php';
+require_once 'TestAuthContainer.php';
+require_once 'Auth/Container/IMAP.php';
 
 
 class IMAPContainer extends TestAuthContainer {
 
-    function IMAPContainer($name){
-        $this->TestAuthContainer($name);
-    }
 
     function &getContainer() {
-        print "IMAPContainer::getContainer\n";
         static $container;
+
+        if (!extension_loaded('imap')) {
+            $this->markTestSkipped("This test needs the IMAP extension");
+        }
+
         if(!isset($container)){
-            include './auth_container_imap_options.php';
+            include 'auth_container_imap_options.php';
             $container = new Auth_Container_IMAP($options);
         }
         return($container);
@@ -22,7 +23,7 @@ class IMAPContainer extends TestAuthContainer {
 
     function &getExtraOptions() {
         print "IMAPContainer::getExtraOptions\n";
-        include './auth_container_imap_options.php';
+        include 'auth_container_imap_options.php';
         return($extra_options);
     }
 }
