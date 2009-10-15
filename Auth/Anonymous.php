@@ -77,7 +77,7 @@ class Auth_Anonymous extends Auth
      *                   driver, you have to pass the dsn string here)
      *
      * @param string    Name of the function that creates the login form
-     * @param boolean   Should the login form be displayed if neccessary?
+     * @param boolean   Should the login form be displayed if necessary?
      * @return void
      * @see Auth::Auth()
      */

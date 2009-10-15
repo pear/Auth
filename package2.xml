@@ -61,7 +61,7 @@ the login data:
  <date>2008-04-04</date>
  <time>15:33:00</time>
  <version>
-  <release>1.6.1</release>
+  <release>1.6.2</release>
   <api>1.5.0</api>
  </version>
  <stability>
@@ -70,9 +70,7 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-  * Actually included the new NetVPOPMaild container file.
-	  *mutter*grumble*stupid package.xml*grumble*mutter*
-  * Fix Bug #13578: Parse errors in DB Containers
+  * Fix Bug #14248: Typo and documentation fixes
  </notes>
  <contents>
   <dir name="/">
@@ -279,6 +277,24 @@ the login data:
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <date>2008-04-04</date>
+   <time>15:33:00</time>
+   <version>
+    <release>1.6.1</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+  * Actually included the new NetVPOPMaild container file.
+	  *mutter*grumble*stupid package.xml*grumble*mutter*
+  * Fix Bug #13578: Parse errors in DB Containers
+   </notes>
+  </release>
   <release>
    <date>2008-04-04</date>
    <time>10:35:00</time>

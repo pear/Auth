@@ -327,7 +327,7 @@ class Auth {
      *                   driver, you have to pass the dsn string here)
      *
      * @param string    Name of the function that creates the login form
-     * @param boolean   Should the login form be displayed if neccessary?
+     * @param boolean   Should the login form be displayed if necessary?
      * @return void
      */
     function Auth($storageDriver, $options = '', $loginFunction = '', $showLogin = true)
@@ -665,7 +665,7 @@ class Auth {
     // {{{ setShowLogin()
 
     /**
-     * Should the login form be displayed if neccessary?
+     * Should the login form be displayed if necessary?
      *
      * @param  bool    show login form or not
      * @return void
@@ -680,9 +680,9 @@ class Auth {
     // {{{ setAllowLogin()
 
     /**
-     * Should the login form be displayed if neccessary?
+     * Is Login Allowed from this page?
      *
-     * @param  bool    show login form or not
+     * @param  bool    allow login from this page or not
      * @return void
      * @access public
      */
