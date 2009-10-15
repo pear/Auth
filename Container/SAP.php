@@ -127,7 +127,7 @@ class Auth_Container_SAP extends Auth_Container {
             if ($error['message']) {
                 $message .= ': ' . $error['message'];
             }
-            PEAR::raiseError($message, null, null, null, @$erorr['all']);
+            PEAR::raiseError($message, null, null, null, @$error['all']);
             return false;
         } else {
             if (!empty($this->options['GETSSO2'])) {

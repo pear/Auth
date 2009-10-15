@@ -70,6 +70,7 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
+  * Fix Bug #13756: Variable name mispelling in SAP container
   * Fix Bug #13757: AUTH_LOG_ERR used but not defined
   * Fix Bug #14248: Typo and documentation fixes
   * Fix Bug #16676: Notices in PEAR container (cweiske)
