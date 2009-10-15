@@ -125,6 +125,9 @@ class Auth_Container_Pear extends Auth_Container
 
         $this->log('Auth_Container_PEAR::fetchData() getting salt.', AUTH_LOG_DEBUG);
         $code = $client->get($this->url . '/getsalt');
+        if ($code instanceof PEAR_Error) {
+            return $code;
+        }
         if ($code != 200) {
             return PEAR::raiseError('Bad response to salt request.', $code);
         }
@@ -141,12 +144,15 @@ class Auth_Container_Pear extends Auth_Container
         }
 
         $code = $client->post($this->url . '/validate', $postOptions);
+        if ($code instanceof PEAR_Error) {
+            return $code;
+        }
         if ($code != 200) {
             return PEAR::raiseError('Bad response to validate request.', $code);
         }
         $resp = $client->currentResponse();
 
-        list($code, $message) = explode(' ', $resp['body'], 1);
+        list($code, $message) = explode(' ', $resp['body'], 2);
         if ($code != 8) {
             return PEAR::raiseError($message, $code);
         }

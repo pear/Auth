@@ -71,6 +71,7 @@ the login data:
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
   * Fix Bug #14248: Typo and documentation fixes
+  * Fix Bug #16676: Notices in PEAR container (cweiske)
  </notes>
  <contents>
   <dir name="/">
