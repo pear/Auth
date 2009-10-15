@@ -159,7 +159,7 @@ class Auth_Container_Multiple extends Auth_Container {
 
             if (PEAR::isError($result)) {
 
-                $this->log('Container '.$key.': '.$result->getMessage(), AUTH_LOG_ERR);
+                $this->log('Container '.$key.': '.$result->getMessage(), AUTH_LOG_DEBUG);
                 return $result;
 
             } elseif ($result == true) {
