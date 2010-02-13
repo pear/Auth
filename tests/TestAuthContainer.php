@@ -6,8 +6,8 @@ class TestAuthContainer extends PHPUnit_Framework_TestCase
 {
 
     // Abstract
-    function getContainer() {}
-    function getExtraOptions() {}
+    function &getContainer() {}
+    function &getExtraOptions() {}
 
     function setUp()
     {
