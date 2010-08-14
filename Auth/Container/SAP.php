@@ -165,7 +165,7 @@ class Auth_Container_SAP extends Auth_Container {
         }
         $err = explode("n", $sap_error);
         foreach ($err AS $line) {
-            $item = split(':', $line);
+            $item = explode(':', $line);
             $error[strtolower(trim($item[0]))] = trim($item[1]);
         }
         $error['all'] = $sap_error;
