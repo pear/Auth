@@ -53,10 +53,10 @@ the login data:
   <email>aharvey@php.net</email>
   <active>yes</active>
  </developer>
- <date>2010-10-25</date>
- <time>22:59:29</time>
+ <date>2010-10-26</date>
+ <time>00:50:12</time>
  <version>
-  <release>1.6.3</release>
+  <release>1.6.4</release>
   <api>1.5.0</api>
  </version>
  <stability>
@@ -65,63 +65,62 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-Automatically built QA release
-Bug #17691 PATCH: Using explode instead of split - doconnor
+Fix baseinstalldir
  </notes>
  <contents>
-  <dir baseinstalldir="Auth" name="/">
-   <file baseinstalldir="" md5sum="ac6fb793a9aefcc3ead21064b5564c9f" name="Auth/Anonymous.php" role="php" />
-   <file baseinstalldir="" md5sum="8c1951eaf366f8c9b55687db0c66a305" name="Auth/Auth.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="e9ed0770e37e086e71edfe4a87928fe8" name="Auth/Container.php" role="php" />
-   <file baseinstalldir="" md5sum="c0d6f8331a79fa367f0bc7229596652d" name="Auth/Controller.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="330e3ad6e3a436b840de70fec71d3294" name="Auth/Container/Array.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="aca9277fa0bce718193fb404a66df336" name="Auth/Container/DB.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="5512bafd19c3b83a0940d8e1fe744851" name="Auth/Container/DBLite.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="dde39f93bc73ec2c8c7625cc3001b869" name="Auth/Container/File.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="06db5f947bc4e9d6cdfd09c7a7dd5cb1" name="Auth/Container/IMAP.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="15d2734f7fa49068c56e0188ead727f7" name="Auth/Container/KADM5.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="f5bae02b6949a48fe9927f1230ccb348" name="Auth/Container/LDAP.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="728e305236093862e4f619f31b2e9698" name="Auth/Container/MDB.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="52b9bf3afb418058888fac413960a034" name="Auth/Container/MDB2.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="6d2fbb513fd4ccf9dc9f3a263129df96" name="Auth/Container/Multiple.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="8a2fec942b6662f0794e2de1fc5515be" name="Auth/Container/NetVPOPMaild.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="8015e81320ed97f215884f256d061876" name="Auth/Container/PEAR.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="c49ae7f03328f1125c1116ee63bd6665" name="Auth/Container/POP3.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="b36ca8470e95ef7a75c59acd7b63a15e" name="Auth/Container/RADIUS.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="79e2a30c7510d39229bc267d3f3b4240" name="Auth/Container/SAP.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="c89ea34ffcf230e04935f22ceddf9db2" name="Auth/Container/SMBPasswd.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="0d0174395d31aa30d380eb93327c10f7" name="Auth/Container/SOAP.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="ebd5e804afd32fa828ad166c327bbad7" name="Auth/Container/SOAP5.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="3c248af7b9cf45741dadfa99eb4c486f" name="Auth/Container/vpopmail.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="c73e8379d73f0c97d0d5330684c7b30a" name="Auth/Frontend/Html.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="6d03025f455869185b57b5c138fd1c01" name="Auth/Frontend/md5.js" role="data" />
-   <file baseinstalldir="Auth" md5sum="797b51ba0f58858ab014771aa1b26fd6" name="examples/logging.php" role="doc" />
-   <file baseinstalldir="Auth" md5sum="c0234bbeeb10e24cdb6f64272e5e9831" name="examples/multi-container.php" role="doc" />
-   <file baseinstalldir="Auth" md5sum="a3482937f298d5a2742f32a54812c0c9" name="tests/AllTests.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="b60c8b083eb08119d88089db53ee2ede" name="tests/auth_container_db_options.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="907193304f6f6d0a03321a344d81a8a8" name="tests/auth_container_file_options.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="70468618acb6cf9314c234f241e93aae" name="tests/auth_container_imap_options.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="2070e2661d33de660a39837ecdec8ca7" name="tests/auth_container_mdb2_options.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="2070e2661d33de660a39837ecdec8ca7" name="tests/auth_container_mdb_options.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="7e41dc017dbc7f9c3841f205736cf2ab" name="tests/auth_container_pop3a_options.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="f2884c6ddc8f0405364aad909105f0d5" name="tests/auth_container_pop3_options.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="3796a67d8c5d3f281ceb414638f60cfa" name="tests/bug8735.passwd" role="test" />
-   <file baseinstalldir="Auth" md5sum="7a5ca7c595123a06d18543b803355158" name="tests/bug8735.phpt" role="test" />
-   <file baseinstalldir="Auth" md5sum="ad27a7b244511da0c2c75674033c3745" name="tests/DBContainer.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="314cd40e8b882f27a807b4eb824abceb" name="tests/DBLiteContainer.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="3b6bb4b847b756f4f25e003ad086bb79" name="tests/FileContainer.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="ca84f548b8cd3abdbca6ffb520e7c864" name="tests/IMAPContainer.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="8c8aaae73d38c31f9fcd0e40759b8794" name="tests/MDB2Container.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="ac86dc743cdd78c350605f4ba4d890d2" name="tests/MDBContainer.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="c0ea6513ca30793404fa300c1f82995e" name="tests/mysql_test_db.sql" role="test" />
-   <file baseinstalldir="Auth" md5sum="470101473f5dc9ab8d0ef35a0f343185" name="tests/POP3aContainer.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="fd933ecf46e31034adc522b7a40aeaa4" name="tests/POP3Container.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="4326ab6109775f02111a64d38cf37e2b" name="tests/TestAuthContainer.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="db9782123c381f0d638ed9ace4f6d42d" name="tests/tests.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="68b329da9893e34099c7d8ad5cb9c940" name="tests/users" role="test" />
-   <file baseinstalldir="" md5sum="7c9142f6d86e90aa18432a1dc983e76d" name="Auth.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="14012d9f7ed31ca900dc177cc37df9b5" name="README.AdvancedSecurity" role="doc" />
-   <file baseinstalldir="Auth" md5sum="38eac955611c0458f057799e6160a361" name="README.Auth" role="doc" />
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="ac6fb793a9aefcc3ead21064b5564c9f" name="Auth/Anonymous.php" role="php" />
+   <file baseinstalldir="/" md5sum="8c1951eaf366f8c9b55687db0c66a305" name="Auth/Auth.php" role="php" />
+   <file baseinstalldir="/" md5sum="e9ed0770e37e086e71edfe4a87928fe8" name="Auth/Container.php" role="php" />
+   <file baseinstalldir="/" md5sum="c0d6f8331a79fa367f0bc7229596652d" name="Auth/Controller.php" role="php" />
+   <file baseinstalldir="/" md5sum="330e3ad6e3a436b840de70fec71d3294" name="Auth/Container/Array.php" role="php" />
+   <file baseinstalldir="/" md5sum="aca9277fa0bce718193fb404a66df336" name="Auth/Container/DB.php" role="php" />
+   <file baseinstalldir="/" md5sum="5512bafd19c3b83a0940d8e1fe744851" name="Auth/Container/DBLite.php" role="php" />
+   <file baseinstalldir="/" md5sum="dde39f93bc73ec2c8c7625cc3001b869" name="Auth/Container/File.php" role="php" />
+   <file baseinstalldir="/" md5sum="06db5f947bc4e9d6cdfd09c7a7dd5cb1" name="Auth/Container/IMAP.php" role="php" />
+   <file baseinstalldir="/" md5sum="15d2734f7fa49068c56e0188ead727f7" name="Auth/Container/KADM5.php" role="php" />
+   <file baseinstalldir="/" md5sum="f5bae02b6949a48fe9927f1230ccb348" name="Auth/Container/LDAP.php" role="php" />
+   <file baseinstalldir="/" md5sum="728e305236093862e4f619f31b2e9698" name="Auth/Container/MDB.php" role="php" />
+   <file baseinstalldir="/" md5sum="52b9bf3afb418058888fac413960a034" name="Auth/Container/MDB2.php" role="php" />
+   <file baseinstalldir="/" md5sum="6d2fbb513fd4ccf9dc9f3a263129df96" name="Auth/Container/Multiple.php" role="php" />
+   <file baseinstalldir="/" md5sum="8a2fec942b6662f0794e2de1fc5515be" name="Auth/Container/NetVPOPMaild.php" role="php" />
+   <file baseinstalldir="/" md5sum="8015e81320ed97f215884f256d061876" name="Auth/Container/PEAR.php" role="php" />
+   <file baseinstalldir="/" md5sum="c49ae7f03328f1125c1116ee63bd6665" name="Auth/Container/POP3.php" role="php" />
+   <file baseinstalldir="/" md5sum="b36ca8470e95ef7a75c59acd7b63a15e" name="Auth/Container/RADIUS.php" role="php" />
+   <file baseinstalldir="/" md5sum="79e2a30c7510d39229bc267d3f3b4240" name="Auth/Container/SAP.php" role="php" />
+   <file baseinstalldir="/" md5sum="c89ea34ffcf230e04935f22ceddf9db2" name="Auth/Container/SMBPasswd.php" role="php" />
+   <file baseinstalldir="/" md5sum="0d0174395d31aa30d380eb93327c10f7" name="Auth/Container/SOAP.php" role="php" />
+   <file baseinstalldir="/" md5sum="ebd5e804afd32fa828ad166c327bbad7" name="Auth/Container/SOAP5.php" role="php" />
+   <file baseinstalldir="/" md5sum="3c248af7b9cf45741dadfa99eb4c486f" name="Auth/Container/vpopmail.php" role="php" />
+   <file baseinstalldir="/" md5sum="c73e8379d73f0c97d0d5330684c7b30a" name="Auth/Frontend/Html.php" role="php" />
+   <file baseinstalldir="/" md5sum="6d03025f455869185b57b5c138fd1c01" name="Auth/Frontend/md5.js" role="data" />
+   <file baseinstalldir="/" md5sum="797b51ba0f58858ab014771aa1b26fd6" name="examples/logging.php" role="doc" />
+   <file baseinstalldir="/" md5sum="c0234bbeeb10e24cdb6f64272e5e9831" name="examples/multi-container.php" role="doc" />
+   <file baseinstalldir="/" md5sum="a3482937f298d5a2742f32a54812c0c9" name="tests/AllTests.php" role="test" />
+   <file baseinstalldir="/" md5sum="b60c8b083eb08119d88089db53ee2ede" name="tests/auth_container_db_options.php" role="test" />
+   <file baseinstalldir="/" md5sum="907193304f6f6d0a03321a344d81a8a8" name="tests/auth_container_file_options.php" role="test" />
+   <file baseinstalldir="/" md5sum="70468618acb6cf9314c234f241e93aae" name="tests/auth_container_imap_options.php" role="test" />
+   <file baseinstalldir="/" md5sum="2070e2661d33de660a39837ecdec8ca7" name="tests/auth_container_mdb2_options.php" role="test" />
+   <file baseinstalldir="/" md5sum="2070e2661d33de660a39837ecdec8ca7" name="tests/auth_container_mdb_options.php" role="test" />
+   <file baseinstalldir="/" md5sum="7e41dc017dbc7f9c3841f205736cf2ab" name="tests/auth_container_pop3a_options.php" role="test" />
+   <file baseinstalldir="/" md5sum="f2884c6ddc8f0405364aad909105f0d5" name="tests/auth_container_pop3_options.php" role="test" />
+   <file baseinstalldir="/" md5sum="3796a67d8c5d3f281ceb414638f60cfa" name="tests/bug8735.passwd" role="test" />
+   <file baseinstalldir="/" md5sum="7a5ca7c595123a06d18543b803355158" name="tests/bug8735.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="ad27a7b244511da0c2c75674033c3745" name="tests/DBContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="314cd40e8b882f27a807b4eb824abceb" name="tests/DBLiteContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="3b6bb4b847b756f4f25e003ad086bb79" name="tests/FileContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="ca84f548b8cd3abdbca6ffb520e7c864" name="tests/IMAPContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="8c8aaae73d38c31f9fcd0e40759b8794" name="tests/MDB2Container.php" role="test" />
+   <file baseinstalldir="/" md5sum="ac86dc743cdd78c350605f4ba4d890d2" name="tests/MDBContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="c0ea6513ca30793404fa300c1f82995e" name="tests/mysql_test_db.sql" role="test" />
+   <file baseinstalldir="/" md5sum="470101473f5dc9ab8d0ef35a0f343185" name="tests/POP3aContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="fd933ecf46e31034adc522b7a40aeaa4" name="tests/POP3Container.php" role="test" />
+   <file baseinstalldir="/" md5sum="4326ab6109775f02111a64d38cf37e2b" name="tests/TestAuthContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="db9782123c381f0d638ed9ace4f6d42d" name="tests/tests.php" role="test" />
+   <file baseinstalldir="/" md5sum="68b329da9893e34099c7d8ad5cb9c940" name="tests/users" role="test" />
+   <file baseinstalldir="/" md5sum="7c9142f6d86e90aa18432a1dc983e76d" name="Auth.php" role="php" />
+   <file baseinstalldir="/" md5sum="14012d9f7ed31ca900dc177cc37df9b5" name="README.AdvancedSecurity" role="doc" />
+   <file baseinstalldir="/" md5sum="38eac955611c0458f057799e6160a361" name="README.Auth" role="doc" />
   </dir>
  </contents>
  <dependencies>
@@ -936,11 +935,26 @@ quoting of table and field names used in SQL in the Database backends.
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2010-10-25</date>
+   <date>2010-10-26</date>
    <license uri="http://www.php.net/license">PHP License</license>
    <notes>
 Automatically built QA release
 Bug #17691 PATCH: Using explode instead of split - doconnor
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.6.4</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2010-10-26</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+Fix baseinstalldir
    </notes>
   </release>
  </changelog>
