@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.9.0" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+<package packagerversion="1.9.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
  <name>Auth</name>
  <channel>pear.php.net</channel>
  <summary>Creating an authentication system.</summary>
@@ -53,10 +53,10 @@ the login data:
   <email>aharvey@php.net</email>
   <active>yes</active>
  </developer>
- <date>2010-02-12</date>
- <time>10:35:58</time>
+ <date>2010-10-25</date>
+ <time>22:59:29</time>
  <version>
-  <release>1.6.2</release>
+  <release>1.6.3</release>
   <api>1.5.0</api>
  </version>
  <stability>
@@ -65,47 +65,39 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-* Fix Bug #13756: Variable name mispelling in SAP container
-* Fix Bug #13757: AUTH_LOG_ERR used but not defined
-* Fix Bug #14248: Typo and documentation fixes
-* Fix Bug #16676: Notices in PEAR container (cweiske)
+Automatically built QA release
+Bug #17691 PATCH: Using explode instead of split - doconnor
  </notes>
  <contents>
   <dir baseinstalldir="Auth" name="/">
-   <file baseinstalldir="" md5sum="ac6fb793a9aefcc3ead21064b5564c9f" name="Auth/Anonymous.php" role="php">
-    <tasks:replace from="@package_version@" to="version" type="package-info" />
-   </file>
-   <file baseinstalldir="" md5sum="8c1951eaf366f8c9b55687db0c66a305" name="Auth/Auth.php" role="php">
-    <tasks:replace from="@package_version@" to="version" type="package-info" />
-   </file>
+   <file baseinstalldir="" md5sum="ac6fb793a9aefcc3ead21064b5564c9f" name="Auth/Anonymous.php" role="php" />
+   <file baseinstalldir="" md5sum="8c1951eaf366f8c9b55687db0c66a305" name="Auth/Auth.php" role="php" />
    <file baseinstalldir="Auth" md5sum="e9ed0770e37e086e71edfe4a87928fe8" name="Auth/Container.php" role="php" />
-   <file baseinstalldir="" md5sum="c0d6f8331a79fa367f0bc7229596652d" name="Auth/Controller.php" role="php">
-    <tasks:replace from="@package_version@" to="version" type="package-info" />
-   </file>
-   <file baseinstalldir="Auth" md5sum="215e4a61abf7020538da07c108d61c73" name="Auth/Container/Array.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="5611ee3da939b56b502daacd6c8687b1" name="Auth/Container/DB.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="3732cddef8cd678347864cfa8675b8de" name="Auth/Container/DBLite.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="0c13e1335301d61da9a98acd05318be1" name="Auth/Container/File.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="38a8eba8d950e126c03f374e4fd50adf" name="Auth/Container/IMAP.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="7c0905fa94f0d50fd519180e03375aa5" name="Auth/Container/KADM5.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="0040020289549fae6a58d34fb9da7015" name="Auth/Container/LDAP.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="120868b46d42959d8a939139a179fd72" name="Auth/Container/MDB.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="20b63b6efdbc2ecc053979a4318515ad" name="Auth/Container/MDB2.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="525a26038792293167b5b0265ea011f8" name="Auth/Container/Multiple.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="af0a6362f46fe10442db64794bca4b97" name="Auth/Container/NetVPOPMaild.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="296f8171a64db24bf3619959f4139ac6" name="Auth/Container/PEAR.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="36eeaefe5917a182447242b7de857226" name="Auth/Container/POP3.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="b0fac9303379c4b2ffc1947ce36c3c80" name="Auth/Container/RADIUS.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="b419d6b7c6f72662df65a70b8afd877a" name="Auth/Container/SAP.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="d27220fda48944eb32629f77bbb19c83" name="Auth/Container/SMBPasswd.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="6abb025c19169b3c4fee93675535b7c3" name="Auth/Container/SOAP.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="c9c39beae9847ebb9d96bfe105da195f" name="Auth/Container/SOAP5.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="1af91c6aa34260b62db2e409269f93d8" name="Auth/Container/vpopmail.php" role="php" />
-   <file baseinstalldir="Auth" md5sum="fe929b55abf171f302daf7043d81080f" name="Auth/Frontend/Html.php" role="php" />
+   <file baseinstalldir="" md5sum="c0d6f8331a79fa367f0bc7229596652d" name="Auth/Controller.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="330e3ad6e3a436b840de70fec71d3294" name="Auth/Container/Array.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="aca9277fa0bce718193fb404a66df336" name="Auth/Container/DB.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="5512bafd19c3b83a0940d8e1fe744851" name="Auth/Container/DBLite.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="dde39f93bc73ec2c8c7625cc3001b869" name="Auth/Container/File.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="06db5f947bc4e9d6cdfd09c7a7dd5cb1" name="Auth/Container/IMAP.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="15d2734f7fa49068c56e0188ead727f7" name="Auth/Container/KADM5.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="f5bae02b6949a48fe9927f1230ccb348" name="Auth/Container/LDAP.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="728e305236093862e4f619f31b2e9698" name="Auth/Container/MDB.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="52b9bf3afb418058888fac413960a034" name="Auth/Container/MDB2.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="6d2fbb513fd4ccf9dc9f3a263129df96" name="Auth/Container/Multiple.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="8a2fec942b6662f0794e2de1fc5515be" name="Auth/Container/NetVPOPMaild.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="8015e81320ed97f215884f256d061876" name="Auth/Container/PEAR.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="c49ae7f03328f1125c1116ee63bd6665" name="Auth/Container/POP3.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="b36ca8470e95ef7a75c59acd7b63a15e" name="Auth/Container/RADIUS.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="79e2a30c7510d39229bc267d3f3b4240" name="Auth/Container/SAP.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="c89ea34ffcf230e04935f22ceddf9db2" name="Auth/Container/SMBPasswd.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="0d0174395d31aa30d380eb93327c10f7" name="Auth/Container/SOAP.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="ebd5e804afd32fa828ad166c327bbad7" name="Auth/Container/SOAP5.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="3c248af7b9cf45741dadfa99eb4c486f" name="Auth/Container/vpopmail.php" role="php" />
+   <file baseinstalldir="Auth" md5sum="c73e8379d73f0c97d0d5330684c7b30a" name="Auth/Frontend/Html.php" role="php" />
    <file baseinstalldir="Auth" md5sum="6d03025f455869185b57b5c138fd1c01" name="Auth/Frontend/md5.js" role="data" />
    <file baseinstalldir="Auth" md5sum="797b51ba0f58858ab014771aa1b26fd6" name="examples/logging.php" role="doc" />
    <file baseinstalldir="Auth" md5sum="c0234bbeeb10e24cdb6f64272e5e9831" name="examples/multi-container.php" role="doc" />
-   <file baseinstalldir="Auth" md5sum="ba570d33d61ca58b9d1962b352200491" name="tests/AllTests.php" role="test" />
+   <file baseinstalldir="Auth" md5sum="a3482937f298d5a2742f32a54812c0c9" name="tests/AllTests.php" role="test" />
    <file baseinstalldir="Auth" md5sum="b60c8b083eb08119d88089db53ee2ede" name="tests/auth_container_db_options.php" role="test" />
    <file baseinstalldir="Auth" md5sum="907193304f6f6d0a03321a344d81a8a8" name="tests/auth_container_file_options.php" role="test" />
    <file baseinstalldir="Auth" md5sum="70468618acb6cf9314c234f241e93aae" name="tests/auth_container_imap_options.php" role="test" />
@@ -124,12 +116,10 @@ the login data:
    <file baseinstalldir="Auth" md5sum="c0ea6513ca30793404fa300c1f82995e" name="tests/mysql_test_db.sql" role="test" />
    <file baseinstalldir="Auth" md5sum="470101473f5dc9ab8d0ef35a0f343185" name="tests/POP3aContainer.php" role="test" />
    <file baseinstalldir="Auth" md5sum="fd933ecf46e31034adc522b7a40aeaa4" name="tests/POP3Container.php" role="test" />
-   <file baseinstalldir="Auth" md5sum="9793164f8f5ef5c8ea538fb4ecc702aa" name="tests/TestAuthContainer.php" role="test" />
+   <file baseinstalldir="Auth" md5sum="4326ab6109775f02111a64d38cf37e2b" name="tests/TestAuthContainer.php" role="test" />
    <file baseinstalldir="Auth" md5sum="db9782123c381f0d638ed9ace4f6d42d" name="tests/tests.php" role="test" />
    <file baseinstalldir="Auth" md5sum="68b329da9893e34099c7d8ad5cb9c940" name="tests/users" role="test" />
-   <file baseinstalldir="" md5sum="7c9142f6d86e90aa18432a1dc983e76d" name="Auth.php" role="php">
-    <tasks:replace from="@package_version@" to="version" type="package-info" />
-   </file>
+   <file baseinstalldir="" md5sum="7c9142f6d86e90aa18432a1dc983e76d" name="Auth.php" role="php" />
    <file baseinstalldir="Auth" md5sum="14012d9f7ed31ca900dc177cc37df9b5" name="README.AdvancedSecurity" role="doc" />
    <file baseinstalldir="Auth" md5sum="38eac955611c0458f057799e6160a361" name="README.Auth" role="doc" />
   </dir>
@@ -935,6 +925,22 @@ quoting of table and field names used in SQL in the Database backends.
 * Fix Bug #13757: AUTH_LOG_ERR used but not defined
 * Fix Bug #14248: Typo and documentation fixes
 * Fix Bug #16676: Notices in PEAR container (cweiske)
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.6.3</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2010-10-25</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+Automatically built QA release
+Bug #17691 PATCH: Using explode instead of split - doconnor
    </notes>
   </release>
  </changelog>
