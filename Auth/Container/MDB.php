@@ -115,7 +115,8 @@ class Auth_Container_MDB extends Auth_Container
         } elseif (is_subclass_of($dsn, 'mdb_common')) {
             $this->db = $dsn;
         } elseif (is_object($dsn) && MDB::isError($dsn)) {
-            return PEAR::raiseError($dsn->getMessage(), $dsn->code);
+            return PEAR::raiseError($dsn->getMessage(), $dsn->code,
+                null, null, $dsn->getUserInfo());
         } else {
             return PEAR::raiseError('The given dsn was not valid in file ' . __FILE__ . ' at line ' . __LINE__,
                                     41,
@@ -127,7 +128,8 @@ class Auth_Container_MDB extends Auth_Container
         }
 
         if (MDB::isError($this->db) || PEAR::isError($this->db)) {
-            return PEAR::raiseError($this->db->getMessage(), $this->db->code);
+            return PEAR::raiseError($this->db->getMessage(), $this->db->code,
+                null, null, $this->db->getUserInfo());
         }
 
         if ($this->options['auto_quote']) {
@@ -297,7 +299,8 @@ class Auth_Container_MDB extends Auth_Container
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                null, null, $err->getUserInfo());
         }
 
         //Check if db_fields contains a *, if so assume all columns are selected
@@ -331,7 +334,8 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->db->getRow($query, null, null, null, MDB_FETCHMODE_ASSOC);
 
         if (MDB::isError($res) || PEAR::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode());
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                null, null, $res->getUserInfo());
         }
         if (!is_array($res)) {
             $this->activeUser = '';
@@ -389,7 +393,8 @@ class Auth_Container_MDB extends Auth_Container
         $this->log('Auth_Container_MDB::listUsers() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                null, null, $err->getUserInfo());
         }
 
         $retVal = array();
@@ -423,7 +428,8 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->db->getAll($query, null, null, null, MDB_FETCHMODE_ASSOC);
 
         if (MDB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode());
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                null, null, $res->getUserInfo());
         } else {
             foreach ($res as $user) {
                 $user['username'] = $user[$this->options['usernamecol']];
@@ -452,7 +458,8 @@ class Auth_Container_MDB extends Auth_Container
         $this->log('Auth_Container_MDB::addUser() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                null, null, $err->getUserInfo());
         }
 
         if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
@@ -494,7 +501,8 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->query($query);
 
         if (MDB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->code);
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                null, null, $res->getUserInfo());
         }
         return true;
     }
@@ -515,7 +523,8 @@ class Auth_Container_MDB extends Auth_Container
         $this->log('Auth_Container_MDB::removeUser() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                null, null, $err->getUserInfo());
         }
 
         $query = sprintf("DELETE FROM %s WHERE %s = %s",
@@ -535,7 +544,8 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->query($query);
 
         if (MDB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->code);
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                null, null, $res->getUserInfo());
         }
         return true;
     }
@@ -554,7 +564,8 @@ class Auth_Container_MDB extends Auth_Container
         $this->log('Auth_Container_MDB::changePassword() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                null, null, $err->getUserInfo());
         }
 
         if (isset($this->options['cryptType']) && $this->options['cryptType'] == 'none') {
@@ -586,7 +597,8 @@ class Auth_Container_MDB extends Auth_Container
         $res = $this->query($query);
 
         if (MDB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->code);
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                null, null, $res->getUserInfo());
         }
         return true;
     }

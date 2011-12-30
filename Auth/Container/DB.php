@@ -116,7 +116,8 @@ class Auth_Container_DB extends Auth_Container
         } elseif (is_subclass_of($dsn, 'db_common')) {
             $this->db = $dsn;
         } elseif (DB::isError($dsn)) {
-            return PEAR::raiseError($dsn->getMessage(), $dsn->getCode());
+            return PEAR::raiseError($dsn->getMessage(), $dsn->getCode(),
+                                    null, null, $dsn->getUserInfo());
         } else {
             return PEAR::raiseError('The given dsn was not valid in file ' . __FILE__ . ' at line ' . __LINE__,
                                     41,
@@ -127,7 +128,8 @@ class Auth_Container_DB extends Auth_Container
         }
 
         if (DB::isError($this->db) || PEAR::isError($this->db)) {
-            return PEAR::raiseError($this->db->getMessage(), $this->db->getCode());
+            return PEAR::raiseError($this->db->getMessage(), $this->db->getCode(),
+                                    null, null, $this->db->getUserInfo());
         } else {
             return true;
         }
@@ -298,7 +300,8 @@ class Auth_Container_DB extends Auth_Container
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                                    null, null, $err->getUserInfo());
         }
 
         // Find if db_fields contains a *, if so assume all columns are selected
@@ -329,7 +332,8 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode());
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                                    null, null, $res->getUserInfo());
         }
 
         if (!is_array($res)) {
@@ -391,7 +395,8 @@ class Auth_Container_DB extends Auth_Container
         $this->log('Auth_Container_DB::listUsers() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                                    null, null, $err->getUserInfo());
         }
 
         $retVal = array();
@@ -425,7 +430,8 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->db->getAll($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode());
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                                    null, null, $res->getUserInfo());
         } else {
             foreach ($res as $user) {
                 $user['username'] = $user[$this->options['usernamecol']];
@@ -454,7 +460,8 @@ class Auth_Container_DB extends Auth_Container
         $this->log('Auth_Container_DB::addUser() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                                    null, null, $err->getUserInfo());
         }
 
         if (   isset($this->options['cryptType'])
@@ -498,7 +505,8 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode());
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                                    null, null, $res->getUserInfo());
         } else {
             return true;
         }
@@ -521,7 +529,8 @@ class Auth_Container_DB extends Auth_Container
 
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                                    null, null, $err->getUserInfo());
         }
 
         // check if there is an optional parameter db_where
@@ -544,7 +553,8 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-           return PEAR::raiseError($res->getMessage(), $res->getCode());
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                                    null, null, $res->getUserInfo());
         } else {
           return true;
         }
@@ -564,7 +574,8 @@ class Auth_Container_DB extends Auth_Container
         $this->log('Auth_Container_DB::changePassword() called.', AUTH_LOG_DEBUG);
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                                    null, null, $err->getUserInfo());
         }
 
         if (   isset($this->options['cryptType'])
@@ -601,7 +612,8 @@ class Auth_Container_DB extends Auth_Container
         $res = $this->query($query);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode());
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                                    null, null, $res->getUserInfo());
         } else {
             return true;
         }

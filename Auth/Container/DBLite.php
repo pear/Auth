@@ -128,7 +128,8 @@ class Auth_Container_DBLite extends Auth_Container
         }
 
         if (DB::isError($this->db) || PEAR::isError($this->db)) {
-            return PEAR::raiseError($this->db->getMessage(), $this->db->getCode());
+            return PEAR::raiseError($this->db->getMessage(), $this->db->getCode(),
+                                    null, null, $this->db->getUserInfo());
         } else {
             return true;
         }
@@ -250,7 +251,8 @@ class Auth_Container_DBLite extends Auth_Container
         // Prepare for a database query
         $err = $this->_prepare();
         if ($err !== true) {
-            return PEAR::raiseError($err->getMessage(), $err->getCode());
+            return PEAR::raiseError($err->getMessage(), $err->getCode(),
+                                    null, null, $err->getUserInfo());
         }
 
         // Find if db_fields contains a *, if so assume all col are selected
@@ -281,7 +283,8 @@ class Auth_Container_DBLite extends Auth_Container
         $res = $this->db->getRow($query, null, DB_FETCHMODE_ASSOC);
 
         if (DB::isError($res)) {
-            return PEAR::raiseError($res->getMessage(), $res->getCode());
+            return PEAR::raiseError($res->getMessage(), $res->getCode(),
+                                    null, null, $res->getUserInfo());
         }
         if (!is_array($res)) {
             $this->activeUser = '';
