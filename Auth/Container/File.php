@@ -133,6 +133,7 @@ class Auth_Container_File extends Auth_Container
             return array();
         }
 
+        $retVal = array();
         foreach ($users as $key => $value) {
             $retVal[] = array("username" => $key,
                               "password" => $value['passwd'],
