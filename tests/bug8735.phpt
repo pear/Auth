@@ -1,5 +1,13 @@
 --TEST--
 Regression test for bug #8735
+--SKIPIF--
+<?php
+$file = 'File/Passwd.php';
+if (!$fp = @fopen($file, 'r', true)) {
+    die("skip $file package is not installed.");
+}
+fclose($fp);
+?>
 --FILE--
 <?php
 set_include_path(dirname(dirname(__FILE__)) . ':' . get_include_path());

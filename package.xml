@@ -100,8 +100,6 @@ Fix baseinstalldir
    <file baseinstalldir="/" md5sum="b60c8b083eb08119d88089db53ee2ede" name="tests/auth_container_db_options.php" role="test" />
    <file baseinstalldir="/" md5sum="907193304f6f6d0a03321a344d81a8a8" name="tests/auth_container_file_options.php" role="test" />
    <file baseinstalldir="/" md5sum="70468618acb6cf9314c234f241e93aae" name="tests/auth_container_imap_options.php" role="test" />
-   <file baseinstalldir="/" md5sum="2070e2661d33de660a39837ecdec8ca7" name="tests/auth_container_mdb2_options.php" role="test" />
-   <file baseinstalldir="/" md5sum="2070e2661d33de660a39837ecdec8ca7" name="tests/auth_container_mdb_options.php" role="test" />
    <file baseinstalldir="/" md5sum="7e41dc017dbc7f9c3841f205736cf2ab" name="tests/auth_container_pop3a_options.php" role="test" />
    <file baseinstalldir="/" md5sum="f2884c6ddc8f0405364aad909105f0d5" name="tests/auth_container_pop3_options.php" role="test" />
    <file baseinstalldir="/" md5sum="3796a67d8c5d3f281ceb414638f60cfa" name="tests/bug8735.passwd" role="test" />
@@ -115,9 +113,10 @@ Fix baseinstalldir
    <file baseinstalldir="/" md5sum="c0ea6513ca30793404fa300c1f82995e" name="tests/mysql_test_db.sql" role="test" />
    <file baseinstalldir="/" md5sum="470101473f5dc9ab8d0ef35a0f343185" name="tests/POP3aContainer.php" role="test" />
    <file baseinstalldir="/" md5sum="fd933ecf46e31034adc522b7a40aeaa4" name="tests/POP3Container.php" role="test" />
-   <file baseinstalldir="/" md5sum="4326ab6109775f02111a64d38cf37e2b" name="tests/TestAuthContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="4326ab6109775f02111a64d38cf37e2b" name="tests/TestAuthContainer.php" role="test">
+    <tasks:replace from="@php_dir@" to="php_dir" type="pear-config" />
+   </file>
    <file baseinstalldir="/" md5sum="db9782123c381f0d638ed9ace4f6d42d" name="tests/tests.php" role="test" />
-   <file baseinstalldir="/" md5sum="68b329da9893e34099c7d8ad5cb9c940" name="tests/users" role="test" />
    <file baseinstalldir="/" md5sum="7c9142f6d86e90aa18432a1dc983e76d" name="Auth.php" role="php" />
    <file baseinstalldir="/" md5sum="14012d9f7ed31ca900dc177cc37df9b5" name="README.AdvancedSecurity" role="doc" />
    <file baseinstalldir="/" md5sum="38eac955611c0458f057799e6160a361" name="README.Auth" role="doc" />
