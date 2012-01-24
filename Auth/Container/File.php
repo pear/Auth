@@ -108,7 +108,7 @@ class Auth_Container_File extends Auth_Container
     function fetchData($user, $pass)
     {
         $this->log('Auth_Container_File::fetchData() called.', AUTH_LOG_DEBUG);
-        return File_Passwd::staticAuth($this->options['type'], $this->pwfile, $user, $pass);
+        return File_Passwd::staticAuth($this->options['type'], $this->pwfile, $user, $pass, $this->options['mode']);
     }
 
     // }}}
@@ -289,6 +289,7 @@ class Auth_Container_File extends Auth_Container
     function _setDefaults()
     {
         $this->options['type']       = 'Cvs';
+        $this->options['mode']      = '';
     }
 
     // }}}
