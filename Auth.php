@@ -923,7 +923,7 @@ class Auth {
                 && isset($this->session['username'])
                 && $this->session['registered'] == true
                 && $this->session['username'] != '') {
-                Auth::updateIdle();
+                $this->updateIdle();
 
                 if ($this->_isAdvancedSecurityEnabled()) {
                     $this->log('Advanced Security Mode Enabled.', AUTH_LOG_DEBUG);
