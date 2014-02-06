@@ -1365,18 +1365,24 @@ class Auth {
     /**
      * Returns a string representation of a callback for logging purposes
      *
-     * @param callback
+     * @param callback $callback The callback to be stringified
+     *
      * @return string
      */
-    function callbackToString($callback) {
+    function callbackToString($callback)
+    {
 
-        if(is_string($callback)) {
+        if (is_string($callback)) {
 
             return $callback;
 
-        } else if (is_array($callback) && isset($callback[1]) && is_string($callback[1])) {
+        } else if (is_array($callback)
+            && isset($callback[1])
+            && is_string($callback[1])
+        ) {
 
-            $class = is_object($callback[0]) ? get_class($callback[0]) : (string)$callback[0];
+            $class = is_object($callback[0]) ? get_class($callback[0])
+               : (string)$callback[0];
             $method = $callback[1];
             $description = "{$class}::{$method}";
 
