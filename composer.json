@@ -1,0 +1,51 @@
+{
+    "authors": [
+        {
+            "email": "mj@php.net",
+            "name": "Martin Jansen",
+            "role": "Lead"
+        },
+        {
+            "email": "yavo@siava.org",
+            "name": "Yavor Shahpasov",
+            "role": "Lead"
+        },
+        {
+            "email": "php@adamashley.name",
+            "name": "Adam Ashley",
+            "role": "Lead"
+        },
+        {
+            "email": "jflemer@acm.jhu.edu",
+            "name": "James E. Flemer",
+            "role": "Developer"
+        },
+        {
+            "email": "aharvey@php.net",
+            "name": "Adam Harvey",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Auth": "./"
+        }
+    },
+    "description": "More info available on: http://pear.php.net/package/Auth",
+    "include-path": [
+        "./"
+    ],
+    "license": "PHP License",
+    "name": "pear/auth",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=Auth",
+        "source": "https://github.com/pear/Auth"
+    },
+    "type": "library",
+    "require": {
+        "pear/pear_exception": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}
