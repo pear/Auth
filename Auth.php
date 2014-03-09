@@ -466,8 +466,7 @@ class Auth {
     {
         $storage_class = 'Auth_Container_' . $driver;
         include_once 'Auth/Container/' . $driver . '.php';
-        $obj =& new $storage_class($options);
-        return $obj;
+        return new $storage_class($options);
     }
 
     // }}}
@@ -563,7 +562,7 @@ class Auth {
         if (!empty($this->username) && $login_ok) {
             $this->setAuth($this->username);
             if (is_callable($this->loginCallback)) {
-                $this->log('Calling loginCallback ('.$this->loginCallback.').', AUTH_LOG_DEBUG);
+                $this->log('Calling loginCallback ('.$this->callbackToString($this->loginCallback).').', AUTH_LOG_DEBUG);
                 call_user_func_array($this->loginCallback, array($this->username, &$this));
             }
         }
@@ -574,7 +573,7 @@ class Auth {
             $this->log('Incorrect login.', AUTH_LOG_INFO);
             $this->status = AUTH_WRONG_LOGIN;
             if (is_callable($this->loginFailedCallback)) {
-                $this->log('Calling loginFailedCallback ('.$this->loginFailedCallback.').', AUTH_LOG_DEBUG);
+                $this->log('Calling loginFailedCallback ('.$this->callbackToString($this->loginFailedCallback).').', AUTH_LOG_DEBUG);
                 call_user_func_array($this->loginFailedCallback, array($this->username, &$this));
             }
         }
@@ -582,7 +581,7 @@ class Auth {
         if ((empty($this->username) || !$login_ok) && $this->showLogin) {
             $this->log('Rendering Login Form.', AUTH_LOG_INFO);
             if (is_callable($this->loginFunction)) {
-                $this->log('Calling loginFunction ('.$this->loginFunction.').', AUTH_LOG_DEBUG);
+                $this->log('Calling loginFunction ('.$this->callbackToString($this->loginFunction).').', AUTH_LOG_DEBUG);
                 call_user_func_array($this->loginFunction, array($this->username, $this->status, &$this));
             } else {
                 // BC fix Auth used to use drawLogin for this
@@ -994,7 +993,7 @@ class Auth {
                 }
 
                 if (is_callable($this->checkAuthCallback)) {
-                    $this->log('Calling checkAuthCallback ('.$this->checkAuthCallback.').', AUTH_LOG_DEBUG);
+                    $this->log('Calling checkAuthCallback ('.$this->callbackToString($this->checkAuthCallback).').', AUTH_LOG_DEBUG);
                     $checkCallback = call_user_func_array($this->checkAuthCallback, array($this->username, &$this));
                     if ($checkCallback == false) {
                         $this->log('checkAuthCallback failed.', AUTH_LOG_INFO);
@@ -1073,7 +1072,7 @@ class Auth {
         $this->log('Auth::logout() called.', AUTH_LOG_DEBUG);
 
         if (is_callable($this->logoutCallback) && isset($this->session['username'])) {
-            $this->log('Calling logoutCallback ('.$this->logoutCallback.').', AUTH_LOG_DEBUG);
+            $this->log('Calling logoutCallback ('.$this->callbackToString($this->logoutCallback).').', AUTH_LOG_DEBUG);
             call_user_func_array($this->logoutCallback, array($this->session['username'], &$this));
         }
 
@@ -1361,5 +1360,40 @@ class Auth {
 
     // }}}
 
+    // {{{ callbackToString()
+
+    /**
+     * Returns a string representation of a callback for logging purposes
+     *
+     * @param callback $callback The callback to be stringified
+     *
+     * @return string
+     */
+    function callbackToString($callback)
+    {
+
+        if (is_string($callback)) {
+
+            return $callback;
+
+        } else if (is_array($callback)
+            && isset($callback[1])
+            && is_string($callback[1])
+        ) {
+
+            $class = is_object($callback[0]) ? get_class($callback[0])
+               : (string)$callback[0];
+            $method = $callback[1];
+            $description = "{$class}::{$method}";
+
+            return $description;
+
+        }
+
+        return 'unknown';
+
+    }
+
+    // }}}
 }
 ?>
