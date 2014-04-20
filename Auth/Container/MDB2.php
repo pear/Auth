@@ -479,7 +479,7 @@ class Auth_Container_MDB2 extends Auth_Container
                 } else {
                     $additional_key   .= ', ' . $key;
                 }
-                $additional_value .= ', ' . $this->db->quote($value, 'text');
+                $additional_value .= ', ' . $this->db->quote($value);
             }
         }
 
