@@ -93,7 +93,7 @@ Fix baseinstalldir
    <file baseinstalldir="/" md5sum="ebd5e804afd32fa828ad166c327bbad7" name="Auth/Container/SOAP5.php" role="php" />
    <file baseinstalldir="/" md5sum="3c248af7b9cf45741dadfa99eb4c486f" name="Auth/Container/vpopmail.php" role="php" />
    <file baseinstalldir="/" md5sum="c73e8379d73f0c97d0d5330684c7b30a" name="Auth/Frontend/Html.php" role="php" />
-   <file baseinstalldir="/" md5sum="6d03025f455869185b57b5c138fd1c01" name="Auth/Frontend/md5.js" role="data" />
+   <file baseinstalldir="/" md5sum="6d03025f455869185b57b5c138fd1c01" name="Auth/Frontend/md5.js" role="php" />
    <file baseinstalldir="/" md5sum="797b51ba0f58858ab014771aa1b26fd6" name="examples/logging.php" role="doc" />
    <file baseinstalldir="/" md5sum="c0234bbeeb10e24cdb6f64272e5e9831" name="examples/multi-container.php" role="doc" />
    <file baseinstalldir="/" md5sum="a3482937f298d5a2742f32a54812c0c9" name="tests/AllTests.php" role="test" />
