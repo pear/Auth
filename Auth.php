@@ -463,7 +463,7 @@ class Auth {
      * @return object Object   Storage object
      * @access private
      */
-    function &_factory($driver, $options = '')
+    function _factory($driver, $options = '')
     {
         $storage_class = 'Auth_Container_' . $driver;
         include_once 'Auth/Container/' . $driver . '.php';
