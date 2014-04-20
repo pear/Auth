@@ -336,6 +336,7 @@ class Auth {
 
         // Start the session suppress error if already started
         if(!session_id()){
+            session_name($this->_sessionName); 
             @session_start();
             if(!session_id()) {
                 // Throw error
