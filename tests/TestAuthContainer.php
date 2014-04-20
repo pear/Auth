@@ -31,7 +31,7 @@ class TestAuthContainer extends PHPUnit_Framework_TestCase
 
     function setUp()
     {
-        $this->container =& $this->getContainer();
+        $this->container = $this->getContainer();
 
         if (!empty($this->container->db)) {
             $res = $this->container->db->query(file_get_contents(

@@ -352,10 +352,10 @@ class Auth {
         }
 
         // Assign Some globals to internal references, this will replace _importGlobalVariable
-        $this->session =& $_SESSION[$this->_sessionName];
-        $this->server =& $_SERVER;
-        $this->post =& $_POST;
-        $this->cookie =& $_COOKIE;
+        $this->session = $_SESSION[$this->_sessionName];
+        $this->server = $_SERVER;
+        $this->post = $_POST;
+        $this->cookie = $_COOKIE;
 
         if ($loginFunction != '' && is_callable($loginFunction)) {
             $this->loginFunction = $loginFunction;
@@ -366,15 +366,15 @@ class Auth {
         }
 
         if (is_object($storageDriver)) {
-            $this->storage =& $storageDriver;
+            $this->storage = $storageDriver;
             // Pass a reference to auth to the container, ugly but works
             // this is used by the DB container to use method setAuthData not staticaly.
-            $this->storage->_auth_obj =& $this;
+            $this->storage->_auth_obj = $this;
         } else {
             // $this->storage = $this->_factory($storageDriver, $options);
             //
             $this->storage_driver = $storageDriver;
-            $this->storage_options =& $options;
+            $this->storage_options = $options;
         }
     }
 
@@ -441,9 +441,9 @@ class Auth {
     function _loadStorage()
     {
         if(!is_object($this->storage)) {
-            $this->storage =& $this->_factory($this->storage_driver,
+            $this->storage = $this->_factory($this->storage_driver,
                     $this->storage_options);
-            $this->storage->_auth_obj =& $this;
+            $this->storage->_auth_obj = $this;
             $this->log('Loaded storage container ('.$this->storage_driver.')', AUTH_LOG_DEBUG);
             return(true);
         }
@@ -657,7 +657,7 @@ class Auth {
         if(!isset($_SESSION[$this->_sessionName])) {
             $_SESSION[$this->_sessionName] = array();
         }
-        $this->session =& $_SESSION[$this->_sessionName];
+        $this->session = $_SESSION[$this->_sessionName];
     }
 
     // }}}
@@ -1288,7 +1288,7 @@ class Auth {
             if (!class_exists('Log')) {
                 include_once 'Log.php';
             }
-            $this->logger =& Log::singleton('null',
+            $this->logger = Log::singleton('null',
                     null,
                     'auth['.getmypid().']',
                     array(),
