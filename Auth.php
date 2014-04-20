@@ -780,6 +780,11 @@ class Auth {
         $this->session['data'][$name] = $value;
     }
 
+    function deleteAuthData($name)
+    {
+       unset($this->session['data'][$name]);
+    }
+
     // }}}
     // {{{ getAuthData()
 
