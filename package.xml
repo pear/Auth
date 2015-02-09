@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.9.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
  <name>Auth</name>
  <channel>pear.php.net</channel>
  <summary>Creating an authentication system.</summary>
@@ -53,11 +53,11 @@ the login data:
   <email>aharvey@php.net</email>
   <active>yes</active>
  </developer>
- <date>2010-10-26</date>
- <time>00:50:12</time>
+ <date>2015-02-10</date>
+ <time>09:31:30</time>
  <version>
-  <release>1.6.4</release>
-  <api>1.5.0</api>
+  <release>1.6.5</release>
+  <api>1.6.0</api>
  </version>
  <stability>
   <release>stable</release>
@@ -65,59 +65,85 @@ the login data:
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-Fix baseinstalldir
+QA release
+Bug #20054 Auth package files installed to wrong directory
+
+Bug #19806	Bad role for md5.js
+
+Request #19805	Please Provides LICENSE file
+Bug #18199	Auth 1.6.4
+
+Request #18097	Auth Log Observer
+Request #19670	Session_Name
+
+Bug #19704	Array to string conversion notice pops up
+Bug #19438	MDB2 container does not handle non string value properly
+Bug #17284	Auth_Container_File-&gt;fetchData doesn&apos;t match the parent&apos;s method
+Request #17156	Don&apos;t call Auth::updateIdle() statically
+Bug #17097	listUsers() throws &quot;undefined variable&quot; on file without users:
+
+Request #16059	Auth container for the CAS service
+
+Bug #16044	Auth_Container_RADIUS and MSCHAPv1
+Bug #13627	Add crypt mode to File container
+Request #12537	No ability to delete data set with setAuthData()
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
-   <file baseinstalldir="/" md5sum="ac6fb793a9aefcc3ead21064b5564c9f" name="Auth/Anonymous.php" role="php" />
-   <file baseinstalldir="/" md5sum="8c1951eaf366f8c9b55687db0c66a305" name="Auth/Auth.php" role="php" />
-   <file baseinstalldir="/" md5sum="e9ed0770e37e086e71edfe4a87928fe8" name="Auth/Container.php" role="php" />
-   <file baseinstalldir="/" md5sum="c0d6f8331a79fa367f0bc7229596652d" name="Auth/Controller.php" role="php" />
-   <file baseinstalldir="/" md5sum="330e3ad6e3a436b840de70fec71d3294" name="Auth/Container/Array.php" role="php" />
-   <file baseinstalldir="/" md5sum="aca9277fa0bce718193fb404a66df336" name="Auth/Container/DB.php" role="php" />
-   <file baseinstalldir="/" md5sum="5512bafd19c3b83a0940d8e1fe744851" name="Auth/Container/DBLite.php" role="php" />
-   <file baseinstalldir="/" md5sum="dde39f93bc73ec2c8c7625cc3001b869" name="Auth/Container/File.php" role="php" />
-   <file baseinstalldir="/" md5sum="06db5f947bc4e9d6cdfd09c7a7dd5cb1" name="Auth/Container/IMAP.php" role="php" />
-   <file baseinstalldir="/" md5sum="15d2734f7fa49068c56e0188ead727f7" name="Auth/Container/KADM5.php" role="php" />
-   <file baseinstalldir="/" md5sum="f5bae02b6949a48fe9927f1230ccb348" name="Auth/Container/LDAP.php" role="php" />
-   <file baseinstalldir="/" md5sum="728e305236093862e4f619f31b2e9698" name="Auth/Container/MDB.php" role="php" />
-   <file baseinstalldir="/" md5sum="52b9bf3afb418058888fac413960a034" name="Auth/Container/MDB2.php" role="php" />
-   <file baseinstalldir="/" md5sum="6d2fbb513fd4ccf9dc9f3a263129df96" name="Auth/Container/Multiple.php" role="php" />
-   <file baseinstalldir="/" md5sum="8a2fec942b6662f0794e2de1fc5515be" name="Auth/Container/NetVPOPMaild.php" role="php" />
-   <file baseinstalldir="/" md5sum="8015e81320ed97f215884f256d061876" name="Auth/Container/PEAR.php" role="php" />
-   <file baseinstalldir="/" md5sum="c49ae7f03328f1125c1116ee63bd6665" name="Auth/Container/POP3.php" role="php" />
-   <file baseinstalldir="/" md5sum="b36ca8470e95ef7a75c59acd7b63a15e" name="Auth/Container/RADIUS.php" role="php" />
-   <file baseinstalldir="/" md5sum="79e2a30c7510d39229bc267d3f3b4240" name="Auth/Container/SAP.php" role="php" />
-   <file baseinstalldir="/" md5sum="c89ea34ffcf230e04935f22ceddf9db2" name="Auth/Container/SMBPasswd.php" role="php" />
-   <file baseinstalldir="/" md5sum="0d0174395d31aa30d380eb93327c10f7" name="Auth/Container/SOAP.php" role="php" />
-   <file baseinstalldir="/" md5sum="ebd5e804afd32fa828ad166c327bbad7" name="Auth/Container/SOAP5.php" role="php" />
-   <file baseinstalldir="/" md5sum="3c248af7b9cf45741dadfa99eb4c486f" name="Auth/Container/vpopmail.php" role="php" />
-   <file baseinstalldir="/" md5sum="c73e8379d73f0c97d0d5330684c7b30a" name="Auth/Frontend/Html.php" role="php" />
+   <file baseinstalldir="/" md5sum="9a73b9f521e14a622c175aa867e98437" name="Auth/Anonymous.php" role="php" />
+   <file baseinstalldir="/" md5sum="9443d194a6bdd2d7267fd3ec5f5ed6a1" name="Auth/Auth.php" role="php" />
+   <file baseinstalldir="/" md5sum="cc93db994338de02cfc92103872989e1" name="Auth/Container.php" role="php" />
+   <file baseinstalldir="/" md5sum="14884b282125b4904dfc81dba884e50b" name="Auth/Controller.php" role="php" />
+   <file baseinstalldir="/" md5sum="740eef802918d0557cc2b22915ec15d1" name="Auth/Container/Array.php" role="php" />
+   <file baseinstalldir="/" md5sum="380a230b4a0afd92144f9c51f4393e09" name="Auth/Container/CAS.php" role="php" />
+   <file baseinstalldir="/" md5sum="a39f0eb21d4436f42f1f9e6095b7ea01" name="Auth/Container/DB.php" role="php" />
+   <file baseinstalldir="/" md5sum="36dd4212e450031b9a3dc3a6ad9c0494" name="Auth/Container/DBLite.php" role="php" />
+   <file baseinstalldir="/" md5sum="b921b0c058a4b09b09506bf0fbe1b140" name="Auth/Container/File.php" role="php" />
+   <file baseinstalldir="/" md5sum="229f1b07a248666bd10038216d2b34fe" name="Auth/Container/IMAP.php" role="php" />
+   <file baseinstalldir="/" md5sum="8123f56ce924e7b7ecd05b13c4002949" name="Auth/Container/KADM5.php" role="php" />
+   <file baseinstalldir="/" md5sum="6b5622aeddeaa98a72fa743569a8f919" name="Auth/Container/LDAP.php" role="php" />
+   <file baseinstalldir="/" md5sum="8f9e9a30b6ebd4c48892a4cac4239a3b" name="Auth/Container/MDB.php" role="php" />
+   <file baseinstalldir="/" md5sum="c2e45cd314f31a04d868fd59be0a737c" name="Auth/Container/MDB2.php" role="php" />
+   <file baseinstalldir="/" md5sum="01675866059f2b139ccfb1459b0d01df" name="Auth/Container/Multiple.php" role="php" />
+   <file baseinstalldir="/" md5sum="8dc4c09b14942ae8c2eb4757a895b088" name="Auth/Container/NetVPOPMaild.php" role="php" />
+   <file baseinstalldir="/" md5sum="e5ee7fdde024739eb6fbd7a4a99bdbb0" name="Auth/Container/PEAR.php" role="php" />
+   <file baseinstalldir="/" md5sum="5334d916c51021a5c4285edffd14f5af" name="Auth/Container/POP3.php" role="php" />
+   <file baseinstalldir="/" md5sum="c0479c8557e236066171d2f04debde02" name="Auth/Container/RADIUS.php" role="php" />
+   <file baseinstalldir="/" md5sum="193f120299ab67c09d8c0bd58129fc18" name="Auth/Container/SAP.php" role="php" />
+   <file baseinstalldir="/" md5sum="e2f74ef8487104b26a9eeeb3547c02f5" name="Auth/Container/SMBPasswd.php" role="php" />
+   <file baseinstalldir="/" md5sum="29a917c0a61f668f9b4dd151f31ac0bd" name="Auth/Container/SOAP.php" role="php" />
+   <file baseinstalldir="/" md5sum="014ba90dfddb87bb0bf8e7acfb2c6c18" name="Auth/Container/SOAP5.php" role="php" />
+   <file baseinstalldir="/" md5sum="434e87fb7c3e730a75258413cd8d1d0a" name="Auth/Container/vpopmail.php" role="php" />
+   <file baseinstalldir="/" md5sum="d00480ed0d97df8c950abd7d79f57c8b" name="Auth/Frontend/Html.php" role="php" />
    <file baseinstalldir="/" md5sum="6d03025f455869185b57b5c138fd1c01" name="Auth/Frontend/md5.js" role="php" />
+   <file baseinstalldir="/" md5sum="767d6d8fad565204e813ccdeaf8f2b3a" name="Auth/Log/Observer.php" role="php" />
    <file baseinstalldir="/" md5sum="797b51ba0f58858ab014771aa1b26fd6" name="examples/logging.php" role="doc" />
    <file baseinstalldir="/" md5sum="c0234bbeeb10e24cdb6f64272e5e9831" name="examples/multi-container.php" role="doc" />
-   <file baseinstalldir="/" md5sum="a3482937f298d5a2742f32a54812c0c9" name="tests/AllTests.php" role="test" />
-   <file baseinstalldir="/" md5sum="b60c8b083eb08119d88089db53ee2ede" name="tests/auth_container_db_options.php" role="test" />
+   <file baseinstalldir="/" md5sum="557f04d5a64da1ec6ba4ecf6c9579738" name="tests/AllTests.php" role="test" />
+   <file baseinstalldir="/" md5sum="cca77b6315af90b71bebc258d1ef8023" name="tests/auth_container_db_options.php" role="test" />
    <file baseinstalldir="/" md5sum="907193304f6f6d0a03321a344d81a8a8" name="tests/auth_container_file_options.php" role="test" />
    <file baseinstalldir="/" md5sum="70468618acb6cf9314c234f241e93aae" name="tests/auth_container_imap_options.php" role="test" />
    <file baseinstalldir="/" md5sum="7e41dc017dbc7f9c3841f205736cf2ab" name="tests/auth_container_pop3a_options.php" role="test" />
    <file baseinstalldir="/" md5sum="f2884c6ddc8f0405364aad909105f0d5" name="tests/auth_container_pop3_options.php" role="test" />
    <file baseinstalldir="/" md5sum="3796a67d8c5d3f281ceb414638f60cfa" name="tests/bug8735.passwd" role="test" />
-   <file baseinstalldir="/" md5sum="7a5ca7c595123a06d18543b803355158" name="tests/bug8735.phpt" role="test" />
-   <file baseinstalldir="/" md5sum="ad27a7b244511da0c2c75674033c3745" name="tests/DBContainer.php" role="test" />
-   <file baseinstalldir="/" md5sum="314cd40e8b882f27a807b4eb824abceb" name="tests/DBLiteContainer.php" role="test" />
-   <file baseinstalldir="/" md5sum="3b6bb4b847b756f4f25e003ad086bb79" name="tests/FileContainer.php" role="test" />
-   <file baseinstalldir="/" md5sum="ca84f548b8cd3abdbca6ffb520e7c864" name="tests/IMAPContainer.php" role="test" />
-   <file baseinstalldir="/" md5sum="8c8aaae73d38c31f9fcd0e40759b8794" name="tests/MDB2Container.php" role="test" />
-   <file baseinstalldir="/" md5sum="ac86dc743cdd78c350605f4ba4d890d2" name="tests/MDBContainer.php" role="test" />
-   <file baseinstalldir="/" md5sum="c0ea6513ca30793404fa300c1f82995e" name="tests/mysql_test_db.sql" role="test" />
-   <file baseinstalldir="/" md5sum="470101473f5dc9ab8d0ef35a0f343185" name="tests/POP3aContainer.php" role="test" />
-   <file baseinstalldir="/" md5sum="fd933ecf46e31034adc522b7a40aeaa4" name="tests/POP3Container.php" role="test" />
-   <file baseinstalldir="/" md5sum="4326ab6109775f02111a64d38cf37e2b" name="tests/TestAuthContainer.php" role="test">
+   <file baseinstalldir="/" md5sum="643f72125a8db7dc785ac6ca560b6269" name="tests/bug8735.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="dc174dd0cfc732de9279563f8ba6cfff" name="tests/bug16044.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="692a0e45513dcc8e1b7355bb5bdd2077" name="tests/DBContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="50d1cb84bc05e366f5e008615d934eed" name="tests/DBLiteContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="a9a8456cb66ef8dcb146556d118ef3d7" name="tests/FileContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="0341915e13c4f7ddf7aad9834f82be3c" name="tests/IMAPContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="5f96ab73177df5061f883390e8f2a47a" name="tests/MDB2Container.php" role="test" />
+   <file baseinstalldir="/" md5sum="f7928f2c094663f7cbb610e9956bee9a" name="tests/MDBContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="1ec0bca44f16f6eb9c5ef03c27a5c7af" name="tests/mysql_test_db.sql" role="test" />
+   <file baseinstalldir="/" md5sum="59dec3188c5f598aa4d5d1d79108ea53" name="tests/POP3aContainer.php" role="test" />
+   <file baseinstalldir="/" md5sum="ecd4407ad49b5c136599367888496e0a" name="tests/POP3Container.php" role="test" />
+   <file baseinstalldir="/" md5sum="340b52d2c30edbd2ecc77421d1c995db" name="tests/TestAuthContainer.php" role="test">
     <tasks:replace from="@php_dir@" to="php_dir" type="pear-config" />
    </file>
    <file baseinstalldir="/" md5sum="db9782123c381f0d638ed9ace4f6d42d" name="tests/tests.php" role="test" />
-   <file baseinstalldir="/" md5sum="7c9142f6d86e90aa18432a1dc983e76d" name="Auth.php" role="php" />
+   <file baseinstalldir="/" md5sum="270ba53683db7e4dca16426a21a01e63" name="Auth.php" role="php" />
+   <file baseinstalldir="/" md5sum="53f05a6e3a5b5c826269492cc793515c" name="composer.json" role="data" />
+   <file baseinstalldir="/" md5sum="52dd90569008fee5bcdbb22d945b1108" name="LICENSE" role="data" />
    <file baseinstalldir="/" md5sum="14012d9f7ed31ca900dc177cc37df9b5" name="README.AdvancedSecurity" role="doc" />
    <file baseinstalldir="/" md5sum="38eac955611c0458f057799e6160a361" name="README.Auth" role="doc" />
   </dir>
@@ -954,6 +980,42 @@ Bug #17691 PATCH: Using explode instead of split - doconnor
    <license uri="http://www.php.net/license">PHP License</license>
    <notes>
 Fix baseinstalldir
+   </notes>
+  </release>
+  <release>
+   <version>
+    <release>1.6.5</release>
+    <api>1.6.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2015-02-10</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+QA release
+Bug #20054 Auth package files installed to wrong directory
+
+Bug #19806	Bad role for md5.js
+
+Request #19805	Please Provides LICENSE file
+Bug #18199	Auth 1.6.4
+
+Request #18097	Auth Log Observer
+Request #19670	Session_Name
+
+Bug #19704	Array to string conversion notice pops up
+Bug #19438	MDB2 container does not handle non string value properly
+Bug #17284	Auth_Container_File-&gt;fetchData doesn&apos;t match the parent&apos;s method
+Request #17156	Don&apos;t call Auth::updateIdle() statically
+Bug #17097	listUsers() throws &quot;undefined variable&quot; on file without users:
+
+Request #16059	Auth container for the CAS service
+
+Bug #16044	Auth_Container_RADIUS and MSCHAPv1
+Bug #13627	Add crypt mode to File container
+Request #12537	No ability to delete data set with setAuthData()
    </notes>
   </release>
  </changelog>
